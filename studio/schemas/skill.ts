@@ -9,7 +9,7 @@ export const skill = defineType({
     str('title', 'Title', true), slugField(), txt('description', 'Description', true), areaField(),
     defineField({ name: 'status', type: 'string', initialValue: 'next', options: { list: ['ready', 'next'], layout: 'radio', direction: 'horizontal' }, validation: (r) => r.required() }),
     ref('author', 'author'), refs('rules', 'rule', 'Rules it checks'),
-    order,
+    order('skill'),
     str('changes', 'Changes (e.g. “Reads your data, changes nothing”)'), str('firstRun', 'First run'),
     connectorsField,
     defineField({ name: 'art', type: 'skillArt', description: 'Until one is picked, the card shows the category icon' }),

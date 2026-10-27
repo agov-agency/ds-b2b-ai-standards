@@ -21,7 +21,9 @@ export const list = (name: string, title: string, fields: any[], preview = 'titl
   name, title, type: 'array', of: [{ type: 'object', fields, preview: { select: { title: preview } } }],
 });
 export const connectorsField = defineField({ name: 'connectors', type: 'array', of: [{ type: 'reference', to: [{ type: 'connector' }] }], description: 'Pick from Connectors; add a new one there (with a logo if the site has none)' });
-export const order = defineField({ name: 'order', type: 'number', initialValue: 99, description: 'Lower comes first' });
+// Not edited by hand: a new document goes last (highest order of its type + 1); lists sort by it
+export const order = (type: string) => defineField({ name: 'order', type: 'number', hidden: true,
+  initialValue: async (_: unknown, { getClient }: any) => (await getClient({ apiVersion: '2025-02-19' }).fetch('coalesce(math::max(*[_type == $type].order), 0) + 1', { type })) });
 export const featured = defineField({ name: 'featured', type: 'boolean', initialValue: false });
 
 // Closing card above the footer; the page template falls back to default copy for any empty field

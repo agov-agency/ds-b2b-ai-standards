@@ -1,6 +1,6 @@
 import { defineField, defineType } from 'sanity';
 import { str, txt, slugField, ref, refs, areaField, obj, list, order, gallery, connectorsField } from './shared';
-import { CoverInput } from './CoverInput';
+import { CoverInput, randomCover } from './CoverInput';
 
 export const scenario = defineType({
   name: 'scenario', type: 'document',
@@ -13,8 +13,8 @@ export const scenario = defineType({
     connectorsField,
     refs('skills', 'skill'), refs('rules', 'rule'),
     defineField({ name: 'art', type: 'scenarioArt', description: 'Until one is picked, the default cover shows' }),
-    defineField({ name: 'cover', title: 'Cover colour', type: 'number', description: 'Pastel behind the card and the page hero; click again to clear (neutral)', components: { input: CoverInput }, validation: (r) => r.integer().min(1).max(20) }),
-    order,
+    defineField({ name: 'cover', title: 'Cover colour', type: 'number', description: 'Pastel behind the card and the page hero; a new scenario gets a random one', components: { input: CoverInput }, initialValue: randomCover, validation: (r) => r.integer().min(1).max(20) }),
+    order('scenario'),
     obj('page', 'Scenario page', [
       obj('catches', 'What it catches', [
         str('headline', 'Headline', true), txt('context'), { ...txt('body'), description: 'A blank line starts a new paragraph' }, txt('note'),

@@ -1,7 +1,7 @@
 // Figure picker: a tile per figure with its still frame, then a live preview of the picked one.
 // Renders the same draw(t) the site plays (site/src/art), so editors see what they pick.
 import { useEffect, useRef } from 'react';
-import { Card, Grid, Stack, Text } from '@sanity/ui';
+import { Card, Stack, Text } from '@sanity/ui';
 import { set, unset, type ObjectInputProps } from 'sanity';
 import { pieces, ART_POOLS } from '../../site/src/art';
 
@@ -45,11 +45,11 @@ export function ArtInput(props: ObjectInputProps) {
   const pool = ART_POOLS[(props.schemaType.options as any).pool as 'scenario' | 'skill'].filter((n) => pieces[n]);
   return (
     <Stack space={3}>
-      {pool.length === 0 && <Text muted size={1}>No figures for this type yet. They are drawn in code (site/src/art) and appear here once added.</Text>}
-      <Grid columns={[2, 3, 4]} gap={2}>
+      {pool.length === 0 && <Text muted size={1}>No figures for this type yet, so the default cover shows. Figures are drawn in code (site/src/art) and appear here once added.</Text>}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 8 }}>
         <Tile on={!piece} pick={() => props.onChange(unset())} />
         {pool.map((n) => <Tile key={n} name={n} on={piece === n} pick={() => props.onChange(set(n, ['piece']))} />)}
-      </Grid>
+      </div>
       {props.validation.map((v, i) => <Text key={i} size={1} style={{ color: 'var(--card-badge-critical-dot-color, #e5484d)' }}>{v.message}</Text>)}
       {piece && <Card padding={3} radius={2} border><Live name={piece} /></Card>}
       {piece && props.renderDefault({ ...props, members: props.members.filter((m) => m.kind !== 'field' || m.name !== 'piece') })}

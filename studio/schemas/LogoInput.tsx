@@ -1,5 +1,5 @@
 // Connector logo: a tile per brand logo in design-system/logos (the set the site draws); empty = upload your own below
-import { Card, Grid, Text } from '@sanity/ui';
+import { Card, Text } from '@sanity/ui';
 import { set, unset, type StringInputProps } from 'sanity';
 
 const raw = import.meta.glob('../../design-system/logos/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
@@ -13,9 +13,9 @@ export function LogoInput({ value, onChange }: StringInputProps) {
     </Card>
   );
   return (
-    <Grid columns={[5, 7, 9]} gap={2}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(48px, 1fr))', gap: 8 }}>
       {tile(undefined, <Text muted size={0}>Own</Text>)}
       {LOGOS.map(([name, svg]) => tile(name, <span style={{ width: 24, height: 24, display: 'block' }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg', '<svg width="24" height="24"') }} />))}
-    </Grid>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 // Skill card icon: a tile per line icon in illustrations/icons; empty = the area's default icon
-import { Card, Grid, Text } from '@sanity/ui';
+import { Card, Text } from '@sanity/ui';
 import { set, unset, type StringInputProps } from 'sanity';
 
 const raw = import.meta.glob('../../illustrations/icons/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
@@ -17,10 +17,10 @@ export function IconInput({ value, onChange }: StringInputProps) {
     </Card>
   );
   return (
-    <Grid columns={[4, 6, 8]} gap={2}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(64px, 1fr))', gap: 8 }}>
       <style>{CSS}</style>
       {tile(undefined, <Text muted size={0}>Area</Text>)}
       {ICONS.map(([name, svg]) => tile(name, <span className="ic" style={{ width: 40, height: 40, display: 'block' }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg', '<svg width="40" height="40"') }} />))}
-    </Grid>
+    </div>
   );
 }

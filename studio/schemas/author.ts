@@ -25,7 +25,7 @@ export const author = defineType({
         preview: { select: { label: 'label', custom: 'customLabel', url: 'url', media: 'logo' }, prepare: ({ label, custom, url, media }) => ({ title: label === 'custom' ? custom : label, subtitle: url, media }) },
       }],
     }),
-    featured, order,
+    featured, order('author'),
   ],
   orderings: [{ title: 'Order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],
   preview: { select: { title: 'name', subtitle: 'company', media: 'photo' } },
