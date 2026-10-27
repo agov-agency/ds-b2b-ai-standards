@@ -1,5 +1,5 @@
 import { defineField, defineType } from 'sanity';
-import { str, txt, slugField, order, featured, desc, fieldsets, inSet } from './shared';
+import { str, txt, slugField, order, featured, desc, part } from './shared';
 
 // Ready icons are the glyphs the author page draws (site/src/pages/authors/[slug].astro); names match the labels already in content
 const ICONS = [{ title: 'LinkedIn', value: 'linkedin' }, { title: 'X', value: 'x' }, { title: 'GitHub', value: 'github' }, { title: 'Website', value: 'web' }, { title: 'Custom logo', value: 'custom' }];
@@ -7,7 +7,6 @@ const NAMES = [...['LinkedIn', 'X', 'GitHub', 'Website'].map((v) => ({ title: v,
 
 export const author = defineType({
   name: 'author', type: 'document',
-  fieldsets: fieldsets(['settings', 'Settings']),
   // Fields follow the author page: name, role and photo at the top, the About text, then the link buttons
   fields: [
     desc(str('name', 'Name', true), 'Page headline; also on bylines and author cards'),
@@ -29,7 +28,8 @@ export const author = defineType({
         preview: { select: { label: 'label', custom: 'customLabel', url: 'url', media: 'logo' }, prepare: ({ label, custom, url, media }) => ({ title: label === 'custom' ? custom : label, subtitle: url, media }) },
       }],
     }),
-    ...inSet('settings', desc(slugField('name'), 'Page address: /authors/<slug>'), desc(featured, 'Featured authors show on the home page and in the Directory; DemandSense stays unfeatured'), order('author')),
+    part('settingsPart', 'Settings', 'Address, featuring and other housekeeping'),
+    desc(slugField('name'), 'Page address: /authors/<slug>'), desc(featured, 'Featured authors show on the home page and in the Directory; DemandSense stays unfeatured'), order('author'),
   ],
   orderings: [{ title: 'Order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],
   preview: { select: { title: 'name', subtitle: 'company', media: 'photo' } },

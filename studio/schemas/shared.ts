@@ -1,6 +1,7 @@
 import { defineField, defineType } from 'sanity';
 import { ArtInput } from './ArtInput';
 import { CoverInput, randomCover } from './CoverInput';
+import { Part, SectionTitle } from './Section';
 
 // One value per document of a type: a figure or icon two items share fails validation
 export const unique = (field: string) => (v: unknown, ctx: any) => {
@@ -23,12 +24,16 @@ export const coverField = (description = 'Pastel behind the card and the page he
 
 // Adds the editor help line under a field's title
 export const desc = <T extends object>(field: T, description: string) => ({ ...field, description });
-// Top-level groups in the order the page reads (hero first, settings last); presentation only, data paths stay
-export const fieldsets = (...sets: [string, string, string?][]) => sets.map(([name, title, description]) => ({ name, title, description, options: { collapsible: false } }));
-export const inSet = <T extends object>(fieldset: string, ...fields: T[]) => fields.map((f) => ({ ...f, fieldset }));
+// Form hierarchy (Section.tsx). part(): a big heading between the page's parts; it has no input and never stores a value.
+// section(): a page section's field drawn under a level-2 heading
+export const part = (name: string, title: string, description?: string) =>
+  defineField({ name, title, description, type: 'string', readOnly: true, components: { field: Part, input: () => null } });
+export const section = <T extends object>(field: T) => ({ ...field, components: { ...(field as any).components, field: SectionTitle } });
 
 // Sections open under a plain title, not as accordions (easier to scan and fill)
-export const obj = (name: string, title: string, fields: any[]) => defineField({ name, title, type: 'object', options: { collapsible: false }, fields });
+export const obj = (name: string, title: string, fields: any[]) => section(defineField({ name, title, type: 'object', options: { collapsible: false }, fields }));
+// The object holding all page sections: its title is a level-1 part
+export const pageObj = (fields: any[]) => defineField({ name: 'page', title: 'Page sections', description: 'In the order they appear on the page', type: 'object', options: { collapsible: false }, fields, components: { field: Part } });
 export const list = (name: string, title: string, fields: any[], preview = 'title') => defineField({
   name, title, type: 'array', of: [{ type: 'object', fields, preview: { select: { title: preview } } }],
 });
