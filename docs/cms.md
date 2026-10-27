@@ -29,3 +29,7 @@ Figures are code: `site/src/art/*.ts`, each a `Piece` with `draw(t)`. The CMS st
 7. Sanity → Members: invite editors (Free plan: Administrator or Viewer only).
 
 After the import is checked, Sanity is the source; the Markdown files stay only as the local fallback until they are removed.
+
+## Rebuild of 27 Oct 2026
+
+Every author, rule, skill and scenario was replaced with the real set (15 rules from the rule pages copy, 31 skills from the Open-Source DemandSense Skills sheet and the contributors directory, 8 expert scenarios, 10 contributors plus DemandSense). Data: `studio/seed/directory.py` → `seed/directory.json`; run with `migrations/2026-10-27-rebuild-directory.ts`. The Markdown in `site/content/` still holds the old placeholder set and is now only a local fallback.

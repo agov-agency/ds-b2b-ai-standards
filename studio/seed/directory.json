@@ -1,0 +1,4009 @@
+[
+ {
+  "_id": "author-justin-rowe",
+  "_type": "author",
+  "name": "Justin Rowe",
+  "company": "Impactable",
+  "featured": true,
+  "order": 1,
+  "slug": {
+   "_type": "slug",
+   "current": "justin-rowe"
+  },
+  "links": [
+   {
+    "_key": "k1",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/justin-rowe-4043339b/"
+   }
+  ]
+ },
+ {
+  "_id": "author-roman-slobodzianyk",
+  "_type": "author",
+  "name": "Roman Slobodzianyk",
+  "company": "Impactable",
+  "featured": true,
+  "order": 2,
+  "slug": {
+   "_type": "slug",
+   "current": "roman-slobodzianyk"
+  },
+  "links": [
+   {
+    "_key": "k2",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/roman-slobodzianyk-b67549140/"
+   }
+  ]
+ },
+ {
+  "_id": "author-george-coudounaris",
+  "_type": "author",
+  "name": "George Coudounaris",
+  "company": "The B2B Playbook",
+  "featured": true,
+  "order": 3,
+  "slug": {
+   "_type": "slug",
+   "current": "george-coudounaris"
+  },
+  "links": [
+   {
+    "_key": "k3",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/b2b-marketing-expert/"
+   }
+  ]
+ },
+ {
+  "_id": "author-joshua-stout",
+  "_type": "author",
+  "name": "Joshua Stout",
+  "company": "Beyond The Funnel",
+  "featured": true,
+  "order": 4,
+  "slug": {
+   "_type": "slug",
+   "current": "joshua-stout"
+  },
+  "links": [
+   {
+    "_key": "k4",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/joshua-stout/"
+   }
+  ]
+ },
+ {
+  "_id": "author-jonathan-belliveau",
+  "_type": "author",
+  "name": "Jonathan Belliveau",
+  "company": "GrowthMotiv",
+  "featured": true,
+  "order": 5,
+  "slug": {
+   "_type": "slug",
+   "current": "jonathan-belliveau"
+  },
+  "links": [
+   {
+    "_key": "k5",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/jonathan-belliveau/"
+   }
+  ]
+ },
+ {
+  "_id": "author-bogdan-liutic",
+  "_type": "author",
+  "name": "Bogdan Liutic",
+  "company": "CR8",
+  "featured": true,
+  "order": 6,
+  "slug": {
+   "_type": "slug",
+   "current": "bogdan-liutic"
+  },
+  "links": [
+   {
+    "_key": "k6",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/bgdn/"
+   }
+  ]
+ },
+ {
+  "_id": "author-alfredo-talib",
+  "_type": "author",
+  "name": "Alfredo Talib",
+  "company": "Cornersight",
+  "featured": true,
+  "order": 7,
+  "slug": {
+   "_type": "slug",
+   "current": "alfredo-talib"
+  },
+  "links": [
+   {
+    "_key": "k7",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/alfredo-iscandar-talib/"
+   }
+  ]
+ },
+ {
+  "_id": "author-moby-hayat",
+  "_type": "author",
+  "name": "Moby Hayat",
+  "company": "The Fire Show",
+  "featured": true,
+  "order": 8,
+  "slug": {
+   "_type": "slug",
+   "current": "moby-hayat"
+  },
+  "links": [
+   {
+    "_key": "k8",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/moby/"
+   }
+  ]
+ },
+ {
+  "_id": "author-ivars-krutainis",
+  "_type": "author",
+  "name": "Ivars Krutainis",
+  "company": "Otter",
+  "featured": true,
+  "order": 9,
+  "slug": {
+   "_type": "slug",
+   "current": "ivars-krutainis"
+  },
+  "links": [
+   {
+    "_key": "k9",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/krutainis/"
+   }
+  ]
+ },
+ {
+  "_id": "author-aj-wilcox",
+  "_type": "author",
+  "name": "AJ Wilcox",
+  "company": "B2Linked",
+  "featured": true,
+  "order": 10,
+  "slug": {
+   "_type": "slug",
+   "current": "aj-wilcox"
+  },
+  "links": [
+   {
+    "_key": "k10",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/in/wilcoxaj/"
+   }
+  ]
+ },
+ {
+  "_id": "author-demandsense",
+  "_type": "author",
+  "name": "DemandSense",
+  "role": "Maintainer of the Standard",
+  "featured": false,
+  "order": 11,
+  "about": "The LinkedIn Ads analytics company behind the Standard. Writes the base rules every skill checks against, tests each contribution on real accounts before it is published, and keeps the library free",
+  "slug": {
+   "_type": "slug",
+   "current": "demandsense"
+  },
+  "links": [
+   {
+    "_key": "k11",
+    "icon": "linkedin",
+    "label": "LinkedIn",
+    "url": "https://www.linkedin.com/company/demandsense"
+   },
+   {
+    "_key": "k12",
+    "icon": "web",
+    "label": "Website",
+    "url": "https://demandsense.com"
+   }
+  ]
+ },
+ {
+  "_id": "rule-read-frequency-and-penetration-together",
+  "_type": "rule",
+  "number": 1,
+  "title": "Read frequency and penetration together",
+  "why": "One number alone doesn't tell you what to fix.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-reach-frequency"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 8,
+  "slug": {
+   "_type": "slug",
+   "current": "read-frequency-and-penetration-together"
+  },
+  "page": {
+   "advises": {
+    "text": "Campaign Manager reports reach, average frequency and audience penetration for each campaign.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Read penetration and accounts reached first, then frequency, then CTR, and decide from the combination. Read them at 30, 60 and 90 days.",
+   "reason": "An average frequency of 3 can mean part of the list saw the ad a dozen times while most of it saw nothing. Once penetration stops growing, more budget only raises frequency on the people already reached.",
+   "mattersLess": "Average frequency on its own is enough when the audience is small and penetration is high, because most people are close to the average.",
+   "signs": [
+    {
+     "_key": "k13",
+     "see": "Frequency under target, penetration healthy",
+     "do": "Add budget, or narrow the audience so the same budget repeats more."
+    },
+    {
+     "_key": "k14",
+     "see": "Penetration stalls around 50% with frequency on target",
+     "do": "That's a reachability ceiling. Export the accounts with no impressions and reach them through other channels, like Meta, programmatic or outbound."
+    },
+    {
+     "_key": "k15",
+     "see": "Frequency above target, CTR falling",
+     "do": "Rotate the weakest ads before you touch budget (rule 03)."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k16",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“Read them together, and over 90 days, not one week. On a signal list low reach is still the usual problem, so I check how much of the list has seen me at all before I touch the average.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-separate-frequency-targets-cold-warm",
+  "_type": "rule",
+  "number": 2,
+  "title": "Set separate frequency targets for cold and warm audiences",
+  "why": "Cold audiences run low and wide. Warm audiences need repetition.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-reach-frequency"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 15,
+  "slug": {
+   "_type": "slug",
+   "current": "separate-frequency-targets-cold-warm"
+  },
+  "page": {
+   "advises": {
+    "text": "Campaign Manager reports average frequency for each campaign. Frequency targets are left to the advertiser.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Cold: low and wide, reach first. Warm in-feed: around 15 to 25 impressions per person over 90 days (our current working range).",
+   "reason": "Cold advertising is there to reach people and fill the warm audiences, so repetition is mostly wasted on it. Warm audiences already know you, and that's where repetition turns into trust and action.",
+   "mattersLess": "One target for the whole account is fine while it runs a single audience layer, such as a new account that only runs cold campaigns.",
+   "signs": [
+    {
+     "_key": "k17",
+     "see": "One frequency target for the whole account",
+     "do": "Set one for cold and a higher one for warm."
+    },
+    {
+     "_key": "k18",
+     "see": "Cold frequency rising while penetration stays flat",
+     "do": "Widen reach before you add repetition."
+    },
+    {
+     "_key": "k19",
+     "see": "Warm audiences under 15 impressions a person in 90 days",
+     "do": "Move budget into the warm layer until it reaches its range."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k20",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“Two targets, yes. But to me, a company with a fresh, dated signal is warm whether it clicked or not, and a company that only fits stays cold. Run a signal company in the cold band, under 3 to 5 views in 90 days, and it barely sees you right when it has a reason to buy. So I plan about 5 a month.”"
+    },
+    {
+     "_key": "k21",
+     "name": "Ivars Krutainis",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-ivars-krutainis"
+     },
+     "company": "Otter",
+     "quote": "“I aim for a frequency of 3–5 for cold audiences and 10–15 for warm, and try not to go over 15.”",
+     "note": "Runs it differently"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-call-it-fatigue-only-when",
+  "_type": "rule",
+  "number": 3,
+  "title": "Call it fatigue only when frequency is high and CTR keeps falling",
+  "why": "Either signal on its own isn't fatigue.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-ads-creative"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 2,
+  "slug": {
+   "_type": "slug",
+   "current": "call-it-fatigue-only-when"
+  },
+  "page": {
+   "advises": {
+    "text": "LinkedIn recommends several ads per ad set and shifts delivery toward the ads it predicts will perform best.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Rotate the losers, never the proven winners. A winner keeps running until the data says it's tired.",
+   "reason": "An ad that has run for a while has collected likes, comments and shares, and that social proof lowers its cost per click. Refreshing everything on a calendar throws that away along with the ads that were actually tired.",
+   "mattersLess": "Letting LinkedIn favour the strongest ads is the right default. It already moves delivery away from the weak ones, so most weeks there is nothing to change by hand.",
+   "signs": [
+    {
+     "_key": "k22",
+     "see": "Frequency high, CTR holding",
+     "do": "Leave it. Winners keep the social proof they've built."
+    },
+    {
+     "_key": "k23",
+     "see": "CTR down for one week",
+     "do": "Check again next week."
+    },
+    {
+     "_key": "k24",
+     "see": "Frequency above target, CTR down two to three weeks running",
+     "do": "Replace the weakest ads. Keep the winners."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k25",
+     "name": "AJ Wilcox",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-aj-wilcox"
+     },
+     "company": "B2Linked",
+     "quote": "“Falling CTR is the best indicator of fatigue in my mind. The frequency number is so opaque (you can't actually tell how often the most active audience members are being reached) that I use it as a precursor clue to what's happening, and then confirm with falling CTR. Sometimes CTR starts to fall even when frequency looks OK.”",
+     "note": "Runs it differently"
+    },
+    {
+     "_key": "k26",
+     "name": "Ivars Krutainis",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-ivars-krutainis"
+     },
+     "company": "Otter",
+     "quote": "“Correct. I look for a trend of CTR dropping over several weeks.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-judge-awareness-formats-on-reach-and-cpm",
+  "_type": "rule",
+  "number": 4,
+  "title": "Judge Text, Spotlight and Follower ads on reach and CPM, not CTR",
+  "why": "These formats are there for efficient visibility, so clicks are the wrong measure.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-reach-frequency"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 9,
+  "slug": {
+   "_type": "slug",
+   "current": "judge-awareness-formats-on-reach-and-cpm"
+  },
+  "page": {
+   "advises": {
+    "text": "Campaign Manager reports every format on the same metrics, so you choose which one fits each format's job.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Single image and video carry the message and the ask. Text, Spotlight and Follower ads give low-cost presence under warm audiences, on a 180-day window. They also work as low-cost broad reach.",
+   "reason": "Coverage formats cost a fraction of in-feed per thousand impressions. Judged on CTR they always lose, which is why many accounts switch off the cheapest way to stay visible across a long sales cycle. They're desktop-only and run alongside in-feed, never in place of it.",
+   "mattersLess": "CTR is the right measure for in-feed formats whose job is the click: single image, video, document and carousel ads.",
+   "signs": [
+    {
+     "_key": "k27",
+     "see": "Text ads with a tiny CTR and a high cost per click",
+     "do": "Judge them on CPM, impressions and accounts reached."
+    },
+    {
+     "_key": "k28",
+     "see": "Coverage ads switched off over cost per lead",
+     "do": "Turn them back on under warm audiences, or as low-cost broad reach, and measure them on reach."
+    },
+    {
+     "_key": "k29",
+     "see": "Coverage ads running on 90-day audiences",
+     "do": "Move them to 180-day audiences."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k30",
+     "name": "AJ Wilcox",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-aj-wilcox"
+     },
+     "company": "B2Linked",
+     "quote": "“Very much agree with this. Also judge them by CPC, since they're so cheap. And judge Follower ads by cost per follow if company follows are actually the goal of the ad set.”"
+    },
+    {
+     "_key": "k31",
+     "name": "Ivars Krutainis",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-ivars-krutainis"
+     },
+     "company": "Otter",
+     "quote": "“I use them less and less. They skew the total performance numbers (they lower CPM) but have minimal impact on overall campaign performance.”",
+     "note": "Runs it differently"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-split-campaigns-only-when-a-segment-outperforms",
+  "_type": "rule",
+  "number": 5,
+  "title": "Split campaigns only when one segment clearly outperforms the rest",
+  "why": "A segment earns its own campaign by performing two to three times better or worse than the rest.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 16,
+  "slug": {
+   "_type": "slug",
+   "current": "split-campaigns-only-when-a-segment-outperforms"
+  },
+  "page": {
+   "advises": {
+    "text": "Campaign Manager has built-in A/B tests for comparing audiences, creative and placements.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Retargeting and cold both start broad. A split comes when a gap shows up in the data, not up front.",
+   "reason": "Every split divides the budget and the creative work. Splitting early gives each campaign too little spend to learn from, so the segments that deserve their own budget never show themselves.",
+   "mattersLess": "Once a segment stands out, a LinkedIn A/B test is the clean way to confirm it before you split the budget for good.",
+   "signs": [
+    {
+     "_key": "k32",
+     "see": "One industry or size band is two to three times more efficient",
+     "do": "Give it its own campaign, budget and message."
+    },
+    {
+     "_key": "k33",
+     "see": "Many small campaigns, none with much budget",
+     "do": "Merge them. Split again when a segment stands out."
+    },
+    {
+     "_key": "k34",
+     "see": "The biggest companies on a list take most of the impressions",
+     "do": "Split the list into company-size bands with their own budgets."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k35",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“I'd add a floor before any split. Each part's ad set has to clear 300 member accounts, and its budget still has to pay for about 5 views a person a month. If it can't, keep it in one ad set.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-watch-for-budget-drifting-to-junior-roles",
+  "_type": "rule",
+  "number": 6,
+  "title": "Watch for budget drifting to junior roles",
+  "why": "Junior roles click more and cost less, so a campaign with mixed seniorities slowly shifts its budget to them.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 3,
+  "slug": {
+   "_type": "slug",
+   "current": "watch-for-budget-drifting-to-junior-roles"
+  },
+  "page": {
+   "advises": {
+    "text": "Seniority is a targeting option, and delivery is optimized toward the result you choose, such as clicks or leads.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "When delivery shows the drift, decision-makers get their own campaign and budget, so cheaper clicks can't take it.",
+   "reason": "Junior researchers often click two to three times more than VPs, while VPs cost more per impression. Optimizing for the cheapest result follows whoever acts most, so a mixed audience drifts junior unless you split it.",
+   "mattersLess": "One blended campaign is fine when every seniority in it can buy, or while the budget is too small to split (rule 05).",
+   "signs": [
+    {
+     "_key": "k36",
+     "see": "Junior seniorities take a large share of impressions",
+     "do": "Put decision-makers in their own campaign, with their own budget and bid."
+    },
+    {
+     "_key": "k37",
+     "see": "Cost per lead falling while the junior share rises",
+     "do": "Check lead quality by seniority before calling it a win."
+    },
+    {
+     "_key": "k38",
+     "see": "Lead quality varies by seniority, all in one campaign",
+     "do": "Split senior titles out so their budget is set on purpose."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k39",
+     "name": "AJ Wilcox",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-aj-wilcox"
+     },
+     "company": "B2Linked",
+     "quote": "“Where this is an issue, I like to break seniorities up into separate ad sets. LinkedIn can't cheat you by giving you too many junior folks in an ad set that's set up only for junior roles.”"
+    },
+    {
+     "_key": "k40",
+     "name": "Joshua Stout",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-joshua-stout"
+     },
+     "company": "Beyond The Funnel",
+     "quote": "“Often it's not really a junior position but a practitioner or end-user role. For example, Data Architect and Data Scientist count as Entry in job seniority. ... I tend to segment by practitioners, their leaders (management or upper-level leadership), and then executives.”"
+    },
+    {
+     "_key": "k41",
+     "name": "Ivars Krutainis",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-ivars-krutainis"
+     },
+     "company": "Otter",
+     "quote": "“Seniority isn't a reliable indicator. A specialist can sometimes be quite a senior decision-maker but still be tagged as a specialist. I rely more on specific job titles than on seniority.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-to-exclude-sdrs-exclude-sales",
+  "_type": "rule",
+  "number": 7,
+  "title": "To exclude SDRs, exclude Sales, not Business Development",
+  "why": "Excluding Business Development to remove SDRs removes the decision-makers too.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 10,
+  "slug": {
+   "_type": "slug",
+   "current": "to-exclude-sdrs-exclude-sales"
+  },
+  "page": {
+   "advises": {
+    "text": "Job function is a standard targeting option, and any function can be excluded.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "In our experience, founders, owners, CEOs and presidents of smaller companies sit under Business Development, while SDRs and BDRs sit under Sales. To exclude sales-floor roles, exclude Sales or junior seniorities, never Business Development.",
+   "reason": "At smaller companies, founders, owners and CEOs often sit under Business Development in LinkedIn's job-function data, while SDRs and BDRs sit under Sales. Exclude Business Development to lose the SDRs and you lose the buyer at exactly the companies where the founder signs.",
+   "mattersLess": "Excluding Business Development can be right when your buyers work at large companies, where BD teams aren't part of the deal.",
+   "signs": [
+    {
+     "_key": "k42",
+     "see": "Business Development excluded to keep SDRs out",
+     "do": "Exclude Sales, or junior seniorities in Sales, instead."
+    },
+    {
+     "_key": "k43",
+     "see": "Founder-led companies targeted by job title",
+     "do": "Target the function with senior seniorities instead."
+    },
+    {
+     "_key": "k44",
+     "see": "You sell to sales leaders",
+     "do": "Exclude junior seniorities in Sales, not the whole function, or you remove the buyer."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k45",
+     "name": "AJ Wilcox",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-aj-wilcox"
+     },
+     "company": "B2Linked",
+     "quote": "“This is super important, and LinkedIn doesn't make it clear, so most advertisers get it wrong. If I want to reach CEOs, presidents and owners, I'll use the Business Development job function with CXO seniority. If I want to reach business development folks, I'll use the Business Development function with the lower seniorities. I don't often exclude SDRs specifically, but I like the idea of excluding the Sales function, or even business development titles.”"
+    },
+    {
+     "_key": "k46",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“Put job titles in an ad set and Campaign Manager won't let you exclude seniorities or functions at all. I hit ‘Job Seniorities may not be excluded when Job Titles is included.’ on my own account in September. So it's titles or those exclusions. You don't get both.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-check-who-your-ads-actually-reach",
+  "_type": "rule",
+  "number": 8,
+  "title": "Check every month who your ads actually reach",
+  "why": "Campaign totals don't show who the budget actually reached. LinkedIn's demographics report does.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 17,
+  "slug": {
+   "_type": "slug",
+   "current": "check-who-your-ads-actually-reach"
+  },
+  "page": {
+   "advises": {
+    "text": "The demographics report in Campaign Manager breaks delivery down by seniority, job function, company size and more.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Once a month, check the demographics report by seniority, function and company size, and read the last ten profiles that engaged or became leads.",
+   "reason": "Targeting choices interact. An expansion setting, an overlapping attribute or a missed exclusion can widen delivery without anyone noticing, and a monthly look at the report plus ten real profiles catches it early.",
+   "mattersLess": "If the report matches your targeting month after month, a quick look is enough.",
+   "signs": [
+    {
+     "_key": "k47",
+     "see": "Company sizes or seniorities you didn't plan for",
+     "do": "Fix the setting that widened delivery, then read ten engaged profiles."
+    },
+    {
+     "_key": "k48",
+     "see": "A function or seniority you never targeted shows up",
+     "do": "Check Audience Expansion is set the way you meant, then exclude it."
+    },
+    {
+     "_key": "k49",
+     "see": "Totals look fine, so nobody checks",
+     "do": "Open the demographics report once a month."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k50",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“Open it by company too, not just by seniority and size. From 7 Aug to 5 Sep 2026, one of my ad sets got 49% of its clicks (350 of 708) from people listed at ‘Stealth AI Startup’, a placeholder page people pick instead of a real employer. Strike those out by exact name before you read any CTR.”"
+    },
+    {
+     "_key": "k51",
+     "name": "Ivars Krutainis",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-ivars-krutainis"
+     },
+     "company": "Otter",
+     "quote": "“I check demographics weekly. Monthly is too slow to adjust.”",
+     "note": "Runs it differently"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-count-an-audience-as-warm-only-once-it-can-serve",
+  "_type": "rule",
+  "number": 9,
+  "title": "Count an audience as warm only once it's big enough to serve ads",
+  "why": "Traffic and followers only count once they're in a matched audience big enough to run.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 4,
+  "slug": {
+   "_type": "slug",
+   "current": "count-an-audience-as-warm-only-once-it-can-serve"
+  },
+  "page": {
+   "advises": {
+    "text": "Matched audiences only collect people from the day they're created, and need 300 members before they serve.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Warm-first only applies to audiences that can serve today. A new account behaves like a cold one for its first weeks, even with real traffic. Create every audience on day one, and plan from the matched count, not the rows uploaded.",
+   "reason": "Plenty of plans stall because they assumed warm audiences that existed in principle but not in the ad account. Checking what can actually serve fixes the pacing before any money goes in.",
+   "mattersLess": "Starting with retargeting is right when the account already has matched audiences that can serve, or a CRM list to upload.",
+   "signs": [
+    {
+     "_key": "k52",
+     "see": "A new account with no tag history plans to start with retargeting",
+     "do": "Start cold to build the audience. Add retargeting once it can serve."
+    },
+    {
+     "_key": "k53",
+     "see": "A retargeting audience under about 1,000 members",
+     "do": "Keep feeding it before you spend on it."
+    },
+    {
+     "_key": "k54",
+     "see": "A CRM or email list ready to upload",
+     "do": "Upload it on day one. It's warm right away. Plan from the matched count."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k55",
+     "name": "AJ Wilcox",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-aj-wilcox"
+     },
+     "company": "B2Linked",
+     "quote": "“I don't mind creating an ad set while the audience is still too small, because I know that as soon as it hits 300, LinkedIn can start serving impressions right away. Since it wasn't large enough to run before, there's no danger to reported traffic, followers or spend, because there wouldn't be any.”"
+    },
+    {
+     "_key": "k56",
+     "name": "Joshua Stout",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-joshua-stout"
+     },
+     "company": "Beyond The Funnel",
+     "quote": "“I've always believed you start retargeting as soon as the audience is usable at 300. I want my ads in front of a prospect as early as possible. You can always start at $10 a day and increase the budget as the audience grows.”",
+     "note": "Runs it differently"
+    },
+    {
+     "_key": "k57",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“A CRM or email contact has had a touchpoint with you, so it's not fully cold. But a dated signal beats familiarity. A company that just hired a new VP is warmer than someone you emailed a year ago. So I rank a fresh signal first and the familiar contact second.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-spend-on-warm-audiences-before-cold",
+  "_type": "rule",
+  "number": 10,
+  "title": "Spend on warm audiences before cold ones",
+  "why": "A colder audience earns budget once the warmer ones reach their frequency range.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 11,
+  "slug": {
+   "_type": "slug",
+   "current": "spend-on-warm-audiences-before-cold"
+  },
+  "page": {
+   "advises": {
+    "text": "Budget is set per campaign, so the order you fund audiences in is up to you.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Order: your own data first (CRM, past leads, site visitors, engaged accounts), then in-market search, then account lists built from signals, then broad targeting.",
+   "reason": "Unused first-party data is the cheapest audience you'll ever have. Spreading a small budget across many cold campaigns gives each one too little to show anything. Cold still runs from month one in most accounts, because it builds the audience everything else draws from.",
+   "mattersLess": "Funding cold first is right on a new account, before any warm audience can serve (rule 09).",
+   "signs": [
+    {
+     "_key": "k58",
+     "see": "Most budget on cold while warm sits underused",
+     "do": "Fund warm up to its frequency target first."
+    },
+    {
+     "_key": "k59",
+     "see": "More campaigns than the budget can support",
+     "do": "Run fewer. About $20 a day per campaign is the floor for one to learn."
+    },
+    {
+     "_key": "k60",
+     "see": "Warm audiences at their frequency range",
+     "do": "Open the next colder audience, in order."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k61",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“Agree, fill warm first. When warm is full I add a second signal list from the same market, and the cold fit-only list carries whatever's left. I never widen a signal list just for size.”"
+    },
+    {
+     "_key": "k62",
+     "name": "Ivars Krutainis",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-ivars-krutainis"
+     },
+     "company": "Otter",
+     "quote": "“I'd tend to disagree, as I get most of my results from cold audiences. Warm audiences get saturated very quickly for most clients, so the opportunity is in cold. I rarely spend more than 20–25% on retargeting and warm audiences.”",
+     "note": "Runs it differently"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-start-lead-gen-forms-early",
+  "_type": "rule",
+  "number": 11,
+  "title": "Start Lead Gen Forms early, then narrow them to recent engagers",
+  "why": "Open the conversion layer as soon as a warm audience can serve, then tighten it to recent engagers.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 18,
+  "slug": {
+   "_type": "slug",
+   "current": "start-lead-gen-forms-early"
+  },
+  "page": {
+   "advises": {
+    "text": "Lead Gen Forms pre-fill members' profile details, which makes them the easiest way to convert on LinkedIn.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Start the form on the 90-day audience. Once the 30-day audience can serve, the form moves there and the 90-day audience gets nurture and trust content.",
+   "reason": "Opening the conversion layer early starts offer testing sooner. Narrowing it later keeps the ask on people whose interest is recent.",
+   "mattersLess": "A form to a cold audience can work for a light offer people want straight away, like a report or a checklist.",
+   "signs": [
+    {
+     "_key": "k63",
+     "see": "Demo or sales-call offers running to cold audiences",
+     "do": "Move the demo to warm. Give cold something lighter."
+    },
+    {
+     "_key": "k64",
+     "see": "Forms held back for a calendar date",
+     "do": "Launch on the first warm audience that can serve: day one with a CRM list, usually weeks 4 to 8 on a cold start. Sync the form to the CRM the day it launches."
+    },
+    {
+     "_key": "k65",
+     "see": "One form running to the whole warm audience",
+     "do": "Start on the 90-day audience, then move it to 30-day engagers once that can serve."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k66",
+     "name": "AJ Wilcox",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-aj-wilcox"
+     },
+     "company": "B2Linked",
+     "quote": "“So good! Especially with small budgets, I usually start with any retargeting audiences I can get my hands on, since we really need a large enough audience. But once that audience has grown and is actively serving, we know that someone who interacted with our ads yesterday is more likely to re-engage than someone who interacted 350 days ago. It's hard to remember to actually do, but it's such good practice to go back in and tighten the time window, so retargeting audiences hold only the most recent engagers, the people who can be expected to remember interacting with the brand.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-report-exposure-influence-attribution-separately",
+  "_type": "rule",
+  "number": 12,
+  "title": "Report exposure, influence and attribution separately",
+  "why": "Exposed, influenced and attributed are three different claims.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-signal-to-sales"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 5,
+  "slug": {
+   "_type": "slug",
+   "current": "report-exposure-influence-attribution-separately"
+  },
+  "page": {
+   "advises": {
+    "text": "Conversion tracking credits conversions inside the click and view windows you set. LinkedIn also offers revenue attribution reporting for CRM-connected accounts.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Use the lowest word the evidence supports. Leave out renewals and existing customers before claiming influence on new business. Report the three as separate numbers, never added together.",
+   "reason": "B2B deals take longer than any click window, so last touch undercounts LinkedIn. Overclaiming wins one meeting and loses the next. A smaller number you can defend lasts longer.",
+   "mattersLess": "Conversion windows are the right tool for comparing campaigns with each other, and for short cycles where the deal closes inside the window.",
+   "signs": [
+    {
+     "_key": "k67",
+     "see": "An account saw your ads",
+     "do": "Report it as exposed."
+    },
+    {
+     "_key": "k68",
+     "see": "Months of impressions before the deal was created",
+     "do": "Report it as influenced, with the dates beside the deal date. Leave renewals and existing customers out."
+    },
+    {
+     "_key": "k69",
+     "see": "A tracked click or conversion ties LinkedIn to the deal",
+     "do": "Report it as attributed, on its own line."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k70",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“If you want to say caused, hold out about 100 companies with a signal that get no ads and no messages all quarter. Report meetings as two counts with both group sizes, never a percentage, because a percentage on half a meeting means nothing.”"
+    },
+    {
+     "_key": "k71",
+     "name": "Ivars Krutainis",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-ivars-krutainis"
+     },
+     "company": "Otter",
+     "quote": "“Yes, but in practice every client has their own take on what counts as influenced.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-give-sales-a-weekly-ranked-list",
+  "_type": "rule",
+  "number": 13,
+  "title": "Give sales a weekly ranked list of warm accounts, checked against the CRM",
+  "why": "Hot accounts, ranked, with who engaged and where they sit in the CRM. Never a raw visitor feed.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-signal-to-sales"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 12,
+  "slug": {
+   "_type": "slug",
+   "current": "give-sales-a-weekly-ranked-list"
+  },
+  "page": {
+   "advises": {
+    "text": "The Company Engagement Report in Campaign Manager shows which companies are engaging with your ads, and how much.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Filter to ICP fit, then rank by how many people and roles engaged over time. Check the CRM before sales touches anything. Open deals go to their owner, customers to their account manager, new accounts to SDRs.",
+   "reason": "Outreach on a single signal reaches good accounts at the wrong moment, and an SDR pitching an account that's mid-deal embarrasses everyone. Context turns a signal into a reason to reach out.",
+   "mattersLess": "For a short account list with one owner, the Company Engagement Report can be enough on its own to brief sales.",
+   "signs": [
+    {
+     "_key": "k72",
+     "see": "One visit, or one intent spike",
+     "do": "Watch list, until more signals follow."
+    },
+    {
+     "_key": "k73",
+     "see": "Two or more people in different roles at one account, back for pricing or case studies",
+     "do": "Top of this week's list, with who engaged and what they read."
+    },
+    {
+     "_key": "k74",
+     "see": "A warm account with an open deal",
+     "do": "Send it to the deal owner. Keep SDRs off it."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k75",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“Count companies on your list, not clicks or people. My default line is 10 or more paid engagements in 30 days, or 3 plus a second signal, and a company with an open deal goes to the deal owner. When someone writes, they name the public signal, never the ad, the click or the visit.”"
+    },
+    {
+     "_key": "k76",
+     "name": "Ivars Krutainis",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-ivars-krutainis"
+     },
+     "company": "Otter",
+     "quote": "“Yes, big fan. We report the list of engaged companies weekly for sales to follow up.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-grow-a-signal-list-from-the-same-market",
+  "_type": "rule",
+  "number": 14,
+  "title": "Grow a signal list by adding signal lists from the same market",
+  "why": "LinkedIn's audience size guidance fits audiences built from filters. A list built from buying signals starts smaller and grows a different way.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-bogdan-liutic"
+  },
+  "featured": false,
+  "cover": 19,
+  "slug": {
+   "_type": "slug",
+   "current": "grow-a-signal-list-from-the-same-market"
+  },
+  "page": {
+   "advises": {
+    "text": "An ad set needs at least 300 members to run. To drive results, LinkedIn recommends larger audiences: 50,000 members, and 300,000 for Sponsored Content.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Those sizes fit audiences built from targeting filters. A signal list starts smaller, around 1,000 companies and 5,000 to 10,000 people. Grow it by adding signal lists from the same market, and leave fit-only companies in the cold layer. Never widen a signal list just to hit a size.",
+   "reason": "A signal list is small because it's specific: these companies have a reason to buy now. Pad it with companies that only fit, and delivery spreads across them while the signal companies see you less.",
+   "mattersLess": "For broad demand generation built from targeting filters, LinkedIn's sizes are a fair target.",
+   "signs": [
+    {
+     "_key": "k77",
+     "see": "A signal list well under LinkedIn's suggested size",
+     "do": "Run it once it clears 300 members. Add signal lists from the same market to grow it."
+    },
+    {
+     "_key": "k78",
+     "see": "A signal list padded with fit-only companies to reach a size",
+     "do": "Move them out to the cold layer."
+    },
+    {
+     "_key": "k79",
+     "see": "A market too small to fill even one signal list",
+     "do": "Check the market is big enough for paid LinkedIn before you build more lists."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k80",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“My lists start at 1,000 companies, and 10,000 is better. I get to LinkedIn's number by adding signal lists from the same market. My floor is the market: at least 10,000 decision-makers and deals worth $10,000 or more.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "rule-judge-cold-ads-by-the-warm-audience-they-build",
+  "_type": "rule",
+  "number": 15,
+  "title": "Judge cold ads by the warm audience they build",
+  "why": "A cold ad's real output is the people who engage with it, because they become your retargeting audience. Leads from cold are a bonus.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-ads-creative"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "featured": false,
+  "cover": 6,
+  "slug": {
+   "_type": "slug",
+   "current": "judge-cold-ads-by-the-warm-audience-they-build"
+  },
+  "page": {
+   "advises": {
+    "text": "Campaign Manager reports cold and retargeting campaigns on the same metrics, and lets you build retargeting audiences from video viewers and ad engagers.",
+    "source": "LinkedIn Campaign Manager"
+   },
+   "adds": "Measure cold in-feed on reach into your target accounts and on cost per new engager or video viewer. Build cold creative to earn that engagement, with video and document ads people can watch or read without leaving the feed.",
+   "reason": "People rarely convert the first time they see a brand, so a cold campaign judged on leads looks like a failure and gets cut. When it goes, the retargeting audiences it was filling stop growing, and a few weeks later the warm campaigns run out of people.",
+   "mattersLess": "Cost per lead is a fair verdict for a cold campaign built to convert on first contact, like a light content offer on a Lead Gen Form (rule 11).",
+   "signs": [
+    {
+     "_key": "k81",
+     "see": "A cold campaign paused for a high cost per lead",
+     "do": "Count the engagers, viewers and engaged accounts it added before you write it off."
+    },
+    {
+     "_key": "k82",
+     "see": "Cold ads asking for a form fill or a demo",
+     "do": "Lead with something to watch or read. Keep the ask for warm (rule 11)."
+    },
+    {
+     "_key": "k83",
+     "see": "90-day engager and viewer audiences stopped growing",
+     "do": "Refresh the cold creative or open a new segment."
+    }
+   ],
+   "voices": [
+    {
+     "_key": "k84",
+     "name": "AJ Wilcox",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-aj-wilcox"
+     },
+     "company": "B2Linked",
+     "quote": "“Love this concept! One of my skills is going to play into this. I measure cold ad sets by very different standards than my warm stages. For cold, I calculate a metric called Cost Per Retargetable Member (CPRM), which measures how much it costs per member of my retargeting audience.”"
+    },
+    {
+     "_key": "k85",
+     "name": "Bogdan Liutic",
+     "author": {
+      "_type": "reference",
+      "_ref": "author-bogdan-liutic"
+     },
+     "company": "CR8",
+     "quote": "“Agree, with one catch. One of my ad sets ran on a company list built from engagement data plus LinkedIn's own engaged-companies segment, and it got 49% of its clicks from people listed at ‘Stealth AI Startup’. So strip placeholder pages before an engager audience becomes your retargeting list.”"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "skill-no-deal-warm-leads-finder",
+  "_type": "skill",
+  "title": "No-Deal Warm Leads Finder",
+  "description": "Finds companies that engage with your LinkedIn ads or website but are not customers and have no open deal, so sales knows who to call. Screens out agencies, schools and noise, and ranks the rest in tiers.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-signal-to-sales"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 1,
+  "cover": 4,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "no-deal-warm-leads-finder"
+  },
+  "connectors": [
+   {
+    "_key": "k86",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k87",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k88",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn Companies export (last 90 days). Website visitors-by-company export from your visitor identification tool (optional, recommended). CRM companies and deals exports.",
+     "You get back: A ranked top-20 list in tiers (companies engaged on both channels first), a short 'check by hand' list, and the full list as a CSV when it is long."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k89",
+      "label": "Your exports",
+      "text": "Load the No-Deal Warm Leads Finder skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/no-deal-warm-leads-finder and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k90",
+      "label": "DemandSense",
+      "text": "Load the No-Deal Warm Leads Finder skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/no-deal-warm-leads-finder and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/no-deal-warm-leads-finder"
+   }
+  }
+ },
+ {
+  "_id": "skill-silent-watchers-finder",
+  "_type": "skill",
+  "title": "Silent Watchers Finder",
+  "description": "Finds companies that saw your LinkedIn ads in each of the last three months but never clicked, engaged, visited the site or entered the CRM, so you can test a different message or suppress them.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-reach-frequency"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 2,
+  "cover": 7,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "silent-watchers-finder"
+  },
+  "connectors": [
+   {
+    "_key": "k91",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k92",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k93",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn Companies exports for the last 30, 60 and 90 days, all taken on the same day with no filters. Website visitors export and CRM companies export (optional).",
+     "You get back: A top-20 table with impressions per month and a trend (rising, steady, fading), a 'check by hand' list, a suggested next step, and the full list as a CSV."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k94",
+      "label": "Your exports",
+      "text": "Load the Silent Watchers Finder skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/silent-watchers-finder and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k95",
+      "label": "DemandSense",
+      "text": "Load the Silent Watchers Finder skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/silent-watchers-finder and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/silent-watchers-finder"
+   }
+  }
+ },
+ {
+  "_id": "skill-account-health-check",
+  "_type": "skill",
+  "title": "Account Health Check",
+  "description": "Audits your marketing account and lists what to fix first: data freshness, delivery, structure, results, tracking and the link between engaged companies and the CRM.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 3,
+  "cover": 10,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "account-health-check"
+  },
+  "connectors": [
+   {
+    "_key": "k96",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k97",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k98",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn campaign exports (last 30 days, the 30 days before, and 90 days if possible). Website sessions export by source, medium and campaign. CRM companies and deals exports. LinkedIn Companies export.",
+     "You get back: A prioritised list of at most 10 items (P1 fix now, P2 this month, P3 tidy-up), each with evidence, the fix and the expected impact, plus what could not be checked."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k99",
+      "label": "Your exports",
+      "text": "Load the Account Health Check skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/account-health-check and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k100",
+      "label": "DemandSense",
+      "text": "Load the Account Health Check skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/account-health-check and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/account-health-check"
+   }
+  }
+ },
+ {
+  "_id": "skill-crm-data-health-check",
+  "_type": "skill",
+  "title": "CRM Data Health Check",
+  "description": "Checks whether your CRM pipeline data can be trusted: missing or contradictory fields, deal hygiene, win rate by source and industry, and how win rate and sales speed have trended.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-signal-to-sales"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 4,
+  "cover": 13,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "crm-data-health-check"
+  },
+  "connectors": [
+   {
+    "_key": "k101",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k102",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: CRM companies export and CRM deals export (HubSpot, Salesforce, Attio or similar), ideally 12 months or more of history.",
+     "You get back: A scorecard of checks (OK, watch, broken, can't check) with counts, the five most important problems with fixes, win rate by source and industry, and a monthly win-rate trend."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k103",
+      "label": "Your exports",
+      "text": "Load the CRM Data Health Check skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/crm-data-health-check and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k104",
+      "label": "DemandSense",
+      "text": "Load the CRM Data Health Check skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/crm-data-health-check and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/crm-data-health-check"
+   }
+  }
+ },
+ {
+  "_id": "skill-whos-looking-at-your-buying-pages",
+  "_type": "skill",
+  "title": "Who's Looking at Your Buying Pages",
+  "description": "Shows who recently visited your high-intent pages (pricing, demo, contact, trial), at the level your visitor tool allows, ranked by seniority and checked against the CRM, with a light first step for the top few.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-signal-to-sales"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 5,
+  "cover": 16,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "whos-looking-at-your-buying-pages"
+  },
+  "connectors": [
+   {
+    "_key": "k105",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k106",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: Website visitor export from an identification tool (last 14 days, person or company level). CRM companies and deals exports. Your website address and the buying-page URLs you care about.",
+     "You get back: A table of plausible buyers (title, company, pages viewed, latest visit, CRM status), poor-fit visitors in one line each, counts, and first steps for the top few."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k107",
+      "label": "Your exports",
+      "text": "Load the Who's Looking at Your Buying Pages skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/whos-looking-at-your-buying-pages and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k108",
+      "label": "DemandSense",
+      "text": "Load the Who's Looking at Your Buying Pages skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/whos-looking-at-your-buying-pages and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/whos-looking-at-your-buying-pages"
+   }
+  }
+ },
+ {
+  "_id": "skill-creative-decay-watchlist",
+  "_type": "skill",
+  "title": "Creative Decay Watchlist",
+  "description": "Finds LinkedIn ads whose click-through rate has slid for several weeks, tells you whether the ad or the whole campaign is the cause, and lists ads that improved with age and should be kept.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-ads-creative"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 6,
+  "cover": 19,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "creative-decay-watchlist"
+  },
+  "connectors": [
+   {
+    "_key": "k109",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k110",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [
+   {
+    "_key": "k111",
+    "_type": "reference",
+    "_ref": "rule-call-it-fatigue-only-when"
+   }
+  ],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn Ad performance export, last 120 days, daily breakdown, with format and video columns. Each campaign's average frequency over 90 days from LinkedIn's campaign report.",
+     "You get back: Summary counts that add up, a coverage-format table, flagged, watchlist and keep lists with the week the decline started, and a CSV for long 'too little data' lists."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k112",
+      "label": "Your exports",
+      "text": "Load the Creative Decay Watchlist skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/creative-decay-watchlist and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k113",
+      "label": "DemandSense",
+      "text": "Load the Creative Decay Watchlist skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/creative-decay-watchlist and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/creative-decay-watchlist"
+   }
+  }
+ },
+ {
+  "_id": "skill-video-quality-check",
+  "_type": "skill",
+  "title": "Video Quality Check",
+  "description": "Ranks your LinkedIn video campaigns by how many viewers actually finish the video and by cost per completed view, and flags unusually high rates for checking.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-ads-creative"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 7,
+  "cover": 2,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "video-quality-check"
+  },
+  "connectors": [
+   {
+    "_key": "k114",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k115",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad set performance export (last 90 days) with the video columns: views, completions, impressions, clicks, spend. Optional: ad-level export.",
+     "You get back: A ranking by completion rate per view and by cost per completed view, odd rates separated, the best and worst ad per campaign, and capped recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k116",
+      "label": "Your exports",
+      "text": "Load the Video Quality Check skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/video-quality-check and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k117",
+      "label": "DemandSense",
+      "text": "Load the Video Quality Check skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/video-quality-check and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/video-quality-check"
+   }
+  }
+ },
+ {
+  "_id": "skill-waste-budget-detection",
+  "_type": "skill",
+  "title": "Waste Budget Detection",
+  "description": "Finds LinkedIn campaigns that spent money in the last 30 days without producing what they were built for, and says what to pause or fix first.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 8,
+  "cover": 5,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "waste-budget-detection"
+  },
+  "connectors": [
+   {
+    "_key": "k118",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k119",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad set exports for the last 30 days and the 30 days before: status, objective, budget, spend, clicks, leads, conversions.",
+     "You get back: Live waste candidates ranked by spend (pause or fix), ad sets already stopped, too new or too thin, a tracking check, and campaigns that are not built to produce leads."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k120",
+      "label": "Your exports",
+      "text": "Load the Waste Budget Detection skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/waste-budget-detection and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k121",
+      "label": "DemandSense",
+      "text": "Load the Waste Budget Detection skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/waste-budget-detection and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/waste-budget-detection"
+   }
+  }
+ },
+ {
+  "_id": "skill-campaign-group-scoreboard",
+  "_type": "skill",
+  "title": "Campaign Group Scoreboard",
+  "description": "Ranks your LinkedIn campaign groups by efficiency and shows the two best campaigns in each group.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 9,
+  "cover": 8,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "campaign-group-scoreboard"
+  },
+  "connectors": [
+   {
+    "_key": "k122",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k123",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad set performance export for the date range, with the campaign group, ad set, status, spend, clicks, engagement and leads.",
+     "You get back: A scoreboard of groups (cost per lead and cost per click ranked separately), each group's share of spend and leads, top two campaigns per group, and observations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k124",
+      "label": "Your exports",
+      "text": "Load the Campaign Group Scoreboard skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/campaign-group-scoreboard and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k125",
+      "label": "DemandSense",
+      "text": "Load the Campaign Group Scoreboard skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/campaign-group-scoreboard and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/campaign-group-scoreboard"
+   }
+  }
+ },
+ {
+  "_id": "skill-market-benchmark-comparison",
+  "_type": "skill",
+  "title": "Market Benchmark Comparison",
+  "description": "Compares your LinkedIn campaigns with a published market benchmark and shows where you are strong and where you need to improve, campaign group by campaign group.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 10,
+  "cover": 11,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "market-benchmark-comparison"
+  },
+  "connectors": [
+   {
+    "_key": "k126",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k127",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad set performance export (last 90 days) and your industry. The assistant finds and names a published benchmark, or you can supply one. Optional: the previous period.",
+     "You get back: The benchmark source and how well it fits, a per-group comparison table (ahead, near, behind), strengths and gaps, and capped recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k128",
+      "label": "Your exports",
+      "text": "Load the Market Benchmark Comparison skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/market-benchmark-comparison and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k129",
+      "label": "DemandSense",
+      "text": "Load the Market Benchmark Comparison skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/market-benchmark-comparison and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/market-benchmark-comparison"
+   }
+  }
+ },
+ {
+  "_id": "skill-manager-monthly-report",
+  "_type": "skill",
+  "title": "Manager Monthly Report",
+  "description": "Prepares a monthly LinkedIn performance report with what to optimise, what to stop and how you compare with the market.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 11,
+  "cover": 14,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "manager-monthly-report"
+  },
+  "connectors": [
+   {
+    "_key": "k130",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k131",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k132",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad set exports for the month and the previous month, and the ad performance export for the month. Optional: CRM export and a benchmark source.",
+     "You get back: A report with headline, totals against last month, campaigns by funnel job, best and weakest ads, up to six optimisations, a stop list, a benchmark section and next-month actions."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k133",
+      "label": "Your exports",
+      "text": "Load the Manager Monthly Report skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/manager-monthly-report and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k134",
+      "label": "DemandSense",
+      "text": "Load the Manager Monthly Report skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/manager-monthly-report and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/manager-monthly-report"
+   }
+  }
+ },
+ {
+  "_id": "skill-pausing-low-performing-ads",
+  "_type": "skill",
+  "title": "Pausing Low-Performing Ads",
+  "description": "Analyses the ads of one LinkedIn campaign, finds the best ad and the ads worth stopping, and shows the statistical basis for each call.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-ads-creative"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 12,
+  "cover": 17,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "pausing-low-performing-ads"
+  },
+  "connectors": [
+   {
+    "_key": "k135",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k136",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad performance export for one campaign (default last month or 90 days): impressions, clicks, spend, leads or conversions.",
+     "You get back: The best performer, stop candidates with the significance test, ads to keep, ads with not enough data, and what more data would settle them."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k137",
+      "label": "Your exports",
+      "text": "Load the Pausing Low-Performing Ads skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/pausing-low-performing-ads and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k138",
+      "label": "DemandSense",
+      "text": "Load the Pausing Low-Performing Ads skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/pausing-low-performing-ads and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/pausing-low-performing-ads"
+   }
+  }
+ },
+ {
+  "_id": "skill-weekly-reporting",
+  "_type": "skill",
+  "title": "Weekly Reporting",
+  "description": "Prepares a weekly breakdown by campaign across LinkedIn, Google Ads and Meta, with week-over-week changes and the main drivers.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 13,
+  "cover": 20,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "weekly-reporting"
+  },
+  "connectors": [
+   {
+    "_key": "k139",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: Daily campaign exports for each platform for the last three weeks (spend, impressions, clicks, conversions or leads, currency). Optional: website sessions export.",
+     "You get back: Per-platform weekly tables, the drivers of the biggest changes (budget, price or response), flags such as tracking drops, and up to five next steps."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k140",
+      "label": "Your exports",
+      "text": "Load the Weekly Reporting skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/weekly-reporting and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k141",
+      "label": "DemandSense",
+      "text": "Load the Weekly Reporting skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/weekly-reporting and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/weekly-reporting"
+   }
+  }
+ },
+ {
+  "_id": "skill-capping-recommendation",
+  "_type": "skill",
+  "title": "Capping Recommendation",
+  "description": "Shows how many times your ads reach the same companies and recommends impression caps and an exclusion list to avoid overexposure.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-reach-frequency"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 14,
+  "cover": 3,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "capping-recommendation"
+  },
+  "connectors": [
+   {
+    "_key": "k142",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k143",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [
+   {
+    "_key": "k144",
+    "_type": "reference",
+    "_ref": "rule-read-frequency-and-penetration-together"
+   }
+  ],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn Companies export (last 90 days) and the ad set export with reach, frequency and audience penetration for the same period.",
+     "You get back: Exposure distribution, response by exposure band, recommended caps with the share of impressions they would redirect, an over-exposed company list (CSV) and how to apply it."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k145",
+      "label": "Your exports",
+      "text": "Load the Capping Recommendation skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/capping-recommendation and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k146",
+      "label": "DemandSense",
+      "text": "Load the Capping Recommendation skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/capping-recommendation and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/capping-recommendation"
+   }
+  }
+ },
+ {
+  "_id": "skill-pacing-check-against-schedule",
+  "_type": "skill",
+  "title": "Pacing Check Against Schedule",
+  "description": "Checks whether each LinkedIn campaign is spending in line with its daily budget and schedule, and says what to do about the ones that are not.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 15,
+  "cover": 6,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "pacing-check-against-schedule"
+  },
+  "connectors": [
+   {
+    "_key": "k147",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k148",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad set export (status, start date, daily budget, spend, impressions) and a daily breakdown export so delivery days can be counted.",
+     "You get back: A pacing table (expected against actual spend, ratio, status, recommendation), the three biggest gaps in money, dark and paused campaigns."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k149",
+      "label": "Your exports",
+      "text": "Load the Pacing Check Against Schedule skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/pacing-check-against-schedule and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k150",
+      "label": "DemandSense",
+      "text": "Load the Pacing Check Against Schedule skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/pacing-check-against-schedule and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/pacing-check-against-schedule"
+   }
+  }
+ },
+ {
+  "_id": "skill-budget-re-allocation",
+  "_type": "skill",
+  "title": "Budget Re-allocation",
+  "description": "Builds a plan to move LinkedIn budget from ended or paused campaigns to the campaigns that earn it.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 16,
+  "cover": 9,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "budget-re-allocation"
+  },
+  "connectors": [
+   {
+    "_key": "k151",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k152",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad set export for the last 90 to 180 days with all statuses, budgets, spend and results. Your goal and, if fixed, your monthly budget.",
+     "You get back: Ended campaigns and the budget they free, a reallocation plan (from, to, amount, estimated impact, risk, confirming number), where not to add money, and a two-step sequence."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k153",
+      "label": "Your exports",
+      "text": "Load the Budget Re-allocation skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/budget-re-allocation and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k154",
+      "label": "DemandSense",
+      "text": "Load the Budget Re-allocation skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/budget-re-allocation and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/budget-re-allocation"
+   }
+  }
+ },
+ {
+  "_id": "skill-account-engagement",
+  "_type": "skill",
+  "title": "Account Engagement",
+  "description": "Shows which companies engage with your LinkedIn ads and website and how that engagement ties to the CRM pipeline: warm accounts, engaged accounts in pipeline, and the gap list of engaged companies missing from the CRM.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-signal-to-sales"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 17,
+  "cover": 12,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "account-engagement"
+  },
+  "connectors": [
+   {
+    "_key": "k155",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k156",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k157",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn Companies export (last 90 days). Website visitors-by-company export. CRM companies and deals exports.",
+     "You get back: Counts by how companies engaged and by pipeline bucket, a top-25 table, the gap list, customers shown separately, firmographics where a file has them, and recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k158",
+      "label": "Your exports",
+      "text": "Load the Account Engagement skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/account-engagement and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k159",
+      "label": "DemandSense",
+      "text": "Load the Account Engagement skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/account-engagement and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/account-engagement"
+   }
+  }
+ },
+ {
+  "_id": "skill-ad-hoc-query",
+  "_type": "skill",
+  "title": "Ad-Hoc Query",
+  "description": "Answers open-ended ad performance questions: how did we do, what changed, trends, campaign breakdowns, budget pacing, video and lead form completion, campaign groups, pipeline and win rate.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 18,
+  "cover": 15,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "ad-hoc-query"
+  },
+  "connectors": [
+   {
+    "_key": "k160",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k161",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k162",
+    "_type": "reference",
+    "_ref": "connector-google-ads"
+   },
+   {
+    "_key": "k163",
+    "_type": "reference",
+    "_ref": "connector-meta-ads"
+   },
+   {
+    "_key": "k164",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: The platform exports the question needs (LinkedIn, Google Ads, Meta; daily or campaign level) and, for pipeline questions, a CRM deals export.",
+     "You get back: The answer first with the window and source columns, a table where useful, what it means, and what to check next."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k165",
+      "label": "Your exports",
+      "text": "Load the Ad-Hoc Query skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/ad-hoc-query and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k166",
+      "label": "DemandSense",
+      "text": "Load the Ad-Hoc Query skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/ad-hoc-query and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/ad-hoc-query"
+   }
+  }
+ },
+ {
+  "_id": "skill-benchmark-comparison",
+  "_type": "skill",
+  "title": "Benchmark Comparison",
+  "description": "Places individual LinkedIn metrics (CTR, CPC, CPM, cost per lead and more) inside a published benchmark range, using the comparison group that fits your account.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 19,
+  "cover": 18,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "benchmark-comparison"
+  },
+  "connectors": [
+   {
+    "_key": "k167",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k168",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad set export (last 90 days), your industry and the metrics you ask about. A benchmark source is found and named by the assistant, or you supply one.",
+     "You get back: The benchmark source and fit, your account profile, a table of metric against benchmark with the position read by direction, both time windows, and capped recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k169",
+      "label": "Your exports",
+      "text": "Load the Benchmark Comparison skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/benchmark-comparison and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k170",
+      "label": "DemandSense",
+      "text": "Load the Benchmark Comparison skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/benchmark-comparison and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/benchmark-comparison"
+   }
+  }
+ },
+ {
+  "_id": "skill-linkedin-abm-account-penetration",
+  "_type": "skill",
+  "title": "LinkedIn ABM Account Penetration",
+  "description": "Shows which of your target accounts engage with your LinkedIn ads, at what level, whether they are in the CRM, and which show no recorded activity.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-reach-frequency"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 20,
+  "cover": 1,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "linkedin-abm-account-penetration"
+  },
+  "connectors": [
+   {
+    "_key": "k171",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k172",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k173",
+    "_type": "reference",
+    "_ref": "connector-csv-export"
+   },
+   {
+    "_key": "k174",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: Your target-account list (CSV). LinkedIn Companies export (last 90 days). Optional: CRM companies export and the ad set export for audience penetration.",
+     "You get back: Match rates, accounts engaging by level (not a reach percentage), paid against organic, coverage gaps, CRM status, audience penetration per ad set, and recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k175",
+      "label": "Your exports",
+      "text": "Load the LinkedIn ABM Account Penetration skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-abm-account-penetration and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k176",
+      "label": "DemandSense",
+      "text": "Load the LinkedIn ABM Account Penetration skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-abm-account-penetration and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-abm-account-penetration"
+   }
+  }
+ },
+ {
+  "_id": "skill-linkedin-audience-demographics",
+  "_type": "skill",
+  "title": "LinkedIn Audience Demographics",
+  "description": "Describes who your LinkedIn ads reach and who responds, by seniority, job function, job title, industry, company size and location.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 21,
+  "cover": 4,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "linkedin-audience-demographics"
+  },
+  "connectors": [
+   {
+    "_key": "k177",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k178",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [
+   {
+    "_key": "k179",
+    "_type": "reference",
+    "_ref": "rule-check-who-your-ads-actually-reach"
+   }
+  ],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: The Campaign Manager Demographics report for the period (one file with ten tables). For response comparisons, an export limited to in-feed campaigns.",
+     "You get back: Shares and response indexes by segment, who you reach, who responds more or less than their share, a campaign-mix caveat, and capped recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k180",
+      "label": "Your exports",
+      "text": "Load the LinkedIn Audience Demographics skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-audience-demographics and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k181",
+      "label": "DemandSense",
+      "text": "Load the LinkedIn Audience Demographics skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-audience-demographics and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-audience-demographics"
+   }
+  }
+ },
+ {
+  "_id": "skill-linkedin-benchmark-context",
+  "_type": "skill",
+  "title": "LinkedIn Benchmark Context",
+  "description": "Compares your LinkedIn performance with your own history first and with market benchmarks second.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 22,
+  "cover": 7,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "linkedin-benchmark-context"
+  },
+  "connectors": [
+   {
+    "_key": "k182",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k183",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: Monthly LinkedIn ad set exports for the last 3 to 6 months, your industry, and optionally a benchmark source.",
+     "You get back: Your latest month against the earlier average, best and worst month, cost per lead two ways, a market comparison table, a plain-words verdict and capped recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k184",
+      "label": "Your exports",
+      "text": "Load the LinkedIn Benchmark Context skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-benchmark-context and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k185",
+      "label": "DemandSense",
+      "text": "Load the LinkedIn Benchmark Context skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-benchmark-context and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-benchmark-context"
+   }
+  }
+ },
+ {
+  "_id": "skill-linkedin-creative-performance",
+  "_type": "skill",
+  "title": "LinkedIn Creative Performance",
+  "description": "Ranks your LinkedIn ads by the measure that fits their job, including video completion and lead form completion, and shows pause candidates checked inside each campaign.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-ads-creative"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 23,
+  "cover": 10,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "linkedin-creative-performance"
+  },
+  "connectors": [
+   {
+    "_key": "k186",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k187",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn Ad performance export (default last 30 days, 90 for video and lead forms) with ad ID, campaign, spend, impressions, clicks, leads, lead forms opened and video columns.",
+     "You get back: A ranking table, video and lead form tables when asked, pause candidates with per-campaign checks and counts, and capped recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k188",
+      "label": "Your exports",
+      "text": "Load the LinkedIn Creative Performance skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-creative-performance and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k189",
+      "label": "DemandSense",
+      "text": "Load the LinkedIn Creative Performance skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-creative-performance and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-creative-performance"
+   }
+  }
+ },
+ {
+  "_id": "skill-linkedin-performance-kpis",
+  "_type": "skill",
+  "title": "LinkedIn Performance KPIs",
+  "description": "Reports LinkedIn spend, CTR, CPC, CPM, cost per lead and more for a period against the previous period, broken down by campaign, group, objective, format or status, with pacing.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 24,
+  "cover": 13,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "linkedin-performance-kpis"
+  },
+  "connectors": [
+   {
+    "_key": "k190",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k191",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: LinkedIn ad set exports for the period and the previous period of the same length. A daily export for trends and pacing.",
+     "You get back: A KPI table with changes, cost per lead account-wide and on lead generation only, breakdown tables, where the money went, and capped recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k192",
+      "label": "Your exports",
+      "text": "Load the LinkedIn Performance KPIs skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-performance-kpis and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k193",
+      "label": "DemandSense",
+      "text": "Load the LinkedIn Performance KPIs skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-performance-kpis and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/linkedin-performance-kpis"
+   }
+  }
+ },
+ {
+  "_id": "skill-multichannel-performance-rollup",
+  "_type": "skill",
+  "title": "Multichannel Performance Rollup",
+  "description": "Combines the exports of several ad platforms into one honest view: spend and results per channel, what can be added together and what cannot, and paid spend next to CRM pipeline.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 25,
+  "cover": 16,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "multichannel-performance-rollup"
+  },
+  "connectors": [
+   {
+    "_key": "k194",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k195",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k196",
+    "_type": "reference",
+    "_ref": "connector-google-ads"
+   },
+   {
+    "_key": "k197",
+    "_type": "reference",
+    "_ref": "connector-meta-ads"
+   },
+   {
+    "_key": "k198",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: One export per platform for the same dates (LinkedIn, Google Ads, Meta, others) with the billing currency of each account. Optional: CRM deals export.",
+     "You get back: A channel table with currencies, totals only where currencies match, results side by side with definitions, pipeline next to spend, and capped recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k199",
+      "label": "Your exports",
+      "text": "Load the Multichannel Performance Rollup skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/multichannel-performance-rollup and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k200",
+      "label": "DemandSense",
+      "text": "Load the Multichannel Performance Rollup skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/multichannel-performance-rollup and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/multichannel-performance-rollup"
+   }
+  }
+ },
+ {
+  "_id": "skill-traffic-analysis",
+  "_type": "skill",
+  "title": "Traffic Analysis",
+  "description": "Shows where website traffic comes from (paid, organic, email, referral, direct), compares it with the previous period, breaks paid traffic down by platform and campaign, and checks how clean your UTM tagging is.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-demandsense"
+  },
+  "status": "ready",
+  "order": 26,
+  "cover": 19,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "traffic-analysis"
+  },
+  "connectors": [
+   {
+    "_key": "k201",
+    "_type": "reference",
+    "_ref": "connector-google-analytics"
+   },
+   {
+    "_key": "k202",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "It reads your exports.",
+    "context": "And changes nothing in your accounts.",
+    "body": [
+     "You bring: Web analytics sessions export with date, source, medium, campaign and sessions, for the last 30 days and the 30 days before. Your own domains.",
+     "You get back: A channel table with change against the previous period, an Other/Unclassified list, a tagging check with exact values and counts, and capped recommendations."
+    ]
+   },
+   "prompt": {
+    "headline": "Paste it into your AI.",
+    "context": "Attach your exports first. It reads them and changes nothing",
+    "tabs": [
+     {
+      "_key": "k203",
+      "label": "Your exports",
+      "text": "Load the Traffic Analysis skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/traffic-analysis and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k204",
+      "label": "DemandSense",
+      "text": "Load the Traffic Analysis skill from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/traffic-analysis and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/traffic-analysis"
+   }
+  }
+ },
+ {
+  "_id": "skill-landing-page-cpc-report",
+  "_type": "skill",
+  "title": "Landing-page CPC report",
+  "description": "Ranks campaigns by what each website visit really costs (spend divided by landing-page clicks), so formats can be compared like for like.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-ads-creative"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-ivars-krutainis"
+  },
+  "status": "next",
+  "order": 27,
+  "cover": 2,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "landing-page-cpc-report"
+  },
+  "connectors": [
+   {
+    "_key": "k205",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k206",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "What it does.",
+    "context": "Ranks campaigns by what each website visit really costs (spend divided by landing-page clicks), so formats can be compared like for like.",
+    "body": [
+     "Runs on: LinkedIn API or a Campaign Manager export. DemandSense MCP later.",
+     "You get back: A dashboard with landing-page CPC as the main number, a bar chart by campaign, a format rollup and the full table. No recommendations in v1."
+    ]
+   },
+   "steps": [
+    {
+     "_key": "k207",
+     "title": "Pull the numbers",
+     "text": "Get spend, clicks and landing-page clicks per campaign for a date range. Stop if there are no landing-page clicks."
+    },
+    {
+     "_key": "k208",
+     "title": "Keep campaigns that spent",
+     "text": "Lead Gen Form campaigns go in a separate block."
+    },
+    {
+     "_key": "k209",
+     "title": "Work out the costs",
+     "text": "Landing-page CPC, regular CPC and the share of clicks that reach the site."
+    },
+    {
+     "_key": "k210",
+     "title": "Sort",
+     "text": "Best to worst. Campaigns with no site clicks go last."
+    },
+    {
+     "_key": "k211",
+     "title": "Roll up",
+     "text": "Blended totals for the account and a rollup by format (Thought Leader, image, video, Spotlight)."
+    },
+    {
+     "_key": "k212",
+     "title": "Show the totals",
+     "text": "Print the totals used, so they can be matched against Campaign Manager."
+    }
+   ]
+  }
+ },
+ {
+  "_id": "skill-lowest-bid-that-still-spends-the-budget",
+  "_type": "skill",
+  "title": "Lowest bid that still spends the budget",
+  "description": "Finds the lowest manual bid that still spends the full daily budget, because a higher bid doesn't buy a better audience.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-aj-wilcox"
+  },
+  "status": "next",
+  "order": 28,
+  "cover": 5,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "lowest-bid-that-still-spends-the-budget"
+  },
+  "connectors": [
+   {
+    "_key": "k213",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "What it does.",
+    "context": "Finds the lowest manual bid that still spends the full daily budget, because a higher bid doesn't buy a better audience.",
+    "body": [
+     "Runs on: Campaign Manager daily export.",
+     "You get back: A bid recommendation per ad set."
+    ]
+   },
+   "steps": [
+    {
+     "_key": "k214",
+     "title": "Export",
+     "text": "Export ad data by day."
+    },
+    {
+     "_key": "k215",
+     "title": "Check two days",
+     "text": "On Wednesday, check average daily spend for Monday and Tuesday. On Monday, check last Thursday and Friday."
+    },
+    {
+     "_key": "k216",
+     "title": "Lower the bid",
+     "text": "If average spend is at or above the daily budget, lower the bid."
+    },
+    {
+     "_key": "k217",
+     "title": "Repeat",
+     "text": "Repeat after each bid change until the bid just barely spends the budget."
+    }
+   ]
+  }
+ },
+ {
+  "_id": "skill-cost-per-retargetable-member",
+  "_type": "skill",
+  "title": "Cost per retargetable member",
+  "description": "Measures cold ad sets by what it costs to add each person to your retargeting audience, to find the most efficient ad type and objective.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-ads-creative"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-aj-wilcox"
+  },
+  "status": "next",
+  "order": 29,
+  "cover": 8,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "cost-per-retargetable-member"
+  },
+  "connectors": [
+   {
+    "_key": "k218",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   }
+  ],
+  "rules": [
+   {
+    "_key": "k219",
+    "_type": "reference",
+    "_ref": "rule-judge-cold-ads-by-the-warm-audience-they-build"
+   }
+  ],
+  "page": {
+   "does": {
+    "headline": "What it does.",
+    "context": "Measures cold ad sets by what it costs to add each person to your retargeting audience, to find the most efficient ad type and objective.",
+    "body": [
+     "Runs on: Campaign Manager export.",
+     "You get back: Cost per retargetable member per ad set and format. AJ's example: video Thought Leader ads around $0.50, static about twice that."
+    ]
+   },
+   "steps": [
+    {
+     "_key": "k220",
+     "title": "Pick the action",
+     "text": "Pick the retargeting action each cold ad set feeds (for example 50% video viewers or document engagers)."
+    },
+    {
+     "_key": "k221",
+     "title": "Divide",
+     "text": "Divide cost by the number of those actions."
+    },
+    {
+     "_key": "k222",
+     "title": "Compare",
+     "text": "Compare ad type and objective combinations and track them over time."
+    }
+   ]
+  }
+ },
+ {
+  "_id": "skill-retargeting-guardrails",
+  "_type": "skill",
+  "title": "Retargeting guardrails",
+  "description": "Adds exclusions to website and company page retargeting, so job seekers, students and people selling to you don't use up the budget.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-aj-wilcox"
+  },
+  "status": "next",
+  "order": 30,
+  "cover": 11,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "retargeting-guardrails"
+  },
+  "connectors": [
+   {
+    "_key": "k223",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "What it does.",
+    "context": "Adds exclusions to website and company page retargeting, so job seekers, students and people selling to you don't use up the budget.",
+    "body": [
+     "Runs on: Campaign Manager demographics export.",
+     "You get back: A list of suggested exclusions for each retargeting audience."
+    ]
+   },
+   "steps": [
+    {
+     "_key": "k224",
+     "title": "Export",
+     "text": "Export the demographics report of the retargeting audience."
+    },
+    {
+     "_key": "k225",
+     "title": "Flag",
+     "text": "AI flags segments outside the target audience."
+    },
+    {
+     "_key": "k226",
+     "title": "Exclude",
+     "text": "Add exclusions, for example the Marketing and Sales functions, or a Manager-and-above seniority floor."
+    }
+   ]
+  }
+ },
+ {
+  "_id": "skill-matched-audience-lists",
+  "_type": "skill",
+  "title": "Matched audience lists",
+  "description": "Formats any company or contact list into LinkedIn's matched audience upload templates.",
+  "area": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-aj-wilcox"
+  },
+  "status": "next",
+  "order": 31,
+  "cover": 14,
+  "changes": "Reads your data, changes nothing",
+  "slug": {
+   "_type": "slug",
+   "current": "matched-audience-lists"
+  },
+  "connectors": [
+   {
+    "_key": "k227",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   }
+  ],
+  "rules": [],
+  "page": {
+   "does": {
+    "headline": "What it does.",
+    "context": "Formats any company or contact list into LinkedIn's matched audience upload templates.",
+    "body": [
+     "Runs on: Your own lists plus LinkedIn's templates.",
+     "You get back: An upload-ready CSV for LinkedIn."
+    ]
+   },
+   "steps": [
+    {
+     "_key": "k228",
+     "title": "Save the templates",
+     "text": "Save LinkedIn's company and contact CSV templates."
+    },
+    {
+     "_key": "k229",
+     "title": "Give AI the inputs",
+     "text": "The templates, the source list and how to fill each column."
+    },
+    {
+     "_key": "k230",
+     "title": "Upload",
+     "text": "Get an upload-ready CSV. Contact lists hold personal data, so AJ processes them with a local model only."
+    }
+   ]
+  }
+ },
+ {
+  "_id": "cadence-daily-to-monthly",
+  "_type": "cadence",
+  "title": "Daily to monthly",
+  "order": 7,
+  "_create": "ifNotExists"
+ },
+ {
+  "_id": "cadence-every-1-to-2-weeks",
+  "_type": "cadence",
+  "title": "Every 1 to 2 weeks",
+  "order": 8,
+  "_create": "ifNotExists"
+ },
+ {
+  "_id": "cadence-daily-then-weekly",
+  "_type": "cadence",
+  "title": "Daily, then weekly",
+  "order": 9,
+  "_create": "ifNotExists"
+ },
+ {
+  "_id": "cadence-on-demand",
+  "_type": "cadence",
+  "title": "On demand",
+  "order": 10,
+  "_create": "ifNotExists"
+ },
+ {
+  "_id": "scenario-warm-lead-handoff",
+  "_type": "scenario",
+  "title": "Warm-lead handoff",
+  "description": "Turns engagement from LinkedIn ads, the website and the CRM into a short list of who sales should call this week.",
+  "category": {
+   "_type": "reference",
+   "_ref": "category-signal-to-sales"
+  },
+  "cadence": {
+   "_type": "reference",
+   "_ref": "cadence-weekly"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-justin-rowe"
+  },
+  "youNeed": "LinkedIn Companies export, website visitors by company, CRM exports. Or the DemandSense MCP.",
+  "youGet": "An \"Act now\" list with a one-line handoff for each account, customers engaging, open deals reached, closed-lost to re-engage, an ad exclusion list, up to five recommendations and the full list as a CSV.",
+  "connectors": [
+   {
+    "_key": "k237",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k238",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k239",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "status": "ready",
+  "order": 1,
+  "cover": 6,
+  "slug": {
+   "_type": "slug",
+   "current": "warm-lead-handoff"
+  },
+  "rules": [
+   {
+    "_key": "k240",
+    "_type": "reference",
+    "_ref": "rule-check-who-your-ads-actually-reach"
+   },
+   {
+    "_key": "k241",
+    "_type": "reference",
+    "_ref": "rule-report-exposure-influence-attribution-separately"
+   },
+   {
+    "_key": "k242",
+    "_type": "reference",
+    "_ref": "rule-give-sales-a-weekly-ranked-list"
+   }
+  ],
+  "skills": [],
+  "page": {
+   "steps": [
+    {
+     "_key": "k231",
+     "title": "Clean the signal",
+     "text": "Remove your own company, competitors, ISPs, bots, and capped or stale exports."
+    },
+    {
+     "_key": "k232",
+     "title": "Fit and rank",
+     "text": "Keep accounts that fit your ICP and rank them by how warm they are."
+    },
+    {
+     "_key": "k233",
+     "title": "Match to the CRM",
+     "text": "Customers go to their owner as expansion, open deals to the deal owner, new accounts to the SDR queue."
+    },
+    {
+     "_key": "k234",
+     "title": "Hand off",
+     "text": "Write a one-line handoff per account: who, what they read, which ad, who owns it."
+    }
+   ],
+   "get": {
+    "intro": "Paste one prompt.",
+    "context": "It reads your exports and changes nothing",
+    "options": [
+     {
+      "_key": "k235",
+      "label": "Your exports",
+      "text": "Load the Warm-lead handoff scenario from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/warm-lead-handoff and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k236",
+      "label": "DemandSense",
+      "text": "Load the Warm-lead handoff scenario from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/warm-lead-handoff and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/warm-lead-handoff",
+    "sourceNote": "Skill folder on GitHub"
+   }
+  }
+ },
+ {
+  "_id": "scenario-account-audit-by-cadence",
+  "_type": "scenario",
+  "title": "Account audit by cadence",
+  "description": "Runs eight account checks on a schedule, so a LinkedIn Ads specialist knows what to fix today, this week and this month.",
+  "category": {
+   "_type": "reference",
+   "_ref": "category-building-account"
+  },
+  "cadence": {
+   "_type": "reference",
+   "_ref": "cadence-daily-to-monthly"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-roman-slobodzianyk"
+  },
+  "youNeed": "Campaign Manager exports. Or the DemandSense MCP.",
+  "youGet": "Daily flags plus an action list for each cadence, every item waiting for approval.",
+  "connectors": [
+   {
+    "_key": "k250",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k251",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "status": "ready",
+  "order": 2,
+  "cover": 11,
+  "slug": {
+   "_type": "slug",
+   "current": "account-audit-by-cadence"
+  },
+  "rules": [],
+  "skills": [],
+  "page": {
+   "steps": [
+    {
+     "_key": "k243",
+     "title": "Daily: read and flag",
+     "text": "Bidding and delivery, how ads engage, acquisition costs, audience saturation (frequency per person over 30 and 90 days).",
+     "phase": "Daily"
+    },
+    {
+     "_key": "k244",
+     "title": "Weekly: adjust",
+     "text": "Bid and pacing adjustments, week-over-week trends, delivery fixes.",
+     "phase": "Weekly"
+    },
+    {
+     "_key": "k245",
+     "title": "Every two weeks: fatigue and pacing",
+     "text": "Ad fatigue (pause, scale, new tests with 2 to 3 variations per ad set) and a pacing check against the monthly target (within 5%).",
+     "phase": "Every two weeks"
+    },
+    {
+     "_key": "k246",
+     "title": "Monthly: move the budget",
+     "text": "Review the budget and move it between campaigns, ad sets and funnel stages.",
+     "phase": "Monthly"
+    },
+    {
+     "_key": "k247",
+     "title": "Approve",
+     "text": "Every change is a recommendation the specialist approves and applies in Campaign Manager."
+    }
+   ],
+   "get": {
+    "intro": "Paste one prompt.",
+    "context": "It reads your exports and changes nothing",
+    "options": [
+     {
+      "_key": "k248",
+      "label": "Your exports",
+      "text": "Load the Account audit by cadence scenario from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/account-audit-by-cadence and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k249",
+      "label": "DemandSense",
+      "text": "Load the Account audit by cadence scenario from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/account-audit-by-cadence and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/account-audit-by-cadence",
+    "sourceNote": "Skill folder on GitHub"
+   }
+  }
+ },
+ {
+  "_id": "scenario-targeting-vs-who-actually-buys",
+  "_type": "scenario",
+  "title": "Targeting vs who actually buys",
+  "description": "Compares who each campaign paid to reach with the people on your deals, and moves budget toward the profiles that buy.",
+  "category": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "cadence": {
+   "_type": "reference",
+   "_ref": "cadence-weekly-monthly"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-george-coudounaris"
+  },
+  "youNeed": "Campaign Manager demographics export plus CRM deals. Or the DemandSense MCP.",
+  "youGet": "Spend vs pipeline per buyer profile, changes per campaign and an exclusion list that's safe to apply.",
+  "connectors": [
+   {
+    "_key": "k260",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k261",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k262",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "status": "ready",
+  "order": 3,
+  "cover": 16,
+  "slug": {
+   "_type": "slug",
+   "current": "targeting-vs-who-actually-buys"
+  },
+  "rules": [],
+  "skills": [],
+  "page": {
+   "steps": [
+    {
+     "_key": "k252",
+     "title": "Job title audit",
+     "text": "Who each campaign paid to reach, graded against that campaign's own targeting.",
+     "phase": "Monthly"
+    },
+    {
+     "_key": "k253",
+     "title": "Read the deal side",
+     "text": "The buying-committee list is the base, titles on deal contacts are evidence (they're often patchy).",
+     "phase": "Monthly"
+    },
+    {
+     "_key": "k254",
+     "title": "Group deals by profile",
+     "text": "Pipeline created, win rate, deal size.",
+     "phase": "Monthly"
+    },
+    {
+     "_key": "k255",
+     "title": "Spend against pipeline",
+     "text": "Compare each profile's share of spend with its share of pipeline. Flag profiles that get too much budget, too little, or never convert.",
+     "phase": "Monthly"
+    },
+    {
+     "_key": "k256",
+     "title": "Recommend",
+     "text": "Targeting, exclusion and budget changes per campaign. Before cutting a title, check whether it sits in an account showing buying signals.",
+     "phase": "Monthly"
+    },
+    {
+     "_key": "k257",
+     "title": "Light check",
+     "text": "Is new spend leaking to off-target titles?",
+     "phase": "Weekly"
+    }
+   ],
+   "get": {
+    "intro": "Paste one prompt.",
+    "context": "It reads your exports and changes nothing",
+    "options": [
+     {
+      "_key": "k258",
+      "label": "Your exports",
+      "text": "Load the Targeting vs who actually buys scenario from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/monthly-targeting-review and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k259",
+      "label": "DemandSense",
+      "text": "Load the Targeting vs who actually buys scenario from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/monthly-targeting-review and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/monthly-targeting-review",
+    "sourceNote": "Skill folder on GitHub"
+   }
+  }
+ },
+ {
+  "_id": "scenario-company-level-account-routing",
+  "_type": "scenario",
+  "title": "Company-level account routing",
+  "description": "Shows which companies take most of the impressions, which are underserved, and which to prioritize or move into their own audience.",
+  "category": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "cadence": {
+   "_type": "reference",
+   "_ref": "cadence-every-1-to-2-weeks"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-joshua-stout"
+  },
+  "youNeed": "LinkedIn Companies tab export. Or the DemandSense MCP.",
+  "youGet": "A coverage and engagement view per campaign and a list of recommendations the advertiser decides on.",
+  "connectors": [
+   {
+    "_key": "k270",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k271",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "status": "ready",
+  "order": 4,
+  "cover": 1,
+  "slug": {
+   "_type": "slug",
+   "current": "company-level-account-routing"
+  },
+  "rules": [],
+  "skills": [],
+  "page": {
+   "steps": [
+    {
+     "_key": "k263",
+     "title": "Coverage",
+     "text": "Which companies get most of the impressions, which are underserved, and whether the campaign reaches the companies it meant to target."
+    },
+    {
+     "_key": "k264",
+     "title": "Engagement",
+     "text": "Which companies engage, which don't, and how that changes over time. Flag accounts for retargeting or sales outreach."
+    },
+    {
+     "_key": "k265",
+     "title": "Spend check",
+     "text": "Is the campaign spending on existing customers, closed-lost or open-deal accounts?"
+    },
+    {
+     "_key": "k266",
+     "title": "Recommend",
+     "text": "Dynamic exclusion audiences, dedicated campaigns for some accounts, or more segmentation."
+    },
+    {
+     "_key": "k267",
+     "title": "Review before any change",
+     "text": "Check every recommendation against the ICP, account priorities and strategy. Nothing is excluded automatically."
+    }
+   ],
+   "get": {
+    "intro": "Paste one prompt.",
+    "context": "It reads your exports and changes nothing",
+    "options": [
+     {
+      "_key": "k268",
+      "label": "Your exports",
+      "text": "Load the Company-level account routing scenario from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/company-account-routing and run it on the exports I’ve attached."
+     },
+     {
+      "_key": "k269",
+      "label": "DemandSense",
+      "text": "Load the Company-level account routing scenario from https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/company-account-routing and run it on my DemandSense workspace. Pull the data through the connector rather than asking me for exports."
+     }
+    ],
+    "source": "https://github.com/demandsense-labs/linkedin-ads-skills/tree/main/company-account-routing",
+    "sourceNote": "Skill folder on GitHub"
+   }
+  }
+ },
+ {
+  "_id": "scenario-linkedin-fit-gate",
+  "_type": "scenario",
+  "title": "LinkedIn fit gate + daily fit check",
+  "description": "Grades a prospecting campaign by the companies it actually reached against your ICP, then says scale, run one more week, or rebuild.",
+  "category": {
+   "_type": "reference",
+   "_ref": "category-budget-reach"
+  },
+  "cadence": {
+   "_type": "reference",
+   "_ref": "cadence-daily-then-weekly"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-jonathan-belliveau"
+  },
+  "youNeed": "DemandSense MCP plus Apollo, CRM or a CSV.",
+  "youGet": "A one-line status, fit rate, fail reasons, a verdict and an exclusion CSV to upload to LinkedIn.",
+  "connectors": [
+   {
+    "_key": "k278",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k279",
+    "_type": "reference",
+    "_ref": "connector-csv-export"
+   },
+   {
+    "_key": "k280",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "status": "soon",
+  "order": 5,
+  "cover": 6,
+  "slug": {
+   "_type": "slug",
+   "current": "linkedin-fit-gate"
+  },
+  "rules": [],
+  "skills": [],
+  "page": {
+   "steps": [
+    {
+     "_key": "k272",
+     "title": "Set the gate",
+     "text": "Before launch, once: countries, employee range, one buyer signal (for example \"runs paid ads\") and exclusions (own domain, customers, open deals, competitors)."
+    },
+    {
+     "_key": "k273",
+     "title": "Pull the companies",
+     "text": "The companies one campaign reached."
+    },
+    {
+     "_key": "k274",
+     "title": "Clean domains",
+     "text": "Any excluded company that was reached is a \"leaked exclusion\" and goes to the top."
+    },
+    {
+     "_key": "k275",
+     "title": "Apply the gate",
+     "text": "Check each domain in the fit source (Apollo, CRM or a CSV)."
+    },
+    {
+     "_key": "k276",
+     "title": "Grade",
+     "text": "Fit rate and spend-weighted fit. Once 500 companies are graded: 80%+ scale, 70 to 80% one more week with tighter exclusions, under 70% rebuild."
+    },
+    {
+     "_key": "k277",
+     "title": "Daily check",
+     "text": "Compare with yesterday (new companies, new fails, new leaks, fit trend) and update the exclusion list."
+    }
+   ]
+  }
+ },
+ {
+  "_id": "scenario-signal-loop",
+  "_type": "scenario",
+  "title": "Signal loop",
+  "description": "Turns a list of target companies, sorted by dated public buying signals, into a Monday short list of who to write to this week and why now.",
+  "category": {
+   "_type": "reference",
+   "_ref": "category-signal-to-sales"
+  },
+  "cadence": {
+   "_type": "reference",
+   "_ref": "cadence-weekly-monthly"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-bogdan-liutic"
+  },
+  "youNeed": "Campaign Manager exports plus your own CSVs. The DemandSense MCP adds engagement, visits, CRM status and lead forms.",
+  "youGet": "A, B and C lists with LinkedIn upload files, names to exclude, up to 5 outreach cards a week and a CRM hand-off CSV.",
+  "connectors": [
+   {
+    "_key": "k287",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k288",
+    "_type": "reference",
+    "_ref": "connector-crm-export"
+   },
+   {
+    "_key": "k289",
+    "_type": "reference",
+    "_ref": "connector-csv-export"
+   },
+   {
+    "_key": "k290",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "status": "soon",
+  "order": 6,
+  "cover": 11,
+  "slug": {
+   "_type": "slug",
+   "current": "signal-loop"
+  },
+  "rules": [
+   {
+    "_key": "k291",
+    "_type": "reference",
+    "_ref": "rule-separate-frequency-targets-cold-warm"
+   },
+   {
+    "_key": "k292",
+    "_type": "reference",
+    "_ref": "rule-check-who-your-ads-actually-reach"
+   },
+   {
+    "_key": "k293",
+    "_type": "reference",
+    "_ref": "rule-give-sales-a-weekly-ranked-list"
+   },
+   {
+    "_key": "k294",
+    "_type": "reference",
+    "_ref": "rule-grow-a-signal-list-from-the-same-market"
+   }
+  ],
+  "skills": [],
+  "page": {
+   "steps": [
+    {
+     "_key": "k281",
+     "title": "Signal list check",
+     "text": "Split the target list into A (2+ fresh signals), B (1 signal) and C (fit only). Hold out 100 B companies with no ads all quarter.",
+     "phase": "Monthly"
+    },
+    {
+     "_key": "k282",
+     "title": "Placeholder page check",
+     "text": "Strike clicks from fake employer pages like \"Stealth AI Startup\".",
+     "phase": "Every Monday"
+    },
+    {
+     "_key": "k283",
+     "title": "List dose check",
+     "text": "Is each list still reaching new people? About 5 views a person a month on warm lists.",
+     "phase": "Every Monday"
+    },
+    {
+     "_key": "k284",
+     "title": "Warm account router",
+     "text": "Alert at 10+ paid engagements in 30 days, or 3 plus a second signal. Open deals go to their owner. Up to 5 cards a week.",
+     "phase": "Every Monday"
+    },
+    {
+     "_key": "k285",
+     "title": "A person writes",
+     "text": "A person approves each card and writes from their own account. Messages name the public signal only, never the ad or the visit.",
+     "phase": "Every Monday"
+    },
+    {
+     "_key": "k286",
+     "title": "Retrain",
+     "text": "Check which signals sat on won deals and retrain the lists.",
+     "phase": "Quarter end"
+    }
+   ]
+  }
+ },
+ {
+  "_id": "scenario-turn-social-signals-into-pipeline",
+  "_type": "scenario",
+  "title": "Turn social signals into pipeline",
+  "description": "Takes people engaging with relevant LinkedIn posts, adds what their companies do on your site and with your ads, and splits them into a sales list and a nurture list.",
+  "category": {
+   "_type": "reference",
+   "_ref": "category-signal-to-sales"
+  },
+  "cadence": {
+   "_type": "reference",
+   "_ref": "cadence-on-demand"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-alfredo-talib"
+  },
+  "youNeed": "Cornersight plus the DemandSense MCP. Or Cornersight's export plus visitor and Companies tab exports.",
+  "youGet": "Two lists (sales review and nurture) with a one-line reason per company. Nothing is written to any tool.",
+  "connectors": [
+   {
+    "_key": "k301",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "status": "soon",
+  "order": 7,
+  "cover": 16,
+  "slug": {
+   "_type": "slug",
+   "current": "turn-social-signals-into-pipeline"
+  },
+  "rules": [],
+  "skills": [],
+  "page": {
+   "steps": [
+    {
+     "_key": "k295",
+     "title": "Pick the source",
+     "text": "Posts anywhere on LinkedIn (Cornersight), your company page (DemandSense), or both."
+    },
+    {
+     "_key": "k296",
+     "title": "Collect",
+     "text": "Collect the engagers and group them by company."
+    },
+    {
+     "_key": "k297",
+     "title": "Add signals",
+     "text": "Website sessions, pricing or demo page views, ad engagement level per company."
+    },
+    {
+     "_key": "k298",
+     "title": "Fit",
+     "text": "Keep companies that fit the ICP."
+    },
+    {
+     "_key": "k299",
+     "title": "Split",
+     "text": "Sales review = ICP fit + organic signal + a website visit or high ad engagement. Everyone else goes to nurture."
+    },
+    {
+     "_key": "k300",
+     "title": "CRM check",
+     "text": "Optional: companies already in pipeline go to the deal owner."
+    }
+   ]
+  }
+ },
+ {
+  "_id": "scenario-weekly-check-for-conversion-campaigns",
+  "_type": "scenario",
+  "title": "Weekly check for conversion campaigns",
+  "description": "Judges every Lead Gen Form and Message ad against your goal cost per lead, pauses losers early and builds new versions from the winners.",
+  "category": {
+   "_type": "reference",
+   "_ref": "category-ads-creative"
+  },
+  "cadence": {
+   "_type": "reference",
+   "_ref": "cadence-weekly"
+  },
+  "author": {
+   "_type": "reference",
+   "_ref": "author-moby-hayat"
+  },
+  "youNeed": "Campaign Manager exports (ads by day, campaign penetration and frequency, settings). Or the DemandSense MCP.",
+  "youGet": "A pause list, winners to copy and campaign fixes, each with the number behind it and the number that shows it worked next week.",
+  "connectors": [
+   {
+    "_key": "k308",
+    "_type": "reference",
+    "_ref": "connector-linkedin-ads-export"
+   },
+   {
+    "_key": "k309",
+    "_type": "reference",
+    "_ref": "connector-demandsense-optional"
+   }
+  ],
+  "status": "soon",
+  "order": 8,
+  "cover": 1,
+  "slug": {
+   "_type": "slug",
+   "current": "weekly-check-for-conversion-campaigns"
+  },
+  "rules": [],
+  "skills": [],
+  "page": {
+   "steps": [
+    {
+     "_key": "k302",
+     "title": "Scope",
+     "text": "Lead gen and Message campaigns that spent in the last 7 days. Skip any without a goal cost per lead."
+    },
+    {
+     "_key": "k303",
+     "title": "Ads with no leads",
+     "text": "Flag pause once the ad has spent 2x the goal cost per lead."
+    },
+    {
+     "_key": "k304",
+     "title": "Ads with leads",
+     "text": "Flag pause when cost per lead reaches 1.5x the campaign's baseline."
+    },
+    {
+     "_key": "k305",
+     "title": "Winners",
+     "text": "Ads at or under goal. The top 2 become the source for new versions with the same offer."
+    },
+    {
+     "_key": "k306",
+     "title": "Check the campaign",
+     "text": "If every ad is expensive: delivery (spend vs daily budget, manual bid), audience size (penetration under 10% means budget too small or audience too big, 20%+ is ideal) and audience quality."
+    },
+    {
+     "_key": "k307",
+     "title": "Recommend",
+     "text": "One recommendation per flagged ad or campaign, each approved by the specialist."
+    }
+   ]
+  }
+ }
+]
