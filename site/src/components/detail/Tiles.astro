@@ -1,0 +1,49 @@
+---
+// Grid cards like the directory's author rail ("Using it", "What it catches"). Top, bottom and row lines run
+// edge line to edge line; outer columns lean on the edge lines, so their copy lines up with the headline.
+// Needs --pad (the content column's side padding) from the page frame; the section around it should be `flush`.
+import { icon } from '../../icons';
+interface Props { items: { icon?: string; title: string; text: string }[] }
+const { items } = Astro.props;
+---
+<ul class:list={['tiles', { two: items.length % 2 === 0 && items.length < 6 }]} data-reveal>
+  {items.map((u) => (
+    <li class="tile">
+      {u.icon && <span class="ic" aria-hidden="true"><Fragment set:html={icon(u.icon)} /></span>}
+      <p class="t-h6">{u.title}</p>
+      <p class="t-p2 body">{u.text}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  /* The grid ends on the next section's divider: no gap, no second line */
+  :global(.sec.flush) { padding-bottom: 0; }
+  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); border-top: 1px solid var(--line); overflow: clip; }
+  .tiles.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tile { position: relative; display: grid; gap: 8px; align-content: start; padding: 40px 24px 32px; box-shadow: inset 1px 0 var(--line); }
+  .tile::before { position: absolute; top: 0; left: calc(-1 * var(--pad)); width: 100vw; height: 1px; background: var(--line); }
+  /* A short last row closes on its last card */
+  .tile::after { position: absolute; top: 0; right: -1px; bottom: 0; width: 1px; background: var(--line); }
+  @media (min-width: 1200px) {
+    .tiles:not(.two) > :nth-child(3n + 1) { padding-left: 0; box-shadow: none; }
+    .tiles:not(.two) > :nth-child(3n) { padding-right: 0; }
+    .tiles:not(.two) > :nth-child(3n + 1):nth-child(n + 4)::before, .tiles:not(.two) > :last-child:not(:nth-child(3n))::after { content: ''; }
+    .tiles.two > :nth-child(odd) { padding-left: 0; box-shadow: none; }
+    .tiles.two > :nth-child(even) { padding-right: 0; }
+    .tiles.two > :nth-child(odd):nth-child(n + 3)::before, .tiles.two > :last-child:nth-child(odd)::after { content: ''; }
+  }
+  @media (max-width: 1199px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 700px) and (max-width: 1199px) {
+    .tile:nth-child(odd) { padding-left: 0; box-shadow: none; }
+    .tile:nth-child(even) { padding-right: 0; }
+    .tile:nth-child(odd):nth-child(n + 3)::before, .tile:last-child:nth-child(odd)::after { content: ''; }
+  }
+  @media (max-width: 699px) {
+    .tiles, .tiles.two { grid-template-columns: 1fr; }
+    .tile { padding-inline: 0; box-shadow: none; }
+    .tile + .tile::before { content: ''; }
+  }
+  .ic { display: block; width: 80px; height: 80px; margin-bottom: 16px; } /* skill card icon size */
+  .ic :global(svg) { width: 100%; height: 100%; }
+</style>

@@ -56,7 +56,7 @@ const cta = {
   </DetailHero>
 
   <DetailFrame toc={toc}>
-    {p.catches && <Catches {...p.catches} stat={d.stat} />}
+    {p.catches && <Catches {...p.catches} />}
     {p.comesBack && <OutputGallery title={p.comesBack.headline} context={p.comesBack.context} items={p.comesBack.items} />}
     {p.get && <GetIt {...p.get} />}
     {p.using.length > 0 && <UsingTiles headline={p.usingHead?.headline} context={p.usingHead?.context} items={p.using} />}

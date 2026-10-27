@@ -6,9 +6,6 @@ cadence: "Weekly + monthly"
 cover: 9
 status: "ready"
 author: "bogdan-liutic"
-stat:
-  value: "49%"
-  label: "of one ad set’s clicks went to a company that doesn’t exist"
 firstRun: "About fifteen minutes"
 youNeed: "Nothing for the sample. A company engagement export and your signal sources"
 youGet: "An exclusion list, a dose readout and the accounts to route"
@@ -35,14 +32,11 @@ page:
     body: "350 of 708 paid clicks on one ad set came from people listing the same placeholder employer. Read the cost line first and the set looks cheap and healthy. Rank the companies as they come and that page is your best account"
     note: "One ad set, 7 Aug to 5 Sep 2026, read by Bogdan on his own account. It ran a 176,823-member list at 11% of the suggested bid"
     findings:
-      - value: "under 300"
-        title: "A list that has gone cold"
+      - title: "A list that has gone cold"
         text: "Fewer than 300 companies still carrying a dated signal means there is no warm list this week, whatever its size. The fix is more signals, never a wider filter"
-      - value: "5 a month"
-        title: "A list being burned"
+      - title: "A list being burned"
         text: "Views per person against the target. Catches the slice carrying the whole campaign while the rest of the list has seen nothing at all"
-      - value: "10 in 30 days"
-        title: "An account pulling ahead of its ads"
+      - title: "An account pulling ahead of its ads"
         text: "Ten paid engagements in thirty days, or three plus a second signal. Under fifty staff, four paid clicks in fourteen. Past that line it goes to a person, not a queue"
   comesBack:
     headline: "Three short reports a week, and one list you act on."

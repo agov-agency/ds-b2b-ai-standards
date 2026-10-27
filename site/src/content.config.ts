@@ -18,7 +18,7 @@ const detailPage = z.object({
     context: z.string().optional(),
     body: z.string().optional(),
     note: z.string().optional(),
-    findings: z.array(z.object({ value: z.string(), title: z.string(), text: z.string() })).default([]),
+    findings: z.array(z.object({ title: z.string(), text: z.string() })).default([]),
   }).optional(),
   comesBack: z.object({
     headline: z.string(),
@@ -152,7 +152,6 @@ const scenarios = defineCollection({
     cadence: z.string(),
     status: z.enum(['ready', 'soon']),
     author: reference('authors'),
-    stat: z.object({ value: z.string(), label: z.string() }).optional(),
     firstRun: z.string().optional(),
     youNeed: z.string().optional(),
     youGet: z.string().optional(),

@@ -2,6 +2,7 @@
 // - categories, cadences and connectors become their own documents; items reference them instead of holding text
 // - author links get an icon from their label
 // - illustrations move to the per-type figure fields
+// - the scenario lead number and the finding numbers go
 // Run: npx sanity exec migrations/2026-10-27-collections.ts --with-user-token
 import { readFileSync, readdirSync } from 'node:fs';
 import { parse } from 'yaml';
@@ -36,7 +37,9 @@ for (const d of docs) {
   if (d.art?._type === 'art') set['art._type'] = d._type === 'skill' ? 'skillArt' : 'scenarioArt';
   if (d._type === 'author' && d.links?.some((l: any) => !l.icon)) set.links = d.links.map((l: any) => l.icon ? l
     : ICON[l.label.toLowerCase()] ? { ...l, icon: ICON[l.label.toLowerCase()] } : { ...l, icon: 'web', label: 'custom', customLabel: l.label });
-  const unset = d._type === 'skill' ? ['icon', 'illustration'].filter((f) => d[f]) : d._type === 'scenario' && d.illustration ? ['illustration'] : [];
+  const unset = d._type === 'skill' ? ['icon', 'illustration'].filter((f) => d[f]) : d._type === 'scenario' ? ['illustration', 'stat'].filter((f) => d[f]) : [];
+  // "What it catches" lost its numbers: findings keep title and text only
+  (d.page?.catches?.findings ?? []).forEach((f: any) => f.value !== undefined && unset.push(`page.catches.findings[_key=="${f._key}"].value`));
   if (Object.keys(set).length || unset.length) { tx.patch(d._id, (p) => p.set(set).unset(unset)); patched++; }
 }
 await tx.commit({ visibility: 'sync' });

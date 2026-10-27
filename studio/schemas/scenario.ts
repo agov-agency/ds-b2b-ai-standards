@@ -9,7 +9,6 @@ export const scenario = defineType({
     defineField({ name: 'cadence', type: 'reference', to: [{ type: 'cadence' }], validation: (r) => r.required() }),
     defineField({ name: 'status', type: 'string', initialValue: 'soon', options: { list: ['ready', 'soon'], layout: 'radio', direction: 'horizontal' }, validation: (r) => r.required(), description: 'Only ready scenarios get a page' }),
     { ...ref('author', 'author'), validation: (r: any) => r.required() },
-    { ...obj('stat', 'Lead number', [str('value', 'Value (e.g. 49%)', true), { ...str('label', 'Label'), description: 'What the number means. Not shown on the site yet' }]), description: 'Big number at the start of “What it catches” on the scenario page' },
     str('firstRun', 'First run'), str('youNeed', 'You need'), str('youGet', 'You get'),
     connectorsField,
     refs('skills', 'skill'), refs('rules', 'rule'),
@@ -18,8 +17,8 @@ export const scenario = defineType({
     order,
     obj('page', 'Scenario page', [
       obj('catches', 'What it catches', [
-        str('headline', 'Headline', true), txt('context'), txt('body'), txt('note'),
-        list('findings', 'Findings', [str('value', 'Value', true), str('title', 'Title', true), txt('text', 'Text', true)]),
+        str('headline', 'Headline', true), txt('context'), { ...txt('body'), description: 'A blank line starts a new paragraph' }, txt('note'),
+        list('findings', 'Findings', [str('title', 'Title', true), txt('text', 'Text', true)]),
       ]),
       obj('comesBack', 'What you get', [str('headline', 'Headline', true), txt('context'), gallery()]),
       obj('get', 'Get it', [
