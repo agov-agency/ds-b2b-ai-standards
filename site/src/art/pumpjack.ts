@@ -1,10 +1,11 @@
 // Scenario "Turn social signals into pipeline": an oil field. Each pump jack nods away into its own company's tank;
-// a full tank opens its valve and drains into the main line along the front: the pipeline, literally.
+// a full tank opens its valve and drains into the main line along the side: the pipeline, literally.
 import { kernel, hue, k, lerp, f, type Piece, type V3 } from './iso';
 
-const PERIOD = 8, TAU = 2 * Math.PI, N = 3, PITCH = 152;
-const JY = 0, JD = 14, PZ = 58, TR = 17, TH = 56, YM = 58, ZM = 9;            // jack depth; beam pivot height; tank radius / height; main line
-const K = kernel([[-10, -24, 0], [N * PITCH, -24, 0], [-10, YM + 12, 0], [N * PITCH + 60, YM + 12, 0], [40, 0, PZ + 30], [(N - 1) * PITCH + 142, 8, TH + 12]], 22);
+const PERIOD = 8, TAU = 2 * Math.PI, N = 3, ROW = 74, MX = 178;           // rows of jack + tank, one behind another; main line x
+const JY = 0, JD = 14, PZ = 58, TR = 17, TH = 56, ZM = 9;                     // jack depth; beam pivot height; tank radius / height; main line z
+const YE = (N - 1) * ROW + 30;
+const K = kernel([[-10, -24, 0], [MX + 8, -24, 0], [-10, YE + 30, 0], [MX + 8, YE + 30, 0], [-40, 0, PZ + 30], [140, 8, TH + 12]], 22);
 const { P, poly, line, box, cyl, cylX, cylY, arrow } = K;
 
 type P2 = [number, number];
@@ -50,9 +51,9 @@ function tank(x: number, y: number, lvl: number, open: number) {
   const gx = x + TR * .72, gy = y + TR * .72;
   s += cyl(gx + 3, gy + 3, 6, 2.6, TH - 4, 'paper', 'paper') + (g > 1 ? cyl(gx + 3, gy + 3, 7, 1.8, g, 'body', 'body') + (lvl > .9 ? `<g class="lit">${cyl(gx + 3, gy + 3, 7, 1.8, g, 'body', 'body')}</g>` : '') : '');
   // Outlet to the main line with its valve and handwheel
-  const wy = y + TR + 14, a = open * TAU;
-  s += cylY(y + TR - 2, YM - 4, x, ZM, 2.8) + box(x - 5, wy - 4, ZM - 5, 10, 8, 10, 'paper', 'body', 'tint') + cyl(x, wy, ZM + 5, 1.4, 8, 'paper', 'body');
-  const [sx, sy] = P(x, wy, ZM + 13);
+  const wx = x + TR + 13, a = open * TAU;
+  s += cylX(x + TR - 2, MX - 4, y, ZM, 2.8) + box(wx - 4, y - 5, ZM - 5, 8, 10, 10, 'paper', 'body', 'tint') + cyl(wx, y, ZM + 5, 1.4, 8, 'paper', 'body');
+  const [sx, sy] = P(wx, y, ZM + 13);
   const spokes = [0, 1, 2].map((q) => { const b = a + q * TAU / 3; return `<path class="det" d="M${f(sx)} ${f(sy)}L${f(sx + 7 * Math.cos(b))} ${f(sy + 3.5 * Math.sin(b))}"/>`; }).join('');
   s += `<g class="${open > 0 && open < 1 ? 'lit' : ''}"><ellipse class="f body" cx="${f(sx)}" cy="${f(sy)}" rx="8" ry="4"/></g><ellipse class="f paper" cx="${f(sx)}" cy="${f(sy - 1)}" rx="6" ry="3"/>${spokes}`;
   return s;
@@ -61,18 +62,20 @@ function tank(x: number, y: number, lvl: number, open: number) {
 function draw(t: number) {
   t = ((t % PERIOD) + PERIOD) % PERIOD;
   let s = '';
-  // Main line along the front on low supports
-  const ml = [20, 170, 320, 450].map((x) => box(x, YM - 5, 0, 6, 10, ZM - 4, 'paper', 'body')).join('') + cylX(-10, N * PITCH + 50, YM, ZM, 4, 'paper', 'tint');
+  // Rows run back to front; a row is the same drawing shifted along y (a straight screen offset in this projection)
   for (let i = 0; i < N; i++) {
-    const x0 = i * PITCH, th = TAU * 4 * t / PERIOD + i * 2.1, u = ((t - i * PERIOD / N) % PERIOD + PERIOD) % PERIOD;
+    const th = TAU * 4 * t / PERIOD + i * 2.1, u = ((t - i * PERIOD / N) % PERIOD + PERIOD) % PERIOD;
     // Fills for 5.4 s, valve opens, drains, valve closes
     const open = k(u, 5.4, 5.9) - k(u, 7.3, 7.9), lvl = lerp(.12, 1, Math.min(1, u / 5.4)) - .88 * k(u, 5.8, 7.2);
-    s += cylX(x0 + 8, x0 + 120 - TR, -18, 8, 2.6) + jack(x0, th) + tank(x0 + 122, 6, lvl, open);
+    const [dx, dy] = K.D(0, i * ROW, 0);
+    s += `<g transform="translate(${f(dx)} ${f(dy)})">${cylX(8, 120 - TR, -18, 8, 2.6) + jack(0, th) + tank(122, 6, lvl, open)}</g>`;
   }
-  return hue('a', s + ml) + arrow([[N * PITCH + 20, YM, ZM + 12], [N * PITCH + 56, YM, ZM + 12]], { dot: true });
+  // Main line along the side on low supports
+  const ml = [-10, 60, 130].map((y) => box(MX - 5, y, 0, 10, 6, ZM - 4, 'paper', 'body')).join('') + cylY(-24, YE, MX, ZM, 4, 'paper', 'tint');
+  return hue('a', s + ml) + arrow([[MX, YE - 6, ZM + 12], [MX, YE + 26, ZM + 12]], { dot: true });
 }
 
 export const pumpjack: Piece = {
-  aria: 'Three pump jacks nod in a row, each filling its own tank. A full tank opens its valve and drains into the main pipeline along the front.',
+  aria: 'Three pump jacks nod in a row, each filling its own tank. A full tank opens its valve and drains into the main pipeline along the side.',
   period: PERIOD, rest: 5.7, viewBox: K.viewBox, focus: [0.5, 0.5], draw,
 };

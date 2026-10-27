@@ -4,10 +4,10 @@
 import { kernel, hue, k, lerp, f, type Piece } from './iso';
 
 const PERIOD = 8, TAU = 2 * Math.PI;
-const BZ = 10, AX0 = 96, AX1 = 176, AD = 64, AH = 86;                         // bench top; analyzer x range, depth, height
+const BZ = 10, AX0 = 96, AX1 = 176, AD = 64, AH = 104;                         // bench top; analyzer x range, depth, height
 const CY = 26, CW = 66, CD = 14, TR = 3.6, TH = 28;                           // cassette lane y, cassette length / depth; tube radius, height
 const HIT = [1, 3];                                                           // the tubes that react
-const K = kernel([[-96, -14, 0], [246, -14, 0], [-96, AD + 22, 0], [246, AD + 22, 0], [AX0, 0, BZ + AH + 6], [-80, 0, BZ + TH + 14]], 20);
+const K = kernel([[-52, -14, 0], [246, -14, 0], [-52, AD + 22, 0], [246, AD + 22, 0], [AX0, 0, BZ + AH + 6], [-46, 0, BZ + TH + 14]], 20);
 const { on, line, box, cyl, cylY, FRONT, SIDE, TOP, arrow, curve } = K;
 
 const tube = (x: number, y: number, z: number, fill: number, cls = 'tint', cap = 'body') =>
@@ -26,13 +26,13 @@ function cassette(x: number, lit: number, a: number) {
 
 function draw(t: number) {
   t = ((t % PERIOD) + PERIOD) % PERIOD;
-  const x = lerp(-84, 40, k(t, 0, 1.4)) + (AX1 + 6 - 40) * k(t, 1.6, 3.6), a = k(t, 0, .4) * (1 - k(t, 6.6, 7.4));
+  const x = lerp(-48, 40, k(t, 0, 1.4)) + (AX1 + 6 - 40) * k(t, 1.6, 3.6), a = k(t, 0, .4) * (1 - k(t, 6.6, 7.4));
   const lit = k(t, 3.2, 3.8), knob = TAU / 6 * k(t, 4.6, 5.6), pulse = k(t, 3.9, 4.4) * (1 - k(t, 5.6, 6.4));
-  let s = box(-96, -14, 0, 342, AD + 36, BZ, 'paper', 'body', 'tint');
+  let s = box(-52, -14, 0, 298, AD + 36, BZ, 'paper', 'body', 'tint');
   // Rack at the back left: two rows of spare tubes, five slots of the front row empty (they ride in the cassette)
-  s += box(-80, -6, BZ, 84, 26, 14, 'paper', 'body', 'tint');
+  s += box(-46, -6, BZ, 84, 26, 14, 'paper', 'body', 'tint');
   for (let r = 0; r < 2; r++) for (let i = 0; i < 6; i++) {
-    const tx = -72 + i * 13, ty = -1 + r * 12;
+    const tx = -38 + i * 13, ty = -1 + r * 12;
     s += r === 1 && i > 0 ? on(TOP(tx - TR, ty - TR, BZ + 14), `<circle class="f body" cx="${TR}" cy="${TR}" r="${TR - .6}"/>`) : tube(tx, ty, BZ + 10, .5);
   }
   // Cassette before the analyzer covers it; the analyzer's body hides the part inside the tunnel
