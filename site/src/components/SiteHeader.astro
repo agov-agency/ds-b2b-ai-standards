@@ -6,8 +6,7 @@ const path = Astro.url.pathname;
 <header class="site-header surface-black" data-site-header>
   <div class="wrap bar">
     <a class="logo" href="/" aria-label="The B2B AI Standard for LinkedIn Ads, home">
-      <span class="name">The B2B AI Standard <span class="tone-2">for LinkedIn Ads</span></span>
-      <span class="lbl-2">Maintained by DemandSense</span>
+      <img src="/design-system/brand/logo-b2b.svg" alt="" width="340" height="40">
     </a>
     <nav class="nav" aria-label="Site">
       {SITE_NAV.map((n) => {
@@ -44,9 +43,8 @@ const path = Astro.url.pathname;
   .site-header.at-top { background-color: transparent; }
   .site-spacer { height: var(--site-bar); }
   .bar { display: flex; align-items: center; gap: 32px; height: var(--site-bar); }
-  .logo { display: grid; gap: 2px; margin-right: auto; }
-  .name { font: 500 16px/1.2 var(--font-sans); letter-spacing: -.04em; }
-  .logo .lbl-2 { color: var(--text-2); }
+  .logo { display: flex; margin-right: auto; }
+  .logo img { display: block; height: 40px; width: auto; }
   .nav { display: flex; gap: 24px; }
   .nav a { font: 600 12px/1.4 var(--font-mono); text-transform: uppercase; color: var(--text-2); transition: color var(--t-fast) ease; }
   .nav a[aria-current] { color: var(--text); }
@@ -57,6 +55,6 @@ const path = Astro.url.pathname;
   .end { display: flex; gap: 8px; align-items: center; margin-left: auto; }
   @media (hover: hover) and (pointer: fine) { .nav a:hover { color: var(--text); } }
     .short { display: none; }
-  /* Phones: logo + site nav only; the "Try" button would push the bar past 375px */
-  @media (max-width: 699px) { .end, .name .tone-2, .logo .lbl-2 { display: none; } .nav { gap: 16px; } .short { display: inline; } .bar { flex-wrap: nowrap; gap: 16px; } .name { white-space: nowrap; } }
+  /* Phones: mark + site nav only; the wordmark's second line is unreadable below ~40px tall, and the "Try" button would push the bar past 375px */
+  @media (max-width: 699px) { .end { display: none; } .logo img { width: 32px; height: 32px; object-fit: cover; object-position: left; } .nav { gap: 16px; } .short { display: inline; } .bar { flex-wrap: nowrap; gap: 16px; } }
 </style>

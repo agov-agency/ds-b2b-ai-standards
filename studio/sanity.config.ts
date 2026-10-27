@@ -1,4 +1,6 @@
+import { createElement } from 'react';
 import { defineConfig } from 'sanity';
+import mark from '../design-system/brand/mark.svg?raw';
 import { structureTool } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
 import { projectId, dataset } from './env';
@@ -10,6 +12,7 @@ const LISTS = [['category', 'Categories'], ['cadence', 'Cadences'], ['connector'
 export default defineConfig({
   name: 'default',
   title: 'B2B AI Standard',
+  icon: () => createElement('span', { dangerouslySetInnerHTML: { __html: mark.replace('width="88" height="88"', 'width="100%" height="100%"') }, style: { display: 'block', width: '100%', height: '100%' } }),
   projectId,
   dataset,
   plugins: [
