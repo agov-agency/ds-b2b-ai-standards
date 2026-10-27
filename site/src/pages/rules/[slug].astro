@@ -176,7 +176,7 @@ const cta = {
 
 
   /* Previous / next: two card-buttons splitting the row between the content lines */
-  .pn { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: var(--section-ruled-bottom) calc(-1 * var(--pad)) calc(-1 * var(--section-ruled-bottom)); border-top: 1px solid var(--line); } /* last thing on the page: runs straight into the closing band */
+  .pn { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 calc(-1 * var(--pad)) calc(-1 * var(--section-ruled-bottom)); border-top: 1px solid var(--line); } /* straight under the CTA, no gap, and last on the page: runs into the closing band */
   .pn > * + * { box-shadow: inset 1px 0 var(--line); }
   /* Each card: the rule's area figure (no tile, as in rule rows), then area chip + number and title; both left-aligned */
   .pn a { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 24px; align-items: center; padding: 40px var(--pad); transition: background-color var(--t-fast) var(--ease-out); } /* figure no taller than the text, so the space above and below match */

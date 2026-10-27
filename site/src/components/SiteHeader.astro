@@ -51,7 +51,7 @@ const path = Astro.url.pathname;
   .nav a { font: 600 12px/1.4 var(--font-mono); text-transform: uppercase; color: var(--text-2); transition: color var(--t-fast) ease; }
   .nav a[aria-current] { color: var(--text); }
   .nav a { display: inline-flex; align-items: center; gap: 6px; }
-  .new { padding: 1px 5px; border-radius: var(--radius-2); background: var(--primary-450); color: var(--neutral-0); font: 600 10px/1.4 var(--font-mono); animation: new-in 250ms var(--ease-out) both; }
+  .new { padding: 1px 5px; border-radius: var(--radius-2); background: var(--secondary-300); color: var(--neutral-950); font: 600 10px/1.4 var(--font-mono); animation: new-in 250ms var(--ease-out) both; }
   @keyframes new-in { from { opacity: 0; transform: scale(.9); } }
   @media (prefers-reduced-motion: reduce) { .new { animation: none; } }
   .end { display: flex; gap: 8px; align-items: center; margin-left: auto; }

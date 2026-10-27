@@ -1,5 +1,5 @@
 ---
-// Author card: photo, "role at company" chip, name, a 2-line bio (lowest priority), chips for their work. Initials stand in until photos arrive.
+// Author card: photo, company and role chips, name, a 2-line bio (lowest priority), chips for their work. Initials stand in until photos arrive.
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
 import { T } from '../site';
@@ -13,7 +13,6 @@ const work = [
   nSk && { type: 'skill', text: `${nSk} ${(nSk === 1 ? T.skill : T.skills).toLowerCase()}` },
 ].filter((w) => !!w);
 const initials = data.name.split(' ').map((w) => w[0]).slice(0, 2).join('');
-const job = [data.role, data.company].filter(Boolean).join(' at ');
 ---
 <a class="acard" href={`/authors/${id}`}>
   <span class="photo">
@@ -22,7 +21,7 @@ const job = [data.role, data.company].filter(Boolean).join(' at ');
       : <><span class="pattern dots" aria-hidden="true" /><span class="ini t-n2" aria-hidden="true">{initials}</span></>}
   </span>
   <span class="txt">
-    {job && <span class="chip role">{job}</span>}
+    {(data.company || data.role) && <span class="job">{data.company && <span class="chip co">{data.company}</span>}{data.role && <span class="chip role">{data.role}</span>}</span>}
     <span class="t-h6 name">{data.name}</span>
     {data.about && <span class="t-p2 about">{data.about}</span>}
   </span>
@@ -41,8 +40,11 @@ const job = [data.role, data.company].filter(Boolean).join(' at ');
   .ini { position: relative; color: var(--text-meta); transition: color var(--t-fast) var(--ease-out); }
   .ini { font-size: 28px; }
   .txt { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; align-content: start; justify-items: start; padding: 24px var(--in) 0 var(--in-l); }
-  /* Role and company first, in one chip; then the name; the bio is the quietest line */
-  .role { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; } /* one line; the full title shows on the profile */
+  /* Company, then role, as two chips on one line; then the name; the bio is the quietest line */
+  .job { display: flex; gap: 4px; max-width: 100%; margin-bottom: 8px; }
+  .job > .chip { display: block; overflow: hidden; text-overflow: ellipsis; }
+  .co { flex: none; max-width: 100%; }
+  .role { min-width: 0; } /* the role gives way first; the full title shows on the profile */
   .about { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 12px; color: var(--text-2); }
   /* Their work as chips, each marked with its type colour */
   .work { display: flex; flex-wrap: wrap; gap: 6px; margin: 24px var(--in) 0 var(--in-l); } /* the card's own bottom padding holds cards without work too */

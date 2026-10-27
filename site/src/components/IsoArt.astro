@@ -86,14 +86,16 @@ const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]
   .on-dark :global(.lit .body) { fill: var(--lit, var(--h)); }
   /* `blue`: on the blue CTA card. Faces take the card colour, light white hairlines; the live part goes white and glows */
   .on-blue { --card: var(--primary-500); }
-  .on-blue :global(.f) { stroke: rgb(255 255 255 / .5); stroke-width: .6; }
-  .on-blue :global(.det) { stroke: rgb(255 255 255 / .28); stroke-width: .45; }
-  .on-blue :global(:is(.paper, .tint)) { fill: var(--card); }
-  .on-blue :global(.body) { fill: color-mix(in srgb, var(--card) 88%, #000); }
+  /* Faces a step lighter than the card, so the machine lifts off the blue instead of melting into it */
+  .on-blue :global(.f) { stroke: rgb(255 255 255 / .62); stroke-width: .6; }
+  .on-blue :global(.det) { stroke: rgb(255 255 255 / .32); stroke-width: .45; }
+  .on-blue :global(.paper) { fill: color-mix(in srgb, var(--neutral-0) 20%, var(--card)); }
+  .on-blue :global(.tint) { fill: color-mix(in srgb, var(--neutral-0) 11%, var(--card)); }
+  .on-blue :global(.body) { fill: color-mix(in srgb, var(--neutral-0) 5%, var(--card)); }
   .on-blue :global(.blk) { fill: color-mix(in srgb, var(--card) 60%, #000); }
   .on-blue :global(.lit) { filter: url(#iso-glow); }
   .on-blue :global(.lit .f) { stroke: var(--neutral-0); stroke-width: .9; }
-  .on-blue :global(.lit .paper) { fill: color-mix(in srgb, var(--neutral-0) 16%, var(--card)); }
+  .on-blue :global(.lit .paper) { fill: color-mix(in srgb, var(--neutral-0) 34%, var(--card)); }
   .on-blue :global(.lit .body) { fill: color-mix(in srgb, var(--neutral-0) 40%, var(--card)); }
   .iso-art :global(.type) { fill: var(--neutral-0); font: 600 10px/1 var(--font-mono); letter-spacing: 0; }
 </style>

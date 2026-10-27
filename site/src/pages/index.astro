@@ -1,13 +1,11 @@
 ---
 // Home: the Standard's landing. Copy from the live site (the-ai-standard-site.netlify.app); structure from the brief of 26 Oct 2026.
-// Black from the hero through the problem scene, white for the why-AI-fails block, rules and the directory, black again for authors + form.
+// Black from the hero through the problem scene, white for the why-AI-fails block and the directory, black again for authors + form.
 import { getCollection } from 'astro:content';
 import { arrow } from '../arrows';
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import IsoArt from '../components/IsoArt.astro';
-import SectionHead from '../components/SectionHead.astro';
-import RuleRow from '../components/RuleRow.astro';
 import Problem from '../components/home/Problem.astro';
 import Meet from '../components/home/Meet.astro';
 import Why from '../components/home/Why.astro';
@@ -15,17 +13,17 @@ import SiteFooter from '../components/SiteFooter.astro';
 import { T } from '../site';
 
 const nRules = (await getCollection('rules')).length;
-const rules = (await getCollection('rules', (r) => r.data.featured)).sort((a, b) => a.data.number - b.data.number);
 // Statements are placeholders until the authors send theirs (live site shows the same)
 const quotes = [
   { name: 'Iurii Znak', company: 'DemandSense' },
   { name: 'Contributor', company: 'Name and company to come' },
   { name: 'Contributor', company: 'Name and company to come' },
 ];
-// Directory teaser: one card per library list (rules have their own section above)
+// Directory teaser: one card per library list, in a rail (two in view, the third off to the right)
 const hubs = [
-  { type: 'scenario', art: 'scenarios', label: T.scenarios, href: '/scenarios', count: (await getCollection('scenarios')).length, title: 'Whole routines, ready to run.', context: 'Weekly or monthly jobs your AI does the same way' },
+  { type: 'rule', art: 'rules', label: T.rules, href: '/rules', count: nRules, title: 'The rules your AI works by.', context: 'What an experienced advertiser checks before trusting a number' },
   { type: 'skill', art: 'skills', label: T.skills, href: '/skills', count: (await getCollection('skills')).length, title: 'Single checks, ready to run.', context: 'Each reads an export, applies one rule and hands back a list' },
+  { type: 'scenario', art: 'scenarios', label: T.scenarios, href: '/scenarios', count: (await getCollection('scenarios')).length, title: 'Whole routines, ready to run.', context: 'Weekly or monthly jobs your AI does the same way' },
 ] as const;
 const go = arrow('right', 'go');
 const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
@@ -72,21 +70,12 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
     <div class="ruled">
       <Why />
 
-      <!-- Rules: the Directory's rules block, as is for now -->
-      <section class="blk wrap bleed" data-type="rule" aria-labelledby="h-rules">
-        <SectionHead id="h-rules" marker={T.rules} count={nRules} title="Three rules to start with." context="What an experienced advertiser checks before trusting a number" />
-        <ul class="rule-grid" data-reveal>
-          {rules.map((r) => <li><RuleRow rule={r} /></li>)}
-        </ul>
-        <div class="below"><a class="btn brand" href="/rules">Explore all {nRules} {T.rules.toLowerCase()} <Fragment set:html={go} /></a></div>
-      </section>
-
       <section class="blk wrap bleed dir" aria-labelledby="h-dir">
         <div class="dir-head">
           <p class="marker">Directory</p>
           <h2 id="h-dir" class="headline t-h3">The directory. <span class="tone-2">Every scenario, skill and rule in the Standard, each signed by the practitioner who runs it that way</span></h2>
         </div>
-        <ul class="picks" data-reveal>
+        <ul class="picks scroll-snap-x to-edges" data-picks data-reveal>
           {hubs.map((h) => (
             <li><a class="pick" data-type={h.type} href={h.href}>
               <span class="cover" aria-hidden="true"><IsoArt name={h.art} accent={h.type} mono zoom={1.3} /></span>
@@ -107,6 +96,13 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
 
   <SiteFooter />
 </Base>
+
+<script>
+  import { wheelX } from '../rail';
+  // Same scroll lock as the Directory's scenario rail: the wheel runs the cards sideways, then the page carries on
+  const picks = document.querySelector<HTMLElement>('[data-picks]');
+  if (picks) wheelX(picks);
+</script>
 
 <style>
   .top { position: relative; background: var(--bg); color: var(--text); }
@@ -143,8 +139,10 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
 
   .dir-head { display: grid; gap: var(--gap-overline); justify-items: center; text-align: center; margin-bottom: var(--header-gap); }
   .dir-head .headline { max-width: 22em; }
-  /* Two big cards side by side, one per library list: its hub art on top, marker + count, two-tone title, link label */
-  .picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter); }
+  /* Big cards, one per library list: its hub art on top, marker + count, two-tone title, link label.
+     Each keeps the half-width size; the rail holds two in view and the third waits off to the right, cropped at the edge lines */
+  .picks { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - var(--gutter)) / 2); gap: var(--gutter); }
+  .picks > li { min-width: 0; }
   .pick { position: relative; display: grid; grid-template-rows: auto 1fr; height: 100%; border-radius: var(--radius-4); overflow: hidden; transition: background-color var(--t-fast) var(--ease-out); }
   .pick::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line-card); pointer-events: none; }
   .cover { position: relative; display: block; aspect-ratio: 16 / 9; background: var(--bg-subtle); }
@@ -183,7 +181,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
     .hero { padding-block: 40px; }
     .ctas > .btn { flex: 1 1 100%; }
     .quote { padding: 24px; }
-    .picks { grid-template-columns: minmax(0, 1fr); }
+    .picks { grid-auto-columns: 88%; }
     .txt { padding: 24px; }
     .below > .btn { flex: 1; }
   }
