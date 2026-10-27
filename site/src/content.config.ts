@@ -79,6 +79,7 @@ const rules = defineCollection({
     author: reference('authors').default('demandsense'),
     lead: z.string().optional(),        // hero lead; falls back to `why`
     icon: z.string().optional(),        // line icon from illustrations/icons; empty = the category's
+    cover: z.number().int().min(1).max(20).optional(),   // --pastel-N; empty = the category's
     // Rule page sections (owned by the rule page template); each one renders only when present
     page: z.object({
       advises: z.object({ text: z.string(), source: z.string().optional(), url: z.string().url().optional() }).optional(),
@@ -111,6 +112,7 @@ const skills = defineCollection({
     author: reference('authors').optional(),
     rules: z.array(reference('rules')).default([]),
     icon: z.string().optional(),        // line icon from the skill set (ICON_POOLS.skill); empty = the category's
+    cover: z.number().int().min(1).max(20).optional(),   // --pastel-N; empty = the category's
     order: z.number().default(99),
     // Skill page (Figma 919:23317): hero facts, then what it does, the prompt, the output, how it works, use it when, related
     changes: z.string().optional(),     // "Reads your data, changes nothing"

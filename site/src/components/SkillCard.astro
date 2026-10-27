@@ -11,8 +11,9 @@ const { id, data } = Astro.props.skill;
 const author = data.author ? await getEntry(data.author) : undefined;
 const next = data.status === 'next';
 const href = next && data.rules[0] ? `/rules/${data.rules[0].id}` : `/skills/${id}`;
+const cover = data.cover ?? area(data.area).cover; // own colour, else the category's
 ---
-<a data-type="skill" class:list={['kcard', { next }]} href={href} style={`--cover: var(--pastel-${area(data.area).cover}); --cover-450: var(--pastel-${area(data.area).cover}-450)`}>
+<a data-type="skill" class:list={['kcard', { next }]} href={href} style={`--cover: var(--pastel-${cover}); --cover-450: var(--pastel-${cover}-450)`}>
   <span class="cover"><span class="ico" aria-hidden="true" set:html={icon(data.icon ?? area(data.area).icon)} /></span>
   <p class="chips"><span class="chip">{area(data.area).title}</span></p>
   <h3 class="t-h6">{data.title}</h3>

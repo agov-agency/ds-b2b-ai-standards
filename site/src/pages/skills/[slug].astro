@@ -35,7 +35,7 @@ const own = (ids: string[], id: string) => Number(ids.includes(id));
 const scIds = scenarios.map((s) => s.id), ruIds = rules.map((r) => r.id);
 const relSc = (await getCollection('scenarios')).sort((a, b) => own(scIds, b.id) - own(scIds, a.id) || Number(b.data.status === 'ready') - Number(a.data.status === 'ready') || a.data.order - b.data.order);
 const relRu = (await getCollection('rules')).sort((a, b) => own(ruIds, b.id) - own(ruIds, a.id) || a.data.number - b.data.number);
-const cover = area(d.area).cover;
+const cover = d.cover ?? area(d.area).cover;
 // What it does carries the step flow (no separate How it works), then the output, then the prompt (Pastel #15)
 const toc = [['h-does', 'What it does', p.does], ['h-back', 'What you get', p.output], ['h-prompt', 'The prompt', p.prompt], ['h-when', 'When to use it', p.useWhen.length], ['h-related', 'Related', relSc.length + relRu.length]]
   .filter(([, , on]) => on).map(([id, label]) => ({ label: label as string, href: `#${id}` }));

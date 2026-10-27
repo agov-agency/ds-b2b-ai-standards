@@ -51,7 +51,7 @@ const cta = {
 };
 ---
 <Base type="rule" title={`${d.title} · ${T.rules} · The B2B AI Standard for LinkedIn Ads`} description={d.why}>
-  <DetailHero cover={area(d.area).cover} crumbs={[{ label: 'Directory', href: '/directory' }, { label: T.rules, href: '/rules' }, { label: d.title }]}
+  <DetailHero cover={d.cover ?? area(d.area).cover} crumbs={[{ label: 'Directory', href: '/directory' }, { label: T.rules, href: '/rules' }, { label: d.title }]}
     chips={[{ label: area(d.area).title }, { label: `${T.rule} ${nn(d.number)}`, out: true }]} author={author} title={d.title} lead={d.lead ?? d.why}>
     <Fragment slot="actions">
       <a class="btn filled" href="#h-run">See where it runs</a>
@@ -121,7 +121,7 @@ const cta = {
       <RelatedTabs scenarios={relSc} skills={relSk} />
     </Sec>
 
-    <DetailCta title={cta.headline} context={cta.context} button={cta.button} cover={area(d.area).cover}>
+    <DetailCta title={cta.headline} context={cta.context} button={cta.button} cover={d.cover ?? area(d.area).cover}>
       <Fragment slot="art" set:html={icon(d.icon ?? area(d.area).icon)} />
     </DetailCta>
 

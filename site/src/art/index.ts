@@ -10,4 +10,5 @@ import type { Piece } from './iso';
 export const pieces: Record<string, Piece> = { directory, scenarios, skills, rules, cta, typewriter };
 
 // What the CMS can pick: only scenarios use figures (skills and rules use line icons, src/icons.ts); hub heroes are not in it. Add a figure to `pieces`, then its name here.
-export const ART_POOLS: Record<'scenario', string[]> = { scenario: [] };
+// For now every existing figure (hub heroes included) is offered as a placeholder until the scenario figures are drawn
+export const ART_POOLS: Record<'scenario', string[]> = { scenario: ['scenarios', 'skills', 'rules', 'directory', 'cta', 'typewriter'] };

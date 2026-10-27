@@ -16,7 +16,7 @@ const work = [
   nSc && { type: 'scenario', text: `${nSc} ${(nSc === 1 ? T.scenario : T.scenarios).toLowerCase()}` },
   nSk && { type: 'skill', text: `${nSk} ${(nSk === 1 ? T.skill : T.skills).toLowerCase()}` },
 ].filter((w) => !!w);
-const cover = area(data.area).cover;
+const cover = data.cover ?? area(data.area).cover; // own colour, else the category's
 ---
 <a data-type="rule" class="rcard" href={`/rules/${id}`} style={`--cover: var(--pastel-${cover}); --cover-450: var(--pastel-${cover}-450)`}>
   <span class="ico" aria-hidden="true" set:html={icon(data.icon ?? area(data.area).icon)} />

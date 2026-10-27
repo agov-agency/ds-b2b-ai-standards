@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity';
 import { ArtInput } from './ArtInput';
+import { CoverInput, randomCover } from './CoverInput';
 
 // One value per document of a type: a figure or icon two items share fails validation
 export const unique = (field: string) => (v: unknown, ctx: any) => {
@@ -16,7 +17,12 @@ export const str = (name: string, title?: string, required = false) => defineFie
 export const txt = (name: string, title?: string, required = false) => defineField({ name, title, type: 'text', rows: 3, ...(required && { validation: (r) => r.required() }) });
 export const ref = (name: string, to: string, title?: string) => defineField({ name, title, type: 'reference', to: [{ type: to }] });
 export const refs = (name: string, to: string, title?: string) => defineField({ name, title, type: 'array', of: [{ type: 'reference', to: [{ type: to }] }] });
-export const obj = (name: string, title: string, fields: any[], collapsed = true) => defineField({ name, title, type: 'object', options: { collapsible: true, collapsed }, fields });
+// Pastel behind the card and the page hero; new items start on a random one
+export const coverField = (description = 'Pastel behind the card and the page hero; a new one gets a random colour') =>
+  defineField({ name: 'cover', title: 'Cover colour', type: 'number', description, components: { input: CoverInput }, initialValue: randomCover, validation: (r) => r.integer().min(1).max(20) });
+
+// Sections open under a plain title, not as accordions (easier to scan and fill)
+export const obj = (name: string, title: string, fields: any[]) => defineField({ name, title, type: 'object', options: { collapsible: false }, fields });
 export const list = (name: string, title: string, fields: any[], preview = 'title') => defineField({
   name, title, type: 'array', of: [{ type: 'object', fields, preview: { select: { title: preview } } }],
 });
@@ -27,7 +33,7 @@ export const order = (type: string) => defineField({ name: 'order', type: 'numbe
 export const featured = defineField({ name: 'featured', type: 'boolean', initialValue: false });
 
 // Closing card above the footer; the page template falls back to default copy for any empty field
-export const cta = defineType({ name: 'cta', title: 'Closing CTA', type: 'object', options: { collapsible: true, collapsed: true }, fields: [str('headline'), txt('context'), str('button'), str('note')] });
+export const cta = defineType({ name: 'cta', title: 'Closing CTA', type: 'object', options: { collapsible: false }, fields: [str('headline'), txt('context'), str('button'), str('note')] });
 export const headline = defineType({ name: 'headline', type: 'object', fields: [str('headline', 'Headline (black)', true), txt('context', 'Context (gray)')] });
 export const gallery = (name = 'items') => list(name, 'Images', [str('title', 'Title', true), str('caption', 'Caption', true), defineField({ name: 'src', title: 'Image', type: 'image' })]);
 

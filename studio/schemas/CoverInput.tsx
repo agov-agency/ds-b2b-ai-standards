@@ -14,7 +14,7 @@ export function CoverInput({ value, onChange }: NumberInputProps) {
     <Flex gap={2} align="center">
       <span style={{ width: 35, height: 35, flex: 'none', borderRadius: 4, background: hex ?? 'transparent', boxShadow: 'inset 0 0 0 1px var(--card-border-color)' }} />
       <Select value={value ?? ''} onChange={(e) => onChange(e.currentTarget.value ? set(Number(e.currentTarget.value)) : unset())}>
-        <option value="">None (neutral)</option>
+        <option value="">Not set</option>
         {PASTELS.map(([n]) => <option key={n} value={n}>{NAMES[n - 1] ?? n} · {n}</option>)}
       </Select>
     </Flex>
