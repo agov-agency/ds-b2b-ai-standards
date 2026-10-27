@@ -42,7 +42,7 @@ function Tile({ name, on, pick }: { name?: string; on: boolean; pick: () => void
 
 export function ArtInput(props: ObjectInputProps) {
   const piece = (props.value as { piece?: string } | undefined)?.piece;
-  const pool = ART_POOLS[(props.schemaType.options as any).pool as 'scenario' | 'skill'].filter((n) => pieces[n]);
+  const pool = ART_POOLS[(props.schemaType.options as any).pool as 'scenario'].filter((n) => pieces[n]);
   return (
     <Stack space={3}>
       {pool.length === 0 && <Text muted size={1}>No figures for this type yet, so the default cover shows. Figures are drawn in code (site/src/art) and appear here once added.</Text>}

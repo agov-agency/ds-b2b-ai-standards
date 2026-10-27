@@ -32,7 +32,7 @@ export const headline = defineType({ name: 'headline', type: 'object', fields: [
 export const gallery = (name = 'items') => list(name, 'Images', [str('title', 'Title', true), str('caption', 'Caption', true), defineField({ name: 'src', title: 'Image', type: 'image' })]);
 
 // Option A: the figure lives in code (site/src/art); the editor picks one from the item type's own pool and tunes how it sits
-const artType = (name: 'scenarioArt' | 'skillArt', pool: 'scenario' | 'skill') => defineType({
+const artType = (name: 'scenarioArt', pool: 'scenario') => defineType({
   name, title: 'Illustration', type: 'object', components: { input: ArtInput }, options: { pool } as any,
   fields: [
     defineField({ name: 'piece', title: 'Figure', type: 'string', validation: (r) => r.custom(unique('art.piece')) }),
@@ -41,4 +41,3 @@ const artType = (name: 'scenarioArt' | 'skillArt', pool: 'scenario' | 'skill') =
   ],
 });
 export const scenarioArt = artType('scenarioArt', 'scenario');
-export const skillArt = artType('skillArt', 'skill');

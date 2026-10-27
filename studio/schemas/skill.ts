@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity';
-import { str, txt, slugField, ref, refs, areaField, obj, list, order, gallery, connectorsField } from './shared';
+import { str, txt, slugField, ref, refs, areaField, obj, list, order, gallery, connectorsField, unique } from './shared';
+import { IconInput } from './IconInput';
 
 const labelText = (name: string, title: string) => list(name, title, [str('label', 'Label', true), txt('text', 'Text', true)], 'label');
 
@@ -12,7 +13,7 @@ export const skill = defineType({
     order('skill'),
     str('changes', 'Changes (e.g. “Reads your data, changes nothing”)'), str('firstRun', 'First run'),
     connectorsField,
-    defineField({ name: 'art', type: 'skillArt', description: 'Until one is picked, the card shows the category icon' }),
+    defineField({ name: 'icon', type: 'string', description: 'Skills use icons from their own set, never a rule’s. Empty = the category icon', components: { input: IconInput }, options: { pool: 'skill' } as any, validation: (r) => r.custom(unique('icon')) }),
     obj('page', 'Skill page', [
       obj('does', 'What it does', [str('headline', 'Headline', true), txt('context'), defineField({ name: 'body', type: 'array', of: [{ type: 'text', rows: 3 }] })]),
       obj('prompt', 'The prompt', [str('headline', 'Headline', true), txt('context'), labelText('tabs', 'Tabs'), labelText('install', 'Install'), defineField({ name: 'source', type: 'url' })]),

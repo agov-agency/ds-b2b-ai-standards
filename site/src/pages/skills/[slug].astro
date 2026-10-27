@@ -18,7 +18,6 @@ import { arrow } from '../../arrows';
 import { icon } from '../../icons';
 import { T } from '../../site';
 import { area } from '../../areas';
-import ItemArt from '../../components/ItemArt.astro';
 
 export async function getStaticPaths() {
   const ready = await getCollection('skills', (s) => s.data.status === 'ready');
@@ -50,7 +49,7 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
       {p.prompt && <a class="btn filled" href="#h-prompt">Copy the prompt</a>}
       {p.prompt?.source && <a class="btn outlined" href={p.prompt.source} rel="noopener">Source on GitHub <Fragment set:html={arrow('up', 'ext')} /></a>}
     </Fragment>
-    <ItemArt slot="art" data={d}><span class="kart" style={`--cover-450: var(--pastel-${cover}-450)`} set:html={icon(d.icon ?? area(d.area).icon)} /></ItemArt>
+    <span slot="art" class="kart" set:html={icon(d.icon ?? area(d.area).icon)} />
   </DetailHero>
 
   <DetailFrame toc={toc}>
@@ -90,7 +89,7 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
     <DetailCta cover={cover} {...(p.prompt
       ? { title: 'Run it on this quarter’s data.', context: 'Paste the prompt into your AI with your exports. It reads them and changes nothing', button: 'Copy the prompt', href: '#h-prompt' }
       : { title: `Built a ${T.skill.toLowerCase()} we don’t have yet?` })}>
-      <ItemArt slot="art" data={d}><span class="kart" set:html={icon(d.icon ?? area(d.area).icon)} /></ItemArt>
+      <span slot="art" class="kart" set:html={icon(d.icon ?? area(d.area).icon)} />
     </DetailCta>
   </DetailFrame>
 
@@ -99,7 +98,7 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
 </Base>
 
 <style>
-  /* Skills have no cover illustration yet: the card icon, drawn large, in the area's colour */
+  /* Skills use line icons (like rules, from their own set), drawn large in the cover's hue */
   .kart { position: absolute; inset: 12%; display: block; }
   .kart :global(.hl) { --hairline-hi: var(--cover-450); width: 100%; height: 100%; }
   @media (max-width: 999px) { .kart { position: static; width: min(100%, 360px); aspect-ratio: 1; margin-inline: auto; } }

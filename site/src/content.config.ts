@@ -110,14 +110,13 @@ const skills = defineCollection({
     status: z.enum(['ready', 'next']),
     author: reference('authors').optional(),
     rules: z.array(reference('rules')).default([]),
-    icon: z.string().optional(),        // legacy: shown until the skill has an illustration; empty = the category's icon
+    icon: z.string().optional(),        // line icon from the skill set (ICON_POOLS.skill); empty = the category's
     order: z.number().default(99),
     // Skill page (Figma 919:23317): hero facts, then what it does, the prompt, the output, how it works, use it when, related
     changes: z.string().optional(),     // "Reads your data, changes nothing"
     firstRun: z.string().optional(),
     connectors: z.array(z.string()).default([]),
     illustration: z.string().optional(),
-    art,
     page: z.object({
       does: z.object({ headline: z.string(), context: z.string().optional(), body: z.array(z.string()).default([]) }).optional(),
       prompt: z.object({

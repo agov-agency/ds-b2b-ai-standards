@@ -50,7 +50,7 @@ for (const { slug, data: d } of read('rules')) {
 for (const { slug, data: d } of skillData) {
   const p = d.page ?? {};
   out.push(doc('skill', slug, {
-    ...d, area: cat(d.area), connectors: conns(d.connectors), author: ref('author', d.author), rules: d.rules?.map((r) => ref('rule', r)), illustration: undefined, icon: undefined,
+    ...d, area: cat(d.area), connectors: conns(d.connectors), author: ref('author', d.author), rules: d.rules?.map((r) => ref('rule', r)), illustration: undefined,
     page: { ...p, output: p.output && { ...p.output, items: images(p.output.items) } },
   }));
 }

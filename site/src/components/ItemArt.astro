@@ -4,7 +4,7 @@
 import IsoArt from './IsoArt.astro';
 import { pieces } from '../art';
 import type { CollectionEntry } from 'astro:content';
-type Data = CollectionEntry<'scenarios'>['data'] | CollectionEntry<'skills'>['data'];
+type Data = CollectionEntry<'scenarios'>['data'];
 interface Props { data: Data; still?: boolean; lazy?: boolean }
 const { data, still = false, lazy = false } = Astro.props;
 const art = data.art && pieces[data.art.piece] ? data.art : undefined;

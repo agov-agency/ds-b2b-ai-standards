@@ -8,7 +8,7 @@ export const rule = defineType({
     defineField({ name: 'number', type: 'number', validation: (r) => r.required().integer() }),
     str('title', 'Title', true), slugField(), txt('why', 'Why (one line under the title)', true), areaField('area', 'Category'), featured,
     { ...ref('author', 'author'), description: 'Empty = DemandSense' },
-    defineField({ name: 'icon', type: 'string', description: 'Rules use icons, never the scenario or skill figures. Empty = the category icon', components: { input: IconInput }, validation: (r) => r.custom(unique('icon')) }),
+    defineField({ name: 'icon', type: 'string', description: 'Rules use icons from their own set, never a skill’s. Empty = the category icon', components: { input: IconInput }, options: { pool: 'rule' } as any, validation: (r) => r.custom(unique('icon')) }),
     { ...txt('lead', 'Hero text'), description: 'The paragraph under the title at the top of the rule page. Empty = the Why line is used' },
     obj('page', 'Rule page', [
       obj('advises', 'What LinkedIn advises', [txt('text', 'Text', true), str('source'), defineField({ name: 'url', type: 'url' })]),

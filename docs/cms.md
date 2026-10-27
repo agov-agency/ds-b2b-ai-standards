@@ -16,7 +16,7 @@ Directory content (authors, skills, scenarios, rules, their pages and illustrati
 
 ## Illustrations (option A)
 
-Figures are code: `site/src/art/*.ts`, each a `Piece` with `draw(t)`. The CMS stores which figure and how it sits (`art`: piece, variant color/mono/dark, zoom). Colour is not stored: every colour group and the live part take the hue of the cover the figure sits on (`--cover-450`), as the hairline icons do. The pickers list only `ART_POOLS.scenario` / `ART_POOLS.skill` from `site/src/art/index.ts` (hub heroes are in neither) and preview them live. A new figure = add a module, add it to `pieces` and to one pool, redeploy the Studio. `ItemArt.astro` renders it (cards get the still frame), else the fallback (scenario cover, category icon). An unknown name falls back instead of breaking the build.
+Figures are code: `site/src/art/*.ts`, each a `Piece` with `draw(t)`. The CMS stores which figure and how it sits (`art`: piece, variant color/mono/dark, zoom). Colour is not stored: every colour group and the live part take the hue of the cover the figure sits on (`--cover-450`), as the hairline icons do. Only scenarios use figures: the picker lists `ART_POOLS.scenario` from `site/src/art/index.ts` (hub heroes are not in it) and previews them live. Rules and skills use line icons from `illustrations/icons`, each from its own set (`ICON_POOLS` in `site/src/icons.ts`), so a rule and a skill never share one. A new figure = add a module, add it to `pieces` and to one pool, redeploy the Studio. `ItemArt.astro` renders it (cards get the still frame), else the fallback (the scenario cover). An unknown name falls back instead of breaking the build.
 
 ## Setup (once)
 
