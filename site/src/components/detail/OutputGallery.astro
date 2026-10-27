@@ -1,5 +1,5 @@
 ---
-// "What you get": slot "lead" sits above the gallery, the default slot below it. Two images in view, the current one on the left at half the column and the next on its right; the arrows in the section head slide the row one image over, and it loops (after the last comes the first).
+// "What you get": slot "lead" sits above the gallery, the default slot below it. A row of images, each about three quarters of the content column, cropped only at the vertical lines; it scrolls sideways (trackpad, swipe) and the arrows in the section head step one image, wrapping from the last back to the first.
 import Sec from '../Sec.astro';
 import { arrow } from '../../arrows';
 interface Item { title: string; caption: string; src?: string }
@@ -12,60 +12,59 @@ const { id = 'h-back', label = 'What you get', title, context, items } = Astro.p
     <button class="btn filled icon xs" type="button" data-next aria-label="Next output" disabled={items.length < 2}><Fragment set:html={arrow('right')} /></button>
   </Fragment>
   <slot name="lead" />
-  <div class="gal" data-gal tabindex="0" aria-roledescription="carousel" aria-label="Outputs">
-    <ul class="track">
-      {[...items, ...(items.length > 1 ? items.slice(0, 2) : [])].map((o, i) => (
-        <li class="slide" aria-hidden={i < 2 && i < items.length ? undefined : 'true'} data-clone={i >= items.length ? '' : undefined}>
-          {o.src ? <img src={i < 2 ? o.src : undefined} data-src={o.src} alt={i < items.length ? `${o.title}: ${o.caption}` : ''} /> : <span class="ph pattern" role="img" aria-label={`${o.title} (image to come)`} />}
-        </li>
-      ))}
-    </ul>
-  </div>
+  <ul class="gal" data-gal tabindex="0" aria-label="Outputs">
+    {items.map((o, i) => (
+      <li class="slide">
+        {o.src ? <img src={o.src} alt={`${o.title}: ${o.caption}`} loading={i < 2 ? undefined : 'lazy'} /> : <span class="ph pattern" role="img" aria-label={`${o.title} (image to come)`} />}
+      </li>
+    ))}
+  </ul>
   <slot />
 </Sec>
 
 <script>
-  // Loop: the track ends with copies of the first two images. Sliding onto the copy of the first then jumps back to the
-  // real first with no transition, and stepping back from the first jumps to that copy before sliding, so it never runs out
+  // Arrows: own tween (snap off while it runs, as in rail.ts) one image over; past either end it runs back round
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
   document.querySelectorAll<HTMLElement>('[data-gal]').forEach((gal) => {
     const sec = gal.closest('section')!;
     const prev = sec.querySelector<HTMLButtonElement>('[data-prev]')!;
     const next = sec.querySelector<HTMLButtonElement>('[data-next]')!;
-    const track = gal.querySelector<HTMLElement>('.track')!;
-    const slides = [...track.children] as HTMLElement[];
-    const n = slides.filter((s) => !s.hasAttribute('data-clone')).length;
-    if (n < 2) return;
-    let cur = 0;
-    const place = (i: number, animate: boolean) => {
-      track.style.transition = animate ? '' : 'none';
-      track.style.setProperty('--at', String(i));
-      if (!animate) void track.offsetWidth; // commit the jump before the next slide animates
+    if (gal.children.length < 2) return;
+    let raf = 0, target = 0;
+    const go = (to: number) => {
+      target = to;
+      if (reduce.matches) { gal.scrollLeft = to; return; }
+      cancelAnimationFrame(raf);
+      const from = gal.scrollLeft, dist = to - from, t0 = performance.now(), dur = 500;
+      gal.style.scrollSnapType = 'none';
+      const tick = (now: number) => {
+        const p = Math.min(1, (now - t0) / dur);
+        gal.scrollLeft = from + dist * (1 - Math.pow(1 - p, 3));
+        if (p < 1) raf = requestAnimationFrame(tick); else { raf = 0; gal.style.scrollSnapType = ''; }
+      };
+      raf = requestAnimationFrame(tick);
     };
     const step = (d: number) => {
-      if (cur === n) { place(0, false); cur = 0; } // reduced motion: no transitionend to jump back on
-      let i = cur + d;
-      if (i < 0) { place(n, false); i = n - 1; }
-      cur = i;
-      // Images load as they come into view: a gallery can hold 20+ screenshots
-      for (const k of [cur, cur + 1, cur + 2]) { const img = slides[k]?.querySelector<HTMLImageElement>('img[data-src]:not([src])'); if (img) img.src = img.dataset.src!; }
-      slides.forEach((s, k) => (k === cur || k === cur + 1) && !s.hasAttribute('data-clone') ? s.removeAttribute('aria-hidden') : s.setAttribute('aria-hidden', 'true'));
-      place(cur, true);
+      const s = (gal.firstElementChild as HTMLElement).offsetWidth + parseFloat(getComputedStyle(gal).columnGap || '0');
+      const max = gal.scrollWidth - gal.clientWidth;
+      const at = raf ? target : gal.scrollLeft;
+      if (d > 0 && at >= max - 4) return go(0);
+      if (d < 0 && at <= 4) return go(max);
+      go(Math.max(0, Math.min(max, Math.round((at + d * s) / s) * s)));
     };
-    track.addEventListener('transitionend', () => { if (cur === n) { place(0, false); cur = 0; } });
     prev.onclick = () => step(-1);
     next.onclick = () => step(1);
-    gal.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1); });
+    gal.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') { e.preventDefault(); step(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); } });
   });
 </script>
 
 <style>
-  /* Two images per view, each half the content column; the row slides one image over per step */
-  .gal { overflow: hidden; border-radius: var(--radius-4); outline-offset: 4px; }
-  .track { --at: 0; --w: calc((100% - var(--gutter)) / 2); display: grid; grid-auto-flow: column; grid-auto-columns: var(--w); gap: var(--gutter); transform: translateX(calc(-1 * var(--at) * (var(--w) + var(--gutter)))); transition: transform 400ms var(--ease-out); }
-  .slide { position: relative; aspect-ratio: 16 / 10; border-radius: var(--radius-4); background: var(--bg-subtle); overflow: hidden; }
+  /* Each image is three quarters of the content column; the row runs out to the vertical lines (--pad from the detail frame) and crops there */
+  .gal { display: grid; grid-auto-flow: column; grid-auto-columns: 75%; gap: var(--gutter); margin-inline: calc(-1 * var(--pad, 0px)); padding: 4px var(--pad, 0px); scroll-padding-inline: var(--pad, 0px); overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; outline-offset: -4px; }
+  .gal::-webkit-scrollbar { display: none; }
+  .slide { position: relative; aspect-ratio: 16 / 10; border-radius: var(--radius-4); background: var(--bg-subtle); overflow: hidden; scroll-snap-align: start; }
   .slide::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line-card); pointer-events: none; } /* over the image, which hides an inset ring on the slide itself */
   .slide img { width: 100%; height: 100%; object-fit: cover; }
   .ph { position: absolute; inset: 0; opacity: .5; }
-  @media (prefers-reduced-motion: reduce) { .track { transition: none; } }
-  @media (max-width: 699px) { .track { --w: 85%; } }
+  @media (max-width: 699px) { .gal { grid-auto-columns: 88%; } }
 </style>
