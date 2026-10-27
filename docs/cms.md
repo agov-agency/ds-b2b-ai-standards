@@ -8,9 +8,15 @@ Directory content (authors, skills, scenarios, rules, their pages and illustrati
 - `site/src/sanity.ts`: the site's content source. With `SANITY_PROJECT_ID` set (Vercel), it reads published documents from the public dataset at build time; without it (local), it reads `site/content/*.md`. Queries turn references into slugs and images into CDN URLs, so pages see the same data either way.
 - Publishing: Publish in Studio → Sanity webhook → Vercel Deploy Hook → static rebuild (1–2 min). No server.
 
+## Content model
+
+- Items: `scenario`, `skill`, `rule`, `author`.
+- Shared lists, referenced by items: `category` (title, colour, fallback icon, Rules hub headline), `cadence`, `connector` (logo only for ones the site doesn't draw). Locally, categories come from `site/content/categories/*.md`.
+- Pictures, each type from its own pool, never shared: scenarios and skills get an illustration (animated figure), rules get an icon (`illustrations/icons`). Studio rejects a figure or icon already used by another item of the same type.
+
 ## Illustrations (option A)
 
-Animated figures are code: `site/src/art/*.ts`, each a `Piece` with `draw(t)`. The CMS stores only which figure and how it sits (`art`: piece, variant color/mono/dark, accent, zoom). Studio lists the pieces from `site/src/art` and previews them live. A new figure = add a module to `site/src/art`, register it in `site/src/art/index.ts`, redeploy the Studio. `ItemArt.astro` renders the figure (cards get the still rest frame), else the static `illustration` image, else the default cover. An unknown name falls back instead of breaking the build.
+Figures are code: `site/src/art/*.ts`, each a `Piece` with `draw(t)`. The CMS stores which figure and how it sits (`art`: piece, variant color/mono/dark, accent, zoom). The pickers list only `ART_POOLS.scenario` / `ART_POOLS.skill` from `site/src/art/index.ts` (hub heroes are in neither) and preview them live. A new figure = add a module, add it to `pieces` and to one pool, redeploy the Studio. `ItemArt.astro` renders it (cards get the still frame), else the fallback (scenario cover, category icon). An unknown name falls back instead of breaking the build.
 
 ## Setup (once)
 

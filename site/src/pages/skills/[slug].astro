@@ -1,7 +1,6 @@
 ---
 // One template for every skill page (Figma 919:23317), built on the scenario page's parts. Only ready skills get a page;
 // "next version" cards link to their rule instead (SkillCard).
-import ItemArt from '../../components/ItemArt.astro';
 import { getCollection, getEntry, getEntries, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import DetailHero from '../../components/detail/DetailHero.astro';
@@ -17,7 +16,9 @@ import DetailCta from '../../components/detail/DetailCta.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { arrow } from '../../arrows';
 import { icon } from '../../icons';
-import { AREAS, AREA_COVER, AREA_ICON, T } from '../../site';
+import { T } from '../../site';
+import { area } from '../../areas';
+import ItemArt from '../../components/ItemArt.astro';
 
 export async function getStaticPaths() {
   const ready = await getCollection('skills', (s) => s.data.status === 'ready');
@@ -35,7 +36,7 @@ const own = (ids: string[], id: string) => Number(ids.includes(id));
 const scIds = scenarios.map((s) => s.id), ruIds = rules.map((r) => r.id);
 const relSc = (await getCollection('scenarios')).sort((a, b) => own(scIds, b.id) - own(scIds, a.id) || Number(b.data.status === 'ready') - Number(a.data.status === 'ready') || a.data.order - b.data.order);
 const relRu = (await getCollection('rules')).sort((a, b) => own(ruIds, b.id) - own(ruIds, a.id) || a.data.number - b.data.number);
-const cover = AREA_COVER[d.area];
+const cover = area(d.area).cover;
 // What it does carries the step flow (no separate How it works), then the output, then the prompt (Pastel #15)
 const toc = [['h-does', 'What it does', p.does], ['h-back', 'What you get', p.output], ['h-prompt', 'The prompt', p.prompt], ['h-when', 'When to use it', p.useWhen.length], ['h-related', 'Related', relSc.length + relRu.length]]
   .filter(([, , on]) => on).map(([id, label]) => ({ label: label as string, href: `#${id}` }));
@@ -44,12 +45,12 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
 ---
 <Base type="skill" title={`${d.title} · ${T.skills} · The B2B AI Standard for LinkedIn Ads`} description={d.description}>
   <DetailHero cover={cover} crumbs={[{ label: 'Directory', href: '/directory' }, { label: T.skills, href: '/skills' }, { label: d.title }]}
-    chips={[{ label: AREAS[d.area] }, { label: T.skill, out: true }]} author={author} title={d.title} lead={d.description} facts={facts}>
+    chips={[{ label: area(d.area).title }, { label: T.skill, out: true }]} author={author} title={d.title} lead={d.description} facts={facts}>
     <Fragment slot="actions">
       {p.prompt && <a class="btn filled" href="#h-prompt">Copy the prompt</a>}
       {p.prompt?.source && <a class="btn outlined" href={p.prompt.source} rel="noopener">Source on GitHub <Fragment set:html={arrow('up', 'ext')} /></a>}
     </Fragment>
-    <ItemArt slot="art" data={d}><span class="kart" style={`--cover-450: var(--pastel-${cover}-450)`} set:html={icon(d.icon ?? AREA_ICON[d.area])} /></ItemArt>
+    <ItemArt slot="art" data={d}><span class="kart" style={`--cover-450: var(--pastel-${cover}-450)`} set:html={icon(d.icon ?? area(d.area).icon)} /></ItemArt>
   </DetailHero>
 
   <DetailFrame toc={toc}>
@@ -89,7 +90,7 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
     <DetailCta cover={cover} {...(p.prompt
       ? { title: 'Run it on this quarter’s data.', context: 'Paste the prompt into your AI with your exports. It reads them and changes nothing', button: 'Copy the prompt', href: '#h-prompt' }
       : { title: `Built a ${T.skill.toLowerCase()} we don’t have yet?` })}>
-      <ItemArt slot="art" data={d}><span class="kart" set:html={icon(d.icon ?? AREA_ICON[d.area])} /></ItemArt>
+      <ItemArt slot="art" data={d}><span class="kart" set:html={icon(d.icon ?? area(d.area).icon)} /></ItemArt>
     </DetailCta>
   </DetailFrame>
 

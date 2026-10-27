@@ -14,14 +14,15 @@ import AuthorCard from '../components/AuthorCard.astro';
 import AuthorMarquee from '../components/AuthorMarquee.astro';
 import SubmitBand from '../components/SubmitBand.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { AREAS, T, type Area } from '../site';
+import { T } from '../site';
+import { AREA_LIST } from '../areas';
 
 const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) => a.data.order - b.data.order;
 // Ready first, then what's coming: the slider shows the library's breadth, not just the two live ones
 const scenarios = (await getCollection('scenarios')).sort((a, b) => (a.data.status === b.data.status ? byOrder(a, b) : a.data.status === 'ready' ? -1 : 1));
 const allSkills = await getCollection('skills');
 const skills = allSkills.sort((a, b) => (a.data.status === b.data.status ? byOrder(a, b) : a.data.status === 'ready' ? -1 : 1));
-const areas = Object.entries(AREAS) as [Area, string][];
+const areas = AREA_LIST.map((a) => [a.id, a.title] as const);
 const two = (n: number) => String(n).padStart(2, '0');
 // Six rules, featured first, then by number
 const rules = (await getCollection('rules')).sort((a, b) => (a.data.featured === b.data.featured ? a.data.number - b.data.number : a.data.featured ? -1 : 1)).slice(0, 6);
@@ -65,11 +66,11 @@ const small = arrow('right');
       <div class="areas" role="group" aria-label="Filter by area" data-areas>
         <button class="fchip" type="button" aria-pressed="true" data-area="">All <span class="n">{two(skills.length)}</span></button>
         {areas.map(([key, label]) => (
-          <button class="fchip" type="button" aria-pressed="false" data-area={key}>{label} <span class="n">{two(skills.filter((s) => s.data.area === key).length)}</span></button>
+          <button class="fchip" type="button" aria-pressed="false" data-area={key}>{label} <span class="n">{two(skills.filter((s) => s.data.area.id === key).length)}</span></button>
         ))}
       </div>
       <ul class="grid4" data-reveal data-grid>
-        {skills.map((s, i) => <li data-area={s.data.area} hidden={i >= 8} data-more={i >= 4 ? '' : undefined}><SkillCard skill={s} /></li>)}
+        {skills.map((s, i) => <li data-area={s.data.area.id} hidden={i >= 8} data-more={i >= 4 ? '' : undefined}><SkillCard skill={s} /></li>)}
       </ul>
       <div class="below"><a class="btn brand" href="/skills">See all {allSkills.length} {T.skills.toLowerCase()} <Fragment set:html={go} /></a></div>
     </section>

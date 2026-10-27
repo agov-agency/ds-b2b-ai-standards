@@ -6,7 +6,7 @@
 // No author on "soon" cards for now.
 import type { CollectionEntry } from 'astro:content';
 import { getEntry } from 'astro:content';
-import { AREAS } from '../site';
+import { area } from '../areas';
 import ScenarioCover from './ScenarioCover.astro';
 import ItemArt from './ItemArt.astro';
 import Byline from './Byline.astro';
@@ -23,7 +23,7 @@ const Tag = soon ? 'div' : 'a';
   </div>
   <div class="txt">
     <p class="chips">
-      <span class="chip">{AREAS[data.category]}</span>
+      <span class="chip">{area(data.category).title}</span>
       {soon ? <span class="chip out soon-chip">Coming next</span> : <span class="chip out">{data.cadence}</span>}
     </p>
     <h3 class:list={[wide ? 't-h4' : 't-h5']}>{data.title}</h3>

@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { Card, Grid, Stack, Text } from '@sanity/ui';
 import { set, unset, type ObjectInputProps } from 'sanity';
-import { pieces } from '../../site/src/art';
+import { pieces, ART_POOLS } from '../../site/src/art';
 
 const CSS = `.f{stroke:#0a0a0a;stroke-width:1.5}.paper{fill:#fff}.tint{fill:#dde8ff}.body{fill:#b8ceff}.blk,.head{fill:#0a0a0a}
 .det{fill:none;stroke:#0a0a0a;stroke-width:1}.hl{fill:none;stroke:#3b6cff;stroke-width:1.5}.dashed{stroke-dasharray:4 3}.nofill{fill:none}
@@ -42,12 +42,15 @@ function Tile({ name, on, pick }: { name?: string; on: boolean; pick: () => void
 
 export function ArtInput(props: ObjectInputProps) {
   const piece = (props.value as { piece?: string } | undefined)?.piece;
+  const pool = ART_POOLS[(props.schemaType.options as any).pool as 'scenario' | 'skill'].filter((n) => pieces[n]);
   return (
     <Stack space={3}>
+      {pool.length === 0 && <Text muted size={1}>No figures for this type yet. They are drawn in code (site/src/art) and appear here once added.</Text>}
       <Grid columns={[2, 3, 4]} gap={2}>
         <Tile on={!piece} pick={() => props.onChange(unset())} />
-        {Object.keys(pieces).map((n) => <Tile key={n} name={n} on={piece === n} pick={() => props.onChange(set(n, ['piece']))} />)}
+        {pool.map((n) => <Tile key={n} name={n} on={piece === n} pick={() => props.onChange(set(n, ['piece']))} />)}
       </Grid>
+      {props.validation.map((v, i) => <Text key={i} size={1} style={{ color: 'var(--card-badge-critical-dot-color, #e5484d)' }}>{v.message}</Text>)}
       {piece && <Card padding={3} radius={2} border><Live name={piece} /></Card>}
       {piece && props.renderDefault({ ...props, members: props.members.filter((m) => m.kind !== 'field' || m.name !== 'piece') })}
     </Stack>

@@ -1,5 +1,5 @@
 ---
-// Rules hub (outer page): every rule, grouped by area in AREAS order. No rule detail pages yet.
+// Rules hub (outer page): every rule, grouped by category in category order. No rule detail pages yet.
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import AuthorMarquee from '../../components/AuthorMarquee.astro';
@@ -11,18 +11,12 @@ import Sec from '../../components/Sec.astro';
 import RuleRow from '../../components/RuleRow.astro';
 import SubmitBand from '../../components/SubmitBand.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import { AREAS, T, type Area } from '../../site';
+import { T } from '../../site';
+import { AREA_LIST } from '../../areas';
 
 const rules = (await getCollection('rules')).sort((a, b) => a.data.number - b.data.number);
-// Two-tone headline per area group
-const HEAD: Record<Area, [string, string]> = {
-  'reach-frequency': ['How often, and to how many.', 'Frequency means little without the share of the audience it reached'],
-  'budget-reach': ['Where the money actually went.', 'Campaign totals hide which companies and roles the budget reached'],
-  'building-account': ['Set up before you spend.', 'Structure, audiences and exclusions the reports depend on'],
-  'signal-to-sales': ['From engagement to a sales call.', 'Which signals count, and how they reach a rep'],
-  'ads-creative': ['When an ad stops working.', 'Telling real fatigue apart from the wrong audience'],
-};
-const groups = (Object.keys(AREAS) as Area[]).map((a) => ({ area: a, rules: rules.filter((r) => r.data.area === a) })).filter((g) => g.rules.length);
+// Two-tone headline per group comes from the category
+const groups = AREA_LIST.map((a) => ({ area: a, rules: rules.filter((r) => r.data.area.id === a.id) })).filter((g) => g.rules.length);
 ---
 <Base type="rule" title={`${T.rules} · The B2B AI Standard for LinkedIn Ads`} description="What an experienced LinkedIn Ads advertiser checks before trusting a number, one rule at a time">
 
@@ -42,7 +36,7 @@ const groups = (Object.keys(AREAS) as Area[]).map((a) => ({ area: a, rules: rule
   <main id="main" class="ruled">
     <div class="wrap">
       {groups.map((g, i) => (
-        <Sec id={`h-${g.area}`} label={AREAS[g.area]} title={HEAD[g.area][0]} context={HEAD[g.area][1]} class={i === 0 ? 'first' : undefined}>
+        <Sec id={`h-${g.area.id}`} label={g.area.title} title={g.area.headline ?? g.area.title} context={g.area.context} class={i === 0 ? 'first' : undefined}>
           <ul class="rule-grid" data-reveal>
             {g.rules.map((r) => <li><RuleRow rule={r} /></li>)}
           </ul>

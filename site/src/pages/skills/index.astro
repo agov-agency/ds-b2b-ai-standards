@@ -10,14 +10,15 @@ import Sec from '../../components/Sec.astro';
 import SkillCard from '../../components/SkillCard.astro';
 import SubmitBand from '../../components/SubmitBand.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
-import { AREAS, T, type Area } from '../../site';
+import { T } from '../../site';
+import { AREA_LIST } from '../../areas';
 
 // Ready first, then "next version", each in their own order
 const all = (await getCollection('skills')).sort((a, b) => (a.data.status === b.data.status ? a.data.order - b.data.order : a.data.status === 'ready' ? -1 : 1));
 const nReady = all.filter((s) => s.data.status === 'ready').length;
 const two = (n: number) => String(n).padStart(2, '0');
-const areas = Object.entries(AREAS) as [Area, string][];
-const countIn = (a: Area) => all.filter((s) => s.data.area === a).length;
+const areas = AREA_LIST.map((a) => [a.id, a.title] as const);
+const countIn = (a: string) => all.filter((s) => s.data.area.id === a).length;
 ---
 <Base type="skill" title={`${T.skills} · The B2B AI Standard for LinkedIn Ads`} description="Single checks for LinkedIn Ads: each reads an export, applies one rule and gives back a list or a flag">
 
@@ -52,7 +53,7 @@ const countIn = (a: Area) => all.filter((s) => s.data.area === a).length;
         </div>
 
         <ul class="grid" data-reveal data-grid>
-          {all.map((s) => <li data-area={s.data.area} data-status={s.data.status}><SkillCard skill={s} /></li>)}
+          {all.map((s) => <li data-area={s.data.area.id} data-status={s.data.status}><SkillCard skill={s} /></li>)}
         </ul>
         <p class="empty t-p1 body" data-empty hidden>No ready {T.skills.toLowerCase()} in this area yet. Turn off “Ready to run only” to see what’s coming</p>
       </Sec>

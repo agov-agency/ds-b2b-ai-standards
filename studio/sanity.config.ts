@@ -4,7 +4,8 @@ import { visionTool } from '@sanity/vision';
 import { projectId, dataset } from './env';
 import { schemaTypes } from './schemas';
 
-const LIST = [['scenario', 'Scenarios'], ['skill', 'Skills'], ['rule', 'Rules'], ['author', 'Authors'], ['connector', 'Connectors']] as const;
+const LIST = [['scenario', 'Scenarios'], ['skill', 'Skills'], ['rule', 'Rules'], ['author', 'Authors']] as const;
+const LISTS = [['category', 'Categories'], ['cadence', 'Cadences'], ['connector', 'Connectors']] as const;
 
 export default defineConfig({
   name: 'default',
@@ -12,7 +13,7 @@ export default defineConfig({
   projectId,
   dataset,
   plugins: [
-    structureTool({ structure: (S) => S.list().title('Directory').items(LIST.map(([type, title]) => S.documentTypeListItem(type).title(title))) }),
+    structureTool({ structure: (S) => S.list().title('Directory').items([...LIST.map(([type, title]) => S.documentTypeListItem(type).title(title)), S.divider(), ...LISTS.map(([type, title]) => S.documentTypeListItem(type).title(title))]) }),
     visionTool(),
   ],
   schema: { types: schemaTypes },

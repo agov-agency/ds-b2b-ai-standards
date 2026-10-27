@@ -4,7 +4,8 @@
 // Lists lay these out as a grid (two up on wide pages, one up in content columns).
 import type { CollectionEntry } from 'astro:content';
 import { getCollection } from 'astro:content';
-import { AREAS, AREA_COVER, AREA_ICON, T } from '../site';
+import { T } from '../site';
+import { area } from '../areas';
 import { icon } from '../icons';
 interface Props { rule: CollectionEntry<'rules'> }
 const { id, data } = Astro.props.rule;
@@ -15,12 +16,12 @@ const work = [
   nSc && { type: 'scenario', text: `${nSc} ${(nSc === 1 ? T.scenario : T.scenarios).toLowerCase()}` },
   nSk && { type: 'skill', text: `${nSk} ${(nSk === 1 ? T.skill : T.skills).toLowerCase()}` },
 ].filter((w) => !!w);
-const cover = AREA_COVER[data.area];
+const cover = area(data.area).cover;
 ---
 <a data-type="rule" class="rcard" href={`/rules/${id}`} style={`--cover: var(--pastel-${cover}); --cover-450: var(--pastel-${cover}-450)`}>
-  <span class="ico" aria-hidden="true" set:html={icon(AREA_ICON[data.area])} />
+  <span class="ico" aria-hidden="true" set:html={icon(data.icon ?? area(data.area).icon)} />
   <span class="main">
-    <span class="kick"><span class="chip dark">{T.rule} {String(data.number).padStart(2, '0')}</span><span class="chip area">{AREAS[data.area]}</span></span>
+    <span class="kick"><span class="chip dark">{T.rule} {String(data.number).padStart(2, '0')}</span><span class="chip area">{area(data.area).title}</span></span>
     <span class="copy">
       <span class="t-h6 title">{data.title}</span>
       <span class="t-p2 body why">{data.why}</span>

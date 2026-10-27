@@ -1,8 +1,7 @@
 import { defineCollection, reference, z } from 'astro:content';
 import { source } from './sanity';
-import { AREAS } from './site';
 
-const area = z.enum(Object.keys(AREAS) as [keyof typeof AREAS]);
+const area = reference('categories');
 
 // Animated figure picked in the CMS: a piece from src/art by name, plus how it sits (option A in docs/cms.md)
 const art = z.object({
@@ -49,6 +48,12 @@ const detailPage = z.object({
   cta: z.object({ headline: z.string().optional(), context: z.string().optional(), button: z.string().optional(), note: z.string().optional() }).optional(),
 }).default({});
 
+// Categories group rules, skills and scenarios (hub filters, rule groups); headline/context head the group on the Rules hub
+const categories = defineCollection({
+  loader: source('categories'),
+  schema: z.object({ title: z.string(), cover: z.number().int().min(1).max(20), icon: z.string(), order: z.number().default(99), headline: z.string().optional(), context: z.string().optional() }),
+});
+
 const authors = defineCollection({
   loader: source('authors'),
   schema: z.object({
@@ -74,6 +79,7 @@ const rules = defineCollection({
     featured: z.boolean().default(false),
     author: reference('authors').default('demandsense'),
     lead: z.string().optional(),        // hero lead; falls back to `why`
+    icon: z.string().optional(),        // line icon from illustrations/icons; empty = the category's
     // Rule page sections (owned by the rule page template); each one renders only when present
     page: z.object({
       advises: z.object({ text: z.string(), source: z.string().optional(), url: z.string().url().optional() }).optional(),
@@ -105,7 +111,7 @@ const skills = defineCollection({
     status: z.enum(['ready', 'next']),
     author: reference('authors').optional(),
     rules: z.array(reference('rules')).default([]),
-    icon: z.string().optional(),
+    icon: z.string().optional(),        // legacy: shown until the skill has an illustration; empty = the category's icon
     order: z.number().default(99),
     // Skill page (Figma 919:23317): hero facts, then what it does, the prompt, the output, how it works, use it when, related
     changes: z.string().optional(),     // "Reads your data, changes nothing"
@@ -161,7 +167,7 @@ const scenarios = defineCollection({
   }),
 });
 
-// Logos for connectors the site doesn't know (Connectors.astro); added in the CMS only
+// Logos for connectors the site doesn't know (Connectors.astro); CMS only, and only the ones with a logo
 const connectors = defineCollection({ loader: source('connectors'), schema: z.object({ name: z.string(), logo: z.string() }) });
 
-export const collections = { authors, rules, skills, scenarios, connectors };
+export const collections = { categories, authors, rules, skills, scenarios, connectors };

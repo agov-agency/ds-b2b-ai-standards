@@ -14,13 +14,16 @@ const clean = (v: any): any => Array.isArray(v) ? v.filter((x) => x != null).map
 const IMG = (f: string) => `"${f}": ${f}.asset->url`;
 const SLUG = (f: string) => `"${f}": ${f}->slug.current`;
 const ITEMS = `items[]{..., ${IMG('src')}}`;
+const AREA = (f = 'area') => `"${f}": ${f}->slug.current`;
+const CONNECTORS = '"connectors": connectors[]->name';
 const QUERIES: Record<string, string> = {
+  categories: `*[_type == "category"]`,
   authors: `*[_type == "author"]{..., ${IMG('photo')}, links[]{url, icon, "label": select(label == "custom" => customLabel, label), ${IMG('logo')}}}`,
-  rules: `*[_type == "rule"]{..., ${SLUG('author')}, page{..., voices[]{..., ${SLUG('author')}}}}`,
-  skills: `*[_type == "skill"]{..., ${SLUG('author')}, "rules": rules[]->slug.current, ${IMG('illustration')}, page{..., output{..., ${ITEMS}}}}`,
-  scenarios: `*[_type == "scenario"]{..., ${SLUG('author')}, "skills": skills[]->slug.current, "rules": rules[]->slug.current, ${IMG('illustration')},
+  rules: `*[_type == "rule"]{..., ${AREA()}, ${SLUG('author')}, page{..., voices[]{..., ${SLUG('author')}}}}`,
+  skills: `*[_type == "skill"]{..., ${AREA()}, ${CONNECTORS}, ${SLUG('author')}, "rules": rules[]->slug.current, ${IMG('illustration')}, page{..., output{..., ${ITEMS}}}}`,
+  scenarios: `*[_type == "scenario"]{..., ${AREA('category')}, "cadence": cadence->title, ${CONNECTORS}, ${SLUG('author')}, "skills": skills[]->slug.current, "rules": rules[]->slug.current, ${IMG('illustration')},
     page{..., comesBack{..., ${ITEMS}}, steps[]{..., ${SLUG('skill')}}}}`,
-  connectors: `*[_type == "connector"]{..., "slug": {"current": _id}, ${IMG('logo')}}`,
+  connectors: `*[_type == "connector" && defined(logo)]{..., "slug": {"current": _id}, ${IMG('logo')}}`,
 };
 
 const sanity = (dir: string): Loader => ({

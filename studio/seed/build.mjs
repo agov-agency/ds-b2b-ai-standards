@@ -28,24 +28,35 @@ const keyed = (v) => Array.isArray(v) ? v.map((x) => x && typeof x === 'object' 
 const doc = (type, slug, data) => keyed({ _id: `${type}-${slug}`, _type: type, slug: { _type: 'slug', current: slug }, ...data });
 
 const out = [];
+// Shared lists (category, cadence, connector) first; items reference them
+const slugify = (v) => v.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const CADENCES = ['Daily', 'Weekly', 'Monthly', 'Weekly + monthly', 'Quarterly'];
+for (const { slug, data: d } of read('categories')) out.push(doc('category', slug, d));
+const scenarioData = read('scenarios'), skillData = read('skills');
+const cadences = [...new Set([...CADENCES, ...scenarioData.map((x) => x.data.cadence)])];
+cadences.forEach((title, i) => out.push(keyed({ _id: `cadence-${slugify(title)}`, _type: 'cadence', title, order: i + 1 })));
+const connectorNames = [...new Set([...scenarioData, ...skillData].flatMap((x) => x.data.connectors ?? []))];
+for (const name of connectorNames) out.push(keyed({ _id: `connector-${slugify(name)}`, _type: 'connector', name }));
+const cat = (key) => ref('category', key);
+const conns = (list) => list?.map((n) => ref('connector', slugify(n)));
 const ICON = { linkedin: 'linkedin', x: 'x', github: 'github', website: 'web' };
 const link = (l) => ICON[l.label.toLowerCase()] ? { ...l, icon: ICON[l.label.toLowerCase()] } : { ...l, icon: 'web', label: 'custom', customLabel: l.label };
 for (const { slug, data: d } of read('authors')) out.push(doc('author', slug, { ...d, photo: image(d.photo), links: d.links?.map(link) }));
 for (const { slug, data: d } of read('rules')) {
   const p = d.page ?? {};
-  out.push(doc('rule', slug, { ...d, author: ref('author', d.author), page: { ...p, voices: p.voices?.map((v) => ({ ...v, author: ref('author', v.author) })) } }));
+  out.push(doc('rule', slug, { ...d, area: cat(d.area), author: ref('author', d.author), page: { ...p, voices: p.voices?.map((v) => ({ ...v, author: ref('author', v.author) })) } }));
 }
-for (const { slug, data: d } of read('skills')) {
+for (const { slug, data: d } of skillData) {
   const p = d.page ?? {};
   out.push(doc('skill', slug, {
-    ...d, author: ref('author', d.author), rules: d.rules?.map((r) => ref('rule', r)), illustration: image(d.illustration),
+    ...d, area: cat(d.area), connectors: conns(d.connectors), author: ref('author', d.author), rules: d.rules?.map((r) => ref('rule', r)), illustration: undefined, icon: undefined,
     page: { ...p, output: p.output && { ...p.output, items: images(p.output.items) } },
   }));
 }
-for (const { slug, data: d } of read('scenarios')) {
+for (const { slug, data: d } of scenarioData) {
   const p = d.page ?? {};
   out.push(doc('scenario', slug, {
-    ...d, author: ref('author', d.author), skills: d.skills?.map((r) => ref('skill', r)), rules: d.rules?.map((r) => ref('rule', r)), illustration: image(d.illustration),
+    ...d, category: cat(d.category), cadence: ref('cadence', slugify(d.cadence)), connectors: conns(d.connectors), illustration: undefined, author: ref('author', d.author), skills: d.skills?.map((r) => ref('skill', r)), rules: d.rules?.map((r) => ref('rule', r)),
     page: { ...p, comesBack: p.comesBack && { ...p.comesBack, items: images(p.comesBack.items) }, steps: p.steps?.map((s) => ({ ...s, skill: ref('skill', s.skill) })) },
   }));
 }

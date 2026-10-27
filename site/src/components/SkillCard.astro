@@ -3,7 +3,8 @@
 // Ready skills link to their page; coming-soon skills link to the rule they will check and are greyed like soon scenario cards.
 import type { CollectionEntry } from 'astro:content';
 import { getEntry } from 'astro:content';
-import { AREAS, AREA_COVER, AREA_ICON } from '../site';
+import { area } from '../areas';
+import ItemArt from './ItemArt.astro';
 import { icon } from '../icons';
 import Byline from './Byline.astro';
 interface Props { skill: CollectionEntry<'skills'> }
@@ -12,9 +13,9 @@ const author = data.author ? await getEntry(data.author) : undefined;
 const next = data.status === 'next';
 const href = next && data.rules[0] ? `/rules/${data.rules[0].id}` : `/skills/${id}`;
 ---
-<a data-type="skill" class:list={['kcard', { next }]} href={href} style={`--cover: var(--pastel-${AREA_COVER[data.area]}); --cover-450: var(--pastel-${AREA_COVER[data.area]}-450)`}>
-  <span class="cover"><span class="ico" aria-hidden="true" set:html={data.icon ? icon(data.icon) : icon(AREA_ICON[data.area])} /></span>
-  <p class="chips"><span class="chip">{AREAS[data.area]}</span></p>
+<a data-type="skill" class:list={['kcard', { next }]} href={href} style={`--cover: var(--pastel-${area(data.area).cover}); --cover-450: var(--pastel-${area(data.area).cover}-450)`}>
+  <span class="cover"><ItemArt data={data} still lazy><span class="ico" aria-hidden="true" set:html={icon(data.icon ?? area(data.area).icon)} /></ItemArt></span>
+  <p class="chips"><span class="chip">{area(data.area).title}</span></p>
   <h3 class="t-h6">{data.title}</h3>
   <p class="t-p2 body desc">{data.description}</p>
   <p class="foot">

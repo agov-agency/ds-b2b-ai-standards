@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity';
-import { str, txt, slugField, ref, areaField, obj, list, featured } from './shared';
+import { str, txt, slugField, ref, areaField, obj, list, featured, unique } from './shared';
+import { IconInput } from './IconInput';
 
 export const rule = defineType({
   name: 'rule', type: 'document',
@@ -7,6 +8,7 @@ export const rule = defineType({
     defineField({ name: 'number', type: 'number', validation: (r) => r.required().integer() }),
     str('title', 'Title', true), slugField(), txt('why', 'Why (one line under the title)', true), areaField('area', 'Category'), featured,
     { ...ref('author', 'author'), description: 'Empty = DemandSense' },
+    defineField({ name: 'icon', type: 'string', description: 'Rules use icons, never the scenario or skill figures. Empty = the category icon', components: { input: IconInput }, validation: (r) => r.custom(unique('icon')) }),
     { ...txt('lead', 'Hero text'), description: 'The paragraph under the title at the top of the rule page. Empty = the Why line is used' },
     obj('page', 'Rule page', [
       obj('advises', 'What LinkedIn advises', [txt('text', 'Text', true), str('source'), defineField({ name: 'url', type: 'url' })]),
