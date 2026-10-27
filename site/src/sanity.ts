@@ -14,7 +14,7 @@ const IMG = (f: string) => `"${f}": ${f}.asset->url`;
 const SLUG = (f: string) => `"${f}": ${f}->slug.current`;
 const ITEMS = `items[]{..., ${IMG('src')}}`;
 const QUERIES: Record<string, string> = {
-  authors: `*[_type == "author"]{..., ${IMG('photo')}}`,
+  authors: `*[_type == "author"]{..., ${IMG('photo')}, links[]{url, icon, "label": select(label == "custom" => customLabel, label), ${IMG('logo')}}}`,
   rules: `*[_type == "rule"]{..., ${SLUG('author')}, page{..., voices[]{..., ${SLUG('author')}}}}`,
   skills: `*[_type == "skill"]{..., ${SLUG('author')}, "rules": rules[]->slug.current, ${IMG('illustration')}, page{..., output{..., ${ITEMS}}}}`,
   scenarios: `*[_type == "scenario"]{..., ${SLUG('author')}, "skills": skills[]->slug.current, "rules": rules[]->slug.current, ${IMG('illustration')},

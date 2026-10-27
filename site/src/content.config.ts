@@ -57,7 +57,8 @@ const authors = defineCollection({
     company: z.string().optional(),
     photo: z.string().optional(),       // /illustrations/... or remote URL; initials show until it arrives
     about: z.string().optional(),       // ~40 words
-    links: z.array(z.object({ label: z.string(), url: z.string().url() })).default([]),
+    // icon: a ready glyph (linkedin, x, github, web) or 'custom' with a logo URL; old entries carry only the label
+    links: z.array(z.object({ label: z.string(), url: z.string().url(), icon: z.string().optional(), logo: z.string().optional() })).default([]),
     featured: z.boolean().default(false),
     order: z.number().default(99),
   }),

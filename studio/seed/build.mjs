@@ -28,7 +28,9 @@ const keyed = (v) => Array.isArray(v) ? v.map((x) => x && typeof x === 'object' 
 const doc = (type, slug, data) => keyed({ _id: `${type}-${slug}`, _type: type, slug: { _type: 'slug', current: slug }, ...data });
 
 const out = [];
-for (const { slug, data: d } of read('authors')) out.push(doc('author', slug, { ...d, photo: image(d.photo) }));
+const ICON = { linkedin: 'linkedin', x: 'x', github: 'github', website: 'web' };
+const link = (l) => ICON[l.label.toLowerCase()] ? { ...l, icon: ICON[l.label.toLowerCase()] } : { ...l, icon: 'web', label: 'custom', customLabel: l.label };
+for (const { slug, data: d } of read('authors')) out.push(doc('author', slug, { ...d, photo: image(d.photo), links: d.links?.map(link) }));
 for (const { slug, data: d } of read('rules')) {
   const p = d.page ?? {};
   out.push(doc('rule', slug, { ...d, author: ref('author', d.author), page: { ...p, voices: p.voices?.map((v) => ({ ...v, author: ref('author', v.author) })) } }));

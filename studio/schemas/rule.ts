@@ -5,9 +5,9 @@ export const rule = defineType({
   name: 'rule', type: 'document',
   fields: [
     defineField({ name: 'number', type: 'number', validation: (r) => r.required().integer() }),
-    str('title', 'Title', true), slugField(), txt('why', 'Why (one line under the title)', true), areaField(), featured,
+    str('title', 'Title', true), slugField(), txt('why', 'Why (one line under the title)', true), areaField('area', 'Category'), featured,
     { ...ref('author', 'author'), description: 'Empty = DemandSense' },
-    txt('lead', 'Hero lead (falls back to Why)'),
+    { ...txt('lead', 'Hero text'), description: 'The paragraph under the title at the top of the rule page. Empty = the Why line is used' },
     obj('page', 'Rule page', [
       obj('advises', 'What LinkedIn advises', [txt('text', 'Text', true), str('source'), defineField({ name: 'url', type: 'url' })]),
       txt('adds', 'What the Standard adds'), txt('reason', 'Reason'), txt('mattersLess', 'When it matters less'),
