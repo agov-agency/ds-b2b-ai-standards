@@ -25,7 +25,7 @@ Figures are code: `site/src/art/*.ts`, each a `Piece` with `draw(t)`. The CMS st
 3. `cd studio && npm install && npx sanity login && npm run import`: builds `seed/content.ndjson` from the Markdown files and imports it with images (`--replace`: re-running overwrites the same ids).
 4. `npm run deploy` for the hosted Studio.
 5. Vercel → ds-b2b-ai-standards → Settings → Environment Variables: `SANITY_PROJECT_ID` (+ `SANITY_DATASET` if not `production`).
-6. Vercel → Settings → Git → Deploy Hooks: hook for the production branch. Sanity → API → Webhooks: POST to that URL, on create/update/delete, filter `_type in ["author","rule","skill","scenario"]`, drafts off.
+6. Vercel → Settings → Git → Deploy Hooks: hook for the production branch. Sanity → API → Webhooks: POST to that URL, on create/update/delete, filter `_type in ["author","rule","skill","scenario","category","cadence","connector"]`, drafts off. Status 27 Oct 2026: not set up yet.
 7. Sanity → Members: invite editors (Free plan: Administrator or Viewer only).
 
 After the import is checked, Sanity is the source; the Markdown files stay only as the local fallback until they are removed.

@@ -4,7 +4,51 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Statement
 
-**DemandSense AI Resource** — a resource landing page that introduces a course-like resource, framed explicitly as a *resource* (community-built, free, maintained by DemandSense) rather than a product. The current live version is https://the-ai-standard.vercel.app/ ("The B2B AI Standard for LinkedIn Ads"). We keep its page structure and rebuild the UI with the DemandSense report design language.
+**The B2B AI Standard for LinkedIn Ads** — a community-built, free library of scenarios, skills and rules for running LinkedIn Ads with AI, maintained by DemandSense and framed as a *resource*, not a product. The original site is https://the-ai-standard.vercel.app/; we keep its content and structure and rebuild the UI in the DemandSense report design language. Two parts: `site/` (the tool: Home, Directory, Scenarios, Skills, Rules, Authors, Contribute) and `landing/` (the earlier promo landing, frozen).
+
+## Repo, branches, deploys
+
+- Repository: **github.com/agov-agency/ds-b2b-ai-standards** only. The old `aftermoonest/demandsense-ai-resource` repo and its Vercel projects are frozen: never push to or deploy from them. Local checkouts on the Mac may still point at the old remote, so check `git remote -v` before pushing.
+- Git: commit and push to **`dev`** only. Never push or merge to `main` without explicit approval from Agov.
+- Vercel: account agov.agency, project `ds-b2b-ai-standards` (framework Astro, builds `site/`, Node 24). Git deploys per branch:
+  - `main` → production https://ds-b2b-ai-standards.vercel.app
+  - `dev` → https://ds-b2b-ai-standards-dev.vercel.app (also `ds-b2b-ai-standards-git-dev-agov-agency.vercel.app`)
+  - Vercel Authentication / password protection is off, so previews open without login.
+  - Env: `SANITY_PROJECT_ID=t6leg115` on all targets (`SANITY_DATASET` defaults to `production`). Without it the build reads the local Markdown.
+- The root `vercel.json` (rewrite `/` → `/landing/`) belongs to the old static landing deploy; the current project does not serve `landing/`.
+
+## Run and build
+
+- Site (Astro 5): `cd site && npm install && npm run dev` → http://127.0.0.1:4321 (`.claude/launch.json` → `site`). `npm run build` → `site/dist/`, `npm run preview` to check it.
+  - Locally, content comes from `site/content/*.md` unless `SANITY_PROJECT_ID=t6leg115` is set (then it reads the published Sanity data, as Vercel does).
+  - A scenario or skill naming a missing author, skill or rule fails the build (`site/src/check.ts`).
+  - `site/public/design-system` and `site/public/illustrations` are symlinks to the repo-root folders; keep them.
+  - The dev server uses file polling (`astro.config.mjs`) because the native watcher missed edits.
+  - `/art-lab` previews the code-drawn figures.
+- Studio (Sanity 6, Node ≥ 22.12): `cd studio && npm install && npm run dev` → http://localhost:3333. `npm run deploy` publishes the hosted Studio.
+- Static servers for the design system, landing and lab: `.claude/launch.json` (`python3 -m http.server`, serve from the repo root because of root-absolute paths).
+
+## CMS (Sanity)
+
+Full notes: `docs/cms.md`. Read it before touching schemas or `site/src/sanity.ts`.
+
+- Project `t6leg115` (org AGOV Agency, Free plan), dataset `production` (public, no token needed to read). Studio: https://ds-b2b-ai-standards.sanity.studio, source in `studio/` (`sanity.config.ts`, `sanity.cli.ts`, `env.ts`).
+- In the CMS: directory content only. **Home and Contribute stay in code** (`site/src/pages/index.astro`, `contribute.astro`, `site/src/copy.ts`).
+- Schemas (`studio/schemas/`, one file per type, shared fields in `shared.ts`):
+  - Items: `author`, `rule`, `skill`, `scenario`. Detail-page sections live in a nested `page` object on each item.
+  - Collections, referenced by items (rename once, every item follows; `collections.ts`): **Categories** (title, slug, cover colour, fallback icon, Rules hub headline), **Cadences**, **Connectors** (name + logo picked from `design-system/logos`, or an uploaded own logo; standard set in `studio/connectors.json`).
+  - `order` is hidden and set automatically (a new document goes last). Cover colour is a dropdown of the 20 pastel hues, random by default.
+- Site side: `site/src/sanity.ts` is the content loader. With `SANITY_PROJECT_ID` it queries published documents at build time (GROQ projects references to slugs and images to CDN URLs, so entries have the same shape as the Markdown); without it, it reads `site/content/{scenarios,skills,rules,authors,categories}/`. Connectors exist only in Sanity (empty locally). Field schemas: `site/src/content.config.ts`.
+- Illustrations stay in code and are only *picked* in the CMS:
+  - Figures: `site/src/art/*.ts`, each a `Piece` with `draw(t)`, registered in `pieces` in `site/src/art/index.ts`. The CMS stores which figure and how it sits (`art`: piece, variant, zoom), never colour.
+  - Separate, non-overlapping sets: **scenarios and skills get an illustration** (each from its own pool, `ART_POOLS.scenario` / `ART_POOLS.skill`), **rules get an icon** (`illustrations/icons`). Hub hero figures are in neither pool. Studio rejects a figure or icon already used by another item of the same type. Pools are empty for now, so cards show the fallback (scenario cover, category icon).
+  - Accent colour follows the background hue: every colour group and the live part take the cover's hue (`--cover-450`).
+  - New figure: add a module, add it to `pieces` and to one pool, redeploy the Studio. `ItemArt.astro` renders it; an unknown name falls back instead of breaking the build.
+  - The Studio's art picker imports `../site/src/art`, so `sanity.cli.ts` allows `..` in Vite.
+- Migrations: `studio/migrations/`, one-off scripts, dated, safe to re-run. Run from `studio/`: `npx sanity exec migrations/<file>.ts --with-user-token`. They write to the production dataset, so ask Agov first. Initial import: `npm run import` (builds `seed/content.ndjson` from the Markdown and imports with `--replace`).
+- Schema change workflow: edit `studio/schemas` → push to `dev` → run any migration → `npm run deploy` in `studio/` → redeploy `dev` on Vercel. A schema change that needs a migration breaks the Vercel build until the migration runs (the live deploy stays up).
+- Publishing: Publish in Studio → Sanity webhook → Vercel Deploy Hook → static rebuild (1–2 min). **Status (27 Oct 2026): not set up yet.** Plan: a Deploy Hook on `dev` (later a second one on `main`), Sanity webhook POST on create/update/delete, drafts off, filter on all content types (`author`, `rule`, `skill`, `scenario`, `category`, `cadence`, `connector`). Until then, redeploy on Vercel after publishing.
+- Access from cloud sessions: needs network access to `api.sanity.io` and `t6leg115.api.sanity.io` and `SANITY_AUTH_TOKEN` (Editor) in the cloud environment; otherwise run Sanity commands on Agov's Mac (CLI logged in there).
 
 ### Tasks
 
@@ -107,22 +151,17 @@ Preview the specimen: start the `design-system` server from `.claude/launch.json
 
 - Minimal comments: only workarounds, design decisions, corner cases.
 - Prefer the shortest working solution (ponytail); no speculative abstractions.
-- Static HTML/CSS/JS is acceptable (the report prototype is built that way); pick the stack when Task 3 starts.
+- Stack: Astro (static output) for `site/`, Sanity for content; the landing and lab are static HTML/CSS/JS.
 
 ## Repo Layout
 
-- `CLAUDE.md` — this file
-- `TASKS.md` — task tracking
-- `.claude/skills/` — emil-design-engineering, impeccable, hallmark
-- `.claude/agents/` — impeccable helper agents
-- `.claude/settings.json` — project-scope plugins (caveman, ponytail, mattpocock-skills)
-- `skills-lock.json` — hallmark install lock
-- `DESIGN.md` — the design system
-- `design-system/tokens.css` — tokens, surfaces, text styles; `specimen.html` — visual check; `fonts/` — Inter, Geist Mono. No images stored: visual reference = Figma node IDs in `DESIGN.md` + the specimen
-- `design-system/tokens.css` and the rest of `design-system/` (wave, word-reveal, specimen) and `illustrations/` (figures, icons) are shared by the landing and the tool
-- `landing/` — current promo landing: `index.html`, `landing.css`, `landing.js`, `assets/`. Served at `/landing/`; root `vercel.json` rewrites `/` to it. Uses root-absolute paths (`/design-system/...`, `/illustrations/...`), so serve from the repo root
-- `site/` — the tool (scaffold only, see `site/README.md`); content files in `site/content/{scenarios,skills,rules,authors}/`
-- `studio/` — Sanity Studio for the directory content (see `docs/cms.md`)
+- `CLAUDE.md`, `DESIGN.md` (design system, source of truth), `PRODUCT.md`, `TASKS.md`
+- `.claude/skills/`, `.claude/agents/`, `.claude/settings.json`, `.agents/skills/` (hairline, anatomy), `skills-lock.json`
+- `design-system/` — `tokens.css`, `specimen.html`, `fonts/`, `icons/`, `logos/` (connector logos), `wave/`, `wave.js`, `word-reveal.js`. Shared by site and landing. No images stored: visual reference = Figma node IDs in `DESIGN.md` + the specimen
+- `illustrations/` — shared hairline figures and line icons (`icons/`, `icons.js`)
+- `site/` — the tool (Astro): `src/pages` (`index` Home, `directory`, `scenarios`, `skills`, `rules`, `authors`, `contribute`, `art-lab`), `src/components`, `src/layouts`, `src/art` (code-drawn figures), `src/sanity.ts` (content loader), `src/content.config.ts`, `src/site.ts` (names, areas, nav), `content/` (Markdown fallback). See `site/README.md`
+- `studio/` — Sanity Studio: `schemas/`, `migrations/`, `seed/`, `connectors.json`
+- `landing/` — earlier promo landing (`index.html`, `landing.css`, `landing.js`, `assets/`), frozen; root-absolute paths, serve from the repo root
 - `lab/` — design experiments, not deployed
-- `docs/` — internal briefs, decisions, specs (incl. `landing-rebuild-brief.md`)
-- `.claude/launch.json` — local static servers: `design-system` (port 4180, design-system folder), `landing` (port 4181, repo root; open `/landing/`), `lab` (4182, repo root)
+- `docs/` — briefs, decisions, specs, `cms.md`
+- `.claude/launch.json` — local servers: `design-system` (4180), `landing` (4181, open `/landing/`), `lab` (4182), `site` (4321)
