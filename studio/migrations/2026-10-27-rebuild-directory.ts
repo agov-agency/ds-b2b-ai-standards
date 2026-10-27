@@ -5,7 +5,7 @@
 import { readFileSync } from 'node:fs';
 import { getCliClient } from 'sanity/cli';
 
-const client = getCliClient({ apiVersion: '2025-02-19' });
+const client = getCliClient({ apiVersion: '2025-02-19', perspective: 'raw' }) // raw: drafts too, or an old draft's references block the delete;
 const docs = JSON.parse(readFileSync('seed/directory.json', 'utf8')) as any[];
 const keep = new Set(docs.map((d) => d._id));
 const old = (await client.fetch<string[]>('*[_type in ["author", "rule", "skill", "scenario"]]._id')).filter((id) => !keep.has(id));
