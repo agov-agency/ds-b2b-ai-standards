@@ -35,8 +35,9 @@ for (const { slug, data: d } of read('categories')) out.push(doc('category', slu
 const scenarioData = read('scenarios'), skillData = read('skills');
 const cadences = [...new Set([...CADENCES, ...scenarioData.map((x) => x.data.cadence)])];
 cadences.forEach((title, i) => out.push(keyed({ _id: `cadence-${slugify(title)}`, _type: 'cadence', title, order: i + 1 })));
-const connectorNames = [...new Set([...scenarioData, ...skillData].flatMap((x) => x.data.connectors ?? []))];
-for (const name of connectorNames) out.push(keyed({ _id: `connector-${slugify(name)}`, _type: 'connector', name }));
+const BRANDS = JSON.parse(readFileSync('connectors.json', 'utf8')); // standard set with logos, plus any name the content uses
+const connectorNames = [...new Set([...Object.keys(BRANDS), ...[...scenarioData, ...skillData].flatMap((x) => x.data.connectors ?? [])])];
+for (const name of connectorNames) out.push(keyed({ _id: `connector-${slugify(name)}`, _type: 'connector', name, brand: BRANDS[name] ?? undefined }));
 const cat = (key) => ref('category', key);
 const conns = (list) => list?.map((n) => ref('connector', slugify(n)));
 const ICON = { linkedin: 'linkedin', x: 'x', github: 'github', website: 'web' };

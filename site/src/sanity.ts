@@ -23,7 +23,7 @@ const QUERIES: Record<string, string> = {
   skills: `*[_type == "skill"]{..., ${AREA()}, ${CONNECTORS}, ${SLUG('author')}, "rules": rules[]->slug.current, ${IMG('illustration')}, page{..., output{..., ${ITEMS}}}}`,
   scenarios: `*[_type == "scenario"]{..., ${AREA('category')}, "cadence": cadence->title, ${CONNECTORS}, ${SLUG('author')}, "skills": skills[]->slug.current, "rules": rules[]->slug.current, ${IMG('illustration')},
     page{..., comesBack{..., ${ITEMS}}, steps[]{..., ${SLUG('skill')}}}}`,
-  connectors: `*[_type == "connector" && defined(logo)]{..., "slug": {"current": _id}, ${IMG('logo')}}`,
+  connectors: `*[_type == "connector" && (defined(brand) || defined(logo))]{..., "slug": {"current": _id}, ${IMG('logo')}}`,
 };
 
 const sanity = (dir: string): Loader => ({

@@ -1,6 +1,8 @@
 import { defineField, defineType } from 'sanity';
 import { CoverInput } from './CoverInput';
 import { IconInput } from './IconInput';
+import { LogoInput, LOGOS } from './LogoInput';
+import { createElement } from 'react';
 
 // Shared lists other documents reference: rename one here and every item that uses it follows
 
@@ -33,7 +35,8 @@ export const connector = defineType({
   name: 'connector', type: 'document',
   fields: [
     defineField({ name: 'name', type: 'string', validation: (r) => r.required(), description: 'As shown in the tooltip, e.g. “Google Ads export”' }),
-    defineField({ name: 'logo', type: 'image', description: 'Only for connectors the site has no logo for. Square SVG or PNG, shown 18px on a white disc' }),
+    defineField({ name: 'brand', title: 'Logo', type: 'string', components: { input: LogoInput } }),
+    defineField({ name: 'logo', title: 'Own logo', type: 'image', hidden: ({ parent }) => !!parent?.brand, description: 'Only when the set above has no logo for it. Square SVG or PNG, shown 18px on a white disc' }),
   ],
-  preview: { select: { title: 'name', media: 'logo' } },
+  preview: { select: { title: 'name', brand: 'brand', media: 'logo' }, prepare: ({ title, brand, media }) => ({ title, media: brand ? createElement('span', { dangerouslySetInnerHTML: { __html: LOGOS.find(([n]) => n === brand)?.[1] ?? '' }, style: { width: '100%', padding: 6 } }) : media }) },
 });

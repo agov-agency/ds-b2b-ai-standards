@@ -7,7 +7,6 @@ const area = reference('categories');
 const art = z.object({
   piece: z.string(),
   variant: z.enum(['color', 'mono', 'dark']).default('color'),
-  accent: z.enum(['scenario', 'skill', 'rule', 'brand']).optional(),
   zoom: z.number().default(1),
 }).optional();
 
@@ -166,7 +165,7 @@ const scenarios = defineCollection({
   }),
 });
 
-// Logos for connectors the site doesn't know (Connectors.astro); CMS only, and only the ones with a logo
-const connectors = defineCollection({ loader: source('connectors'), schema: z.object({ name: z.string(), logo: z.string() }) });
+// Connector logos (Connectors.astro): a key from design-system/logos, or an uploaded logo; CMS only
+const connectors = defineCollection({ loader: source('connectors'), schema: z.object({ name: z.string(), brand: z.string().optional(), logo: z.string().optional() }) });
 
 export const collections = { categories, authors, rules, skills, scenarios, connectors };

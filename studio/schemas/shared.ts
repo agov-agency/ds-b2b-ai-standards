@@ -35,7 +35,6 @@ const artType = (name: 'scenarioArt' | 'skillArt', pool: 'scenario' | 'skill') =
   fields: [
     defineField({ name: 'piece', title: 'Figure', type: 'string', validation: (r) => r.custom(unique('art.piece')) }),
     defineField({ name: 'variant', type: 'string', initialValue: 'color', options: { list: ['color', 'mono', 'dark'], layout: 'radio', direction: 'horizontal' } }),
-    defineField({ name: 'accent', type: 'string', options: { list: ['scenario', 'skill', 'rule', 'brand'], layout: 'radio', direction: 'horizontal' }, description: 'Colour of the live part' }),
     defineField({ name: 'zoom', type: 'number', initialValue: 1, validation: (r) => r.min(0.5).max(3) }),
   ],
 });

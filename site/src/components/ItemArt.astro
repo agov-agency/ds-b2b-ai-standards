@@ -10,12 +10,14 @@ const { data, still = false, lazy = false } = Astro.props;
 const art = data.art && pieces[data.art.piece] ? data.art : undefined;
 ---
 {art
-  ? <IsoArt name={art.piece} dark={art.variant === 'dark'} mono={art.variant === 'mono'} accent={art.accent} zoom={art.zoom} still={still} class="item-art" />
+  ? <IsoArt name={art.piece} dark={art.variant === 'dark'} mono={art.variant === 'mono'} zoom={art.zoom} still={still} class="item-art" />
   : data.illustration ? <img src={data.illustration} alt="" loading={lazy ? 'lazy' : undefined} /> : <slot />}
 
 <style>
   /* Fills whatever art box it lands in (hero, closing card, card cover); `figure` outranks IsoArt's own scoped rule */
   :global(figure.iso-panel.item-art) { position: absolute; inset: 0; background: none; border-radius: 0; }
+  /* One hue per figure: every colour group and the live part take the hue of the cover it sits on */
+  :global(figure.iso-panel.item-art) { --art-a: var(--cover-450, var(--primary-450)); --art-b: var(--art-a); --art-c: var(--art-a); --lit: var(--art-a); }
   /* Stacked hero: the art box has no height of its own there */
   @media (max-width: 999px) { :global(.hart:has(> figure.item-art)) { width: 100%; } :global(.hart > figure.iso-panel.item-art) { position: relative; aspect-ratio: 1; } }
 </style>

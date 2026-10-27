@@ -2,18 +2,18 @@
 import { getCollection } from 'astro:content';
 // "Runs with": one logo tile per connector, its name in a tooltip on hover and focus.
 // Logos live in design-system/logos, in brand colours (Simple Icons, DS Report mark); list/target are Figma line icons.
-// A CRM export is any CRM, so it shows the most common ones stacked; the AI tools (Claude, ChatGPT, Gemini) share one stack too.
+// A CRM export is any CRM, so it shows the most common ones stacked; the AI tools (Claude, ChatGPT, Gemini, Perplexity) share one stack too.
 const raw = import.meta.glob('../../../design-system/logos/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const logo = (n: string) => raw[`../../../design-system/logos/${n}.svg`] ?? '';
-// Connector names are free text in content; match the known ones, generic exports and sources fall back to line icons
-const pick = (name: string) =>
-  /crm/i.test(name) ? 'crm' : /claude/i.test(name) ? 'claude' : /chatgpt|openai/i.test(name) ? 'chatgpt' : /gemini/i.test(name) ? 'gemini' : /linkedin/i.test(name) ? 'linkedin' : /demandsense/i.test(name) ? 'demandsense' : /signal|source/i.test(name) ? 'target' : 'list';
-// CMS connector documents add logos for names the rules below don't know (e.g. "Google Ads" matches "Google Ads export")
-const cms = process.env.SANITY_PROJECT_ID ? (await getCollection('connectors')).map((c) => c.data) : []; // empty locally
-const own = (name: string) => cms.find((c) => name.toLowerCase().includes(c.name.toLowerCase()));
+// CMS connector documents name their logo; their name (or the longest one the item's text contains, e.g. "Google Ads" in "Google Ads export") wins
+const cms = process.env.SANITY_PROJECT_ID ? (await getCollection('connectors')).map((c) => c.data).sort((a, b) => b.name.length - a.name.length) : []; // empty locally
+const own = (name: string) => cms.find((c) => c.name.toLowerCase() === name.toLowerCase()) ?? cms.find((c) => name.toLowerCase().includes(c.name.toLowerCase()));
+// Without one, match the known names; generic exports and sources fall back to line icons
+const pick = (name: string) => (own(name)?.brand && raw[`../../../design-system/logos/${own(name)!.brand}.svg`] ? own(name)!.brand! :
+  /crm/i.test(name) ? 'crm' : /claude/i.test(name) ? 'claude' : /chatgpt|openai/i.test(name) ? 'chatgpt' : /gemini/i.test(name) ? 'gemini' : /linkedin/i.test(name) ? 'linkedin' : /demandsense/i.test(name) ? 'demandsense' : /signal|source/i.test(name) ? 'target' : 'list');
 interface Props { items: string[] }
 const { items: all } = Astro.props;
-const AI = ['claude', 'chatgpt', 'gemini'];
+const AI = ['claude', 'chatgpt', 'gemini', 'perplexity'];
 const ai = all.filter((n) => AI.includes(pick(n)));
 const aiLabel = `Works with ${ai.length > 1 ? `${ai.slice(0, -1).join(', ')} or ${ai.at(-1)}` : ai[0]}`;
 // AI stack leads, stacked CRM logos go last, single logos sit between
@@ -26,7 +26,7 @@ const stack = (name: string) => (name === aiLabel ? ai.map(pick) : pick(name) ==
     <li class="conn" tabindex="0" aria-label={name}>
       {stack(name)
         ? <span class="stack" aria-hidden="true">{stack(name)!.map((n) => <span class="dot" set:html={logo(n)} />)}</span>
-        : own(name)
+        : !own(name)?.brand && own(name)?.logo
           ? <span class="ic" aria-hidden="true"><img src={own(name)!.logo} alt="" /></span>
           : <span class="ic" aria-hidden="true" set:html={logo(pick(name))} />}
       <span class="tip" role="tooltip">{name}</span>

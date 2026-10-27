@@ -86,8 +86,9 @@ svg.ext { rotate: 45deg; }
   .btn svg { transition: none; }
 }
 
-/* Static hairline icons (illustrations/icons): kernel palette mapped to tokens, as on the landing */
-.hl { --hairline-plate: var(--neutral-0); --hairline-hi: var(--primary-450); --hairline-edge: var(--neutral-800); --hairline-mid: var(--neutral-300); --hairline-lo: var(--neutral-100); --hairline-stroke: 1; display: block; overflow: visible; }
+/* Static hairline icons (illustrations/icons): kernel palette mapped to tokens, as on the landing.
+   The accent takes the hue of the pastel cover behind it (--cover-450, set with the cover), brand blue elsewhere */
+.hl { --hairline-plate: var(--neutral-0); --hairline-hi: var(--cover-450, var(--primary-450)); --hairline-edge: var(--neutral-800); --hairline-mid: var(--neutral-300); --hairline-lo: var(--neutral-100); --hairline-stroke: 1; display: block; overflow: visible; }
 .surface-black .hl { --hairline-plate: var(--neutral-1000); --hairline-hi: var(--primary-300); --hairline-edge: var(--neutral-300); --hairline-mid: var(--neutral-500); --hairline-lo: var(--neutral-800); }
 .hl :where(path, polygon, ellipse, line) { fill: var(--hairline-plate); stroke: var(--hairline-mid); stroke-width: var(--hairline-stroke); vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; }
 .hl :where(.nf) { fill: none; } .hl :where(.fo) { stroke: none; }

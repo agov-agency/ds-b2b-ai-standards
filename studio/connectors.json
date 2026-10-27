@@ -1,0 +1,10 @@
+{
+  "Claude": "claude", "ChatGPT": "chatgpt", "Gemini": "gemini", "Perplexity": "perplexity",
+  "LinkedIn Ads": "linkedin", "LinkedIn Ads export": "linkedin", "Google Ads": "googleads", "Meta Ads": "meta", "Reddit Ads": "reddit",
+  "CRM export": null, "HubSpot": "hubspot", "Salesforce": "salesforce", "Zoho CRM": "zoho", "Microsoft Dynamics 365": "dynamics365", "Marketo": "marketo",
+  "Google Analytics": "googleanalytics", "Google Tag Manager": "googletagmanager", "Mixpanel": "mixpanel", "Looker": "looker", "BigQuery": "bigquery", "Snowflake": "snowflake",
+  "Google Sheets": "googlesheets", "Microsoft Excel": "excel", "Google Drive": "googledrive", "Notion": "notion", "Airtable": "airtable", "CSV export": "list",
+  "Slack": "slack", "Microsoft Teams": "teams", "Gmail": "gmail", "Outlook": "outlook",
+  "Zapier": "zapier", "Make": "make", "n8n": "n8n",
+  "DemandSense (optional)": "demandsense", "Signal sources": "target"
+}

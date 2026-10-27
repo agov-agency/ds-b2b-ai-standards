@@ -11,12 +11,12 @@ Directory content (authors, skills, scenarios, rules, their pages and illustrati
 ## Content model
 
 - Items: `scenario`, `skill`, `rule`, `author`.
-- Shared lists, referenced by items: `category` (title, colour, fallback icon, Rules hub headline), `cadence`, `connector` (logo only for ones the site doesn't draw). Locally, categories come from `site/content/categories/*.md`.
+- Shared lists, referenced by items: `category` (title, colour, fallback icon, Rules hub headline), `cadence`, `connector` (logo picked from `design-system/logos`, or an uploaded one; the standard set is `studio/connectors.json`, loaded by `migrations/2026-10-27-connectors.ts`). Locally, categories come from `site/content/categories/*.md`.
 - Pictures, each type from its own pool, never shared: scenarios and skills get an illustration (animated figure), rules get an icon (`illustrations/icons`). Studio rejects a figure or icon already used by another item of the same type.
 
 ## Illustrations (option A)
 
-Figures are code: `site/src/art/*.ts`, each a `Piece` with `draw(t)`. The CMS stores which figure and how it sits (`art`: piece, variant color/mono/dark, accent, zoom). The pickers list only `ART_POOLS.scenario` / `ART_POOLS.skill` from `site/src/art/index.ts` (hub heroes are in neither) and preview them live. A new figure = add a module, add it to `pieces` and to one pool, redeploy the Studio. `ItemArt.astro` renders it (cards get the still frame), else the fallback (scenario cover, category icon). An unknown name falls back instead of breaking the build.
+Figures are code: `site/src/art/*.ts`, each a `Piece` with `draw(t)`. The CMS stores which figure and how it sits (`art`: piece, variant color/mono/dark, zoom). Colour is not stored: every colour group and the live part take the hue of the cover the figure sits on (`--cover-450`), as the hairline icons do. The pickers list only `ART_POOLS.scenario` / `ART_POOLS.skill` from `site/src/art/index.ts` (hub heroes are in neither) and preview them live. A new figure = add a module, add it to `pieces` and to one pool, redeploy the Studio. `ItemArt.astro` renders it (cards get the still frame), else the fallback (scenario cover, category icon). An unknown name falls back instead of breaking the build.
 
 ## Setup (once)
 
