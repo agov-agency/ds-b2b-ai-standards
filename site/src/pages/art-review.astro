@@ -1,0 +1,99 @@
+---
+// Temporary review page: every item with its figure or icon, before they are assigned in the CMS. Delete after review.
+import Base from '../layouts/Base.astro';
+import IsoArt from '../components/IsoArt.astro';
+import { icon } from '../icons';
+
+const SCENARIOS = [
+  ['Warm-lead handoff', 'Поштова сортувальна', 'sorter'],
+  ['Account audit by cadence', 'Оррері', 'orrery'],
+  ['Targeting vs who actually buys', 'Дошка Гальтона', 'galton'],
+  ['Company-level account routing', 'Цех із трансмісійним валом', 'lineshaft'],
+  ['LinkedIn fit gate', 'Багажна стрічка з рамкою і трьома гілками', 'baggage'],
+  ['Signal loop', 'Лабораторний аналізатор', 'analyzer'],
+  ['Turn social signals into pipeline', 'Промисел із трубопроводом', 'pumpjack'],
+  ['Weekly check for conversion campaigns', 'Стенд прогону ламп', 'burnin'],
+];
+const SKILLS = [
+  ['Landing-page CPC report', 'Турнікет із монетоприймачем', 'turnstile'],
+  ['Lowest bid that still spends the budget', 'Регулятор подачі з зарубками', 'regulator'],
+  ['Cost per retargetable member', 'Картка-абонемент і монета', 'passcard'],
+  ['Retargeting guardrails', 'Стійки з мотузкою', 'stanchions'],
+  ['Matched audience lists', 'Перехідник для розетки', 'adapter'],
+  ['No-Deal Warm Leads Finder', 'Ключниця з бирками', 'keyrack'],
+  ['Silent Watchers Finder', 'Перископ', 'periscope'],
+  ['Account Health Check', 'Кліпборд із чек-листом', 'clipboard'],
+  ['CRM Data Health Check', 'Хиткий стіл', 'table'],
+  ["Who's Looking at Your Buying Pages", 'Клікер на ціннику', 'tagcounter'],
+  ['Creative Decay Watchlist', 'Дві батарейки', 'batteries'],
+  ['Video Quality Check', 'Дві кінокотушки', 'reels'],
+  ['Waste Budget Detection', 'Кран у злив', 'tap'],
+  ['Campaign Group Scoreboard', "П'єдестал із кубками", 'trophies'],
+  ['Market Benchmark Comparison', 'Лінійка поруч з еталонною', 'rulers'],
+  ['Manager Monthly Report', 'Журнал із закладкою', 'logbook'],
+  ['Pausing Low-Performing Ads', 'Рубильник із замком', 'lockout'],
+  ['Weekly Reporting', 'Тижневий календар з трьома закладками', 'weekpad'],
+  ['Capping Recommendation', 'Дверний молоток і ряд рисок', 'knocker'],
+  ['Pacing Check Against Schedule', 'Метроном', 'metronome'],
+  ['Budget Re-allocation', 'Сифон між двома баками', 'siphon'],
+  ['Account Engagement', 'Пазл із фрагментами поруч', 'puzzle'],
+  ['Ad-Hoc Query', 'Дзвіночок на стійці', 'bell'],
+  ['Benchmark Comparison', 'Термометр із нормою', 'thermometer'],
+  ['LinkedIn ABM Account Penetration', 'Три просвердлені блоки', 'drilled'],
+  ['LinkedIn Audience Demographics', 'Ярусний класифікатор', 'sieve'],
+  ['LinkedIn Benchmark Context', 'Дзеркало заднього виду і лобове скло', 'mirror'],
+  ['LinkedIn Creative Performance', 'Набір біт для викрутки', 'bits'],
+  ['LinkedIn Performance KPIs', 'Стрілочний прилад із блідою стрілкою', 'dial'],
+  ['Multichannel Performance Rollup', 'Рахівниця з різними кісточками', 'abacus'],
+  ['Traffic Analysis', 'Комутаційна панель з маркованими кабелями', 'patchpanel'],
+];
+const RULES = [
+  ['01 Read frequency and penetration together', 'Годинник із двома стрілками', 'clock'],
+  ['02 Separate frequency targets for cold and warm', 'Валик і штамп', 'rollerstamp'],
+  ['03 Call it fatigue only when…', 'Двері з двома засувами', 'bolts'],
+  ['04 Judge awareness formats on reach and CPM', 'Білборд', 'billboard'],
+  ['05 Split campaigns only when a segment outperforms', 'Клин у тріщині бетонного блоку', 'wedge'],
+  ['06 Watch for budget drifting to junior roles', 'Перехилена таця з перегородкою', 'tilttray'],
+  ['07 To exclude SDRs, exclude Sales', 'Урна зі злитком', 'binbar'],
+  ['08 Check who your ads actually reach', 'Коробка в рентген-рамці', 'xray'],
+  ['09 Count an audience as warm only once it can serve', 'Пружинні ваги з позначкою', 'springscale'],
+  ['10 Spend on warm audiences before cold', 'Каскад із трьох чаш', 'cascade'],
+  ['11 Start Lead Gen Forms early', "Діафрагма об'єктива", 'aperture'],
+  ['12 Report exposure, influence, attribution separately', 'Три запечатані каністри', 'canisters'],
+  ['13 Give sales a weekly ranked list', 'Шлюзова камера', 'airlock'],
+  ['14 Grow a signal list from the same market', 'Ланцюг з однакових ланок', 'chain'],
+  ['15 Judge cold ads by the warm audience they build', 'Магніт із тирсою', 'magnet'],
+];
+const HUES = [5, 13, 9, 16, 1, 11, 6, 14];
+const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover: var(--pastel-${n}); --cover-200: var(--pastel-${n}-200); --cover-450: var(--pastel-${n}-450)`; };
+---
+<Base title="Art review">
+  <main class="rev">
+    <h2>Сценарії</h2>
+    <table>
+      {SCENARIOS.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic big"><IsoArt name={n} field="var(--cover)" /></td></tr>)}
+    </table>
+    <h2>Скіли</h2>
+    <table>
+      {SKILLS.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic"><span class="ico" set:html={icon(n)} /></td></tr>)}
+    </table>
+    <h2>Правила</h2>
+    <table>
+      {RULES.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic"><span class="ico" set:html={icon(n)} /></td></tr>)}
+    </table>
+  </main>
+</Base>
+<style>
+  .rev { max-width: 1100px; margin: 0 auto; padding: 48px 24px 120px; }
+  h2 { font: 500 32px/1.1 var(--font-sans, Inter); margin: 48px 0 16px; }
+  table { width: 100%; border-collapse: collapse; }
+  tr { border-top: 1px solid var(--neutral-100, #eee); }
+  td { padding: 16px 0; vertical-align: middle; }
+  .t { width: 45%; font: 500 18px/1.4 Inter, sans-serif; padding-right: 24px; }
+  .t span { display: block; color: var(--neutral-500, #888); font-size: 16px; }
+  .t code { display: block; margin-top: 6px; font: 600 12px/1.4 var(--font-mono, monospace); text-transform: uppercase; color: var(--neutral-500, #888); }
+  .pic.big :global(figure.iso-panel) { aspect-ratio: 1; width: 100%; max-width: 560px; }
+  .rev :global(figure.iso-panel) { --art-a: var(--cover-450); --art-b: var(--cover-450); --art-c: var(--cover-450); --lit: var(--cover-450); }
+  .pic .ico { display: grid; place-items: center; width: 240px; height: 240px; background: var(--cover); border-radius: 4px; }
+  .pic .ico :global(svg) { width: 160px; height: 160px; }
+</style>
