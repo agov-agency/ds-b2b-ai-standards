@@ -5,10 +5,18 @@ import { typewriter } from './typewriter';
 import { scenarios } from './musicbox';
 import { skills } from './press';
 import { rules } from './gauge';
+import { sorter } from './sorter';
+import { orrery } from './orrery';
+import { galton } from './galton';
+import { lineshaft } from './lineshaft';
+import { baggage } from './baggage';
+import { analyzer } from './analyzer';
+import { pumpjack } from './pumpjack';
+import { burnin } from './burnin';
 import type { Piece } from './iso';
 
-export const pieces: Record<string, Piece> = { directory, scenarios, skills, rules, cta, typewriter };
+export const pieces: Record<string, Piece> = { directory, scenarios, skills, rules, cta, typewriter, sorter, orrery, galton, lineshaft, baggage, analyzer, pumpjack, burnin };
 
-// What the CMS can pick: only scenarios use figures (skills and rules use line icons, src/icons.ts); hub heroes are not in it. Add a figure to `pieces`, then its name here.
-// For now every existing figure (hub heroes included) is offered as a placeholder until the scenario figures are drawn
-export const ART_POOLS: Record<'scenario', string[]> = { scenario: ['scenarios', 'skills', 'rules', 'directory', 'cta', 'typewriter'] };
+// What the CMS can pick: only scenarios use figures (skills and rules use line icons, src/icons.ts); hub heroes are not in it.
+// A new figure goes into `pieces`, then its name here.
+export const ART_POOLS: Record<'scenario', string[]> = { scenario: ['sorter', 'orrery', 'galton', 'lineshaft', 'baggage', 'analyzer', 'pumpjack', 'burnin'] };
