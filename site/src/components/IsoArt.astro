@@ -5,16 +5,16 @@
 // instead pins it at an exact rect from the Figma layout: [right, top, width, height] in px, right measured from the
 // box's right edge (plus --bleed, how far the box runs past its section). The build renders the rest frame;
 // on the page it plays by itself (no pointer or key triggers), pauses off-screen and stays on the rest frame
-// under reduced motion.
+// under reduced motion. `still` keeps the rest frame (cards).
 import { pieces } from '../art';
-interface Props { name: string; field?: string; dark?: boolean; blue?: boolean; mono?: boolean; zoom?: number; place?: [number, number, number, number]; clip?: number; accent?: 'scenario' | 'skill' | 'rule' | 'brand'; class?: string }
-const { name, field = 'transparent', dark = false, blue = false, mono = false, zoom = 1, place, clip, accent, class: cls } = Astro.props;
+interface Props { name: string; field?: string; dark?: boolean; blue?: boolean; mono?: boolean; zoom?: number; place?: [number, number, number, number]; clip?: number; accent?: 'scenario' | 'skill' | 'rule' | 'brand'; still?: boolean; class?: string }
+const { name, field = 'transparent', dark = false, blue = false, mono = false, zoom = 1, place, clip, accent, still = false, class: cls } = Astro.props;
 const lit = accent ? `; --lit: ${accent === 'brand' ? `var(--primary-${dark ? 300 : 450})` : `var(--art-${{ scenario: 'a', skill: 'b', rule: 'c' }[accent]})`}` : '';
 const piece = pieces[name];
 const [fx, fy] = piece.focus ?? [0.5, 0.5];
 const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]}px; --ph: ${place[3]}px` : '';
 ---
-<figure class:list={['iso-panel', cls]} data-iso={name} style={`--field: ${field}; --zoom: ${zoom}; --fx: ${fx * 100}%; --fy: ${fy * 100}%${lit}${at}${clip ? `; --cw: ${clip}px` : ''}`}>
+<figure class:list={['iso-panel', cls]} data-iso={still ? undefined : name} style={`--field: ${field}; --zoom: ${zoom}; --fx: ${fx * 100}%; --fy: ${fy * 100}%${lit}${at}${clip ? `; --cw: ${clip}px` : ''}`}>
   <svg class:list={['iso-art', { 'on-dark': dark, 'on-blue': blue, mono, placed: place }]} viewBox={piece.viewBox} role="img" aria-label={piece.aria} preserveAspectRatio="xMidYMid meet">
     {(dark || blue) && <defs><filter id="iso-glow" filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="6000" height="6000"><feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b" /><feComponentTransfer in="b" result="g"><feFuncA type="linear" slope=".7" /></feComponentTransfer><feMerge><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>}
     <g data-frame set:html={piece.draw(piece.rest)} />

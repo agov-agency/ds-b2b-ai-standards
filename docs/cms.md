@@ -1,0 +1,25 @@
+# CMS (Sanity)
+
+Directory content (authors, skills, scenarios, rules, their pages and illustrations) lives in Sanity. Home and Contribute stay in code.
+
+## How it fits
+
+- `studio/`: Sanity Studio (the editor). Schemas in `studio/schemas/`, one per type; shared fields in `shared.ts`. Hosted by Sanity at https://ds-b2b-ai-standards.sanity.studio (`npm run deploy` in `studio/`).
+- `site/src/sanity.ts`: the site's content source. With `SANITY_PROJECT_ID` set (Vercel), it reads published documents from the public dataset at build time; without it (local), it reads `site/content/*.md`. Queries turn references into slugs and images into CDN URLs, so pages see the same data either way.
+- Publishing: Publish in Studio → Sanity webhook → Vercel Deploy Hook → static rebuild (1–2 min). No server.
+
+## Illustrations (option A)
+
+Animated figures are code: `site/src/art/*.ts`, each a `Piece` with `draw(t)`. The CMS stores only which figure and how it sits (`art`: piece, variant color/mono/dark, accent, zoom). Studio lists the pieces from `site/src/art` and previews them live. A new figure = add a module to `site/src/art`, register it in `site/src/art/index.ts`, redeploy the Studio. `ItemArt.astro` renders the figure (cards get the still rest frame), else the static `illustration` image, else the default cover. An unknown name falls back instead of breaking the build.
+
+## Setup (once)
+
+1. Project in sanity.io/manage, dataset `production` (public).
+2. `studio/env.ts`: project id (or `SANITY_STUDIO_PROJECT_ID`).
+3. `cd studio && npm install && npx sanity login && npm run import`: builds `seed/content.ndjson` from the Markdown files and imports it with images (`--replace`: re-running overwrites the same ids).
+4. `npm run deploy` for the hosted Studio.
+5. Vercel → ds-b2b-ai-standards → Settings → Environment Variables: `SANITY_PROJECT_ID` (+ `SANITY_DATASET` if not `production`).
+6. Vercel → Settings → Git → Deploy Hooks: hook for the production branch. Sanity → API → Webhooks: POST to that URL, on create/update/delete, filter `_type in ["author","rule","skill","scenario"]`, drafts off.
+7. Sanity → Members: invite editors (Free plan: Administrator or Viewer only).
+
+After the import is checked, Sanity is the source; the Markdown files stay only as the local fallback until they are removed.

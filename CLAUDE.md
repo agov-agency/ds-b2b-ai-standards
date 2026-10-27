@@ -122,6 +122,7 @@ Preview the specimen: start the `design-system` server from `.claude/launch.json
 - `design-system/tokens.css` and the rest of `design-system/` (wave, word-reveal, specimen) and `illustrations/` (figures, icons) are shared by the landing and the tool
 - `landing/` — current promo landing: `index.html`, `landing.css`, `landing.js`, `assets/`. Served at `/landing/`; root `vercel.json` rewrites `/` to it. Uses root-absolute paths (`/design-system/...`, `/illustrations/...`), so serve from the repo root
 - `site/` — the tool (scaffold only, see `site/README.md`); content files in `site/content/{scenarios,skills,rules,authors}/`
+- `studio/` — Sanity Studio for the directory content (see `docs/cms.md`)
 - `lab/` — design experiments, not deployed
 - `docs/` — internal briefs, decisions, specs (incl. `landing-rebuild-brief.md`)
 - `.claude/launch.json` — local static servers: `design-system` (port 4180, design-system folder), `landing` (port 4181, repo root; open `/landing/`), `lab` (4182, repo root)

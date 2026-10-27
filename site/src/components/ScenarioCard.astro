@@ -8,6 +8,7 @@ import type { CollectionEntry } from 'astro:content';
 import { getEntry } from 'astro:content';
 import { AREAS } from '../site';
 import ScenarioCover from './ScenarioCover.astro';
+import ItemArt from './ItemArt.astro';
 import Byline from './Byline.astro';
 interface Props { scenario: CollectionEntry<'scenarios'>; wide?: boolean; compact?: boolean }
 const { scenario, wide = false, compact = false } = Astro.props;
@@ -18,9 +19,7 @@ const Tag = soon ? 'div' : 'a';
 ---
 <Tag data-type="scenario" class:list={['scard', { soon, wide, compact }]} href={soon ? undefined : `/scenarios/${id}`} style={data.cover ? `--cover: var(--pastel-${data.cover}); --cover-200: var(--pastel-${data.cover}-200); --cover-450: var(--pastel-${data.cover}-450)` : undefined}>
   <div class="art" aria-hidden="true">
-    {data.illustration
-      ? <img src={data.illustration} alt="" loading="lazy" />
-      : <ScenarioCover />}
+    <ItemArt data={data} still lazy><ScenarioCover /></ItemArt>
   </div>
   <div class="txt">
     <p class="chips">

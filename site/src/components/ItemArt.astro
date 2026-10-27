@@ -1,0 +1,21 @@
+---
+// Item illustration from the CMS: the animated figure picked by name (src/art), else a static image, else the slot (default cover).
+// Unknown names fall through too, so a figure removed from code never breaks a page.
+import IsoArt from './IsoArt.astro';
+import { pieces } from '../art';
+import type { CollectionEntry } from 'astro:content';
+type Data = CollectionEntry<'scenarios'>['data'] | CollectionEntry<'skills'>['data'];
+interface Props { data: Data; still?: boolean; lazy?: boolean }
+const { data, still = false, lazy = false } = Astro.props;
+const art = data.art && pieces[data.art.piece] ? data.art : undefined;
+---
+{art
+  ? <IsoArt name={art.piece} dark={art.variant === 'dark'} mono={art.variant === 'mono'} accent={art.accent} zoom={art.zoom} still={still} class="item-art" />
+  : data.illustration ? <img src={data.illustration} alt="" loading={lazy ? 'lazy' : undefined} /> : <slot />}
+
+<style>
+  /* Fills whatever art box it lands in (hero, closing card, card cover); `figure` outranks IsoArt's own scoped rule */
+  :global(figure.iso-panel.item-art) { position: absolute; inset: 0; background: none; border-radius: 0; }
+  /* Stacked hero: the art box has no height of its own there */
+  @media (max-width: 999px) { :global(.hart:has(> figure.item-art)) { width: 100%; } :global(.hart > figure.iso-panel.item-art) { position: relative; aspect-ratio: 1; } }
+</style>

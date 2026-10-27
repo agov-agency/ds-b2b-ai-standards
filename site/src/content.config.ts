@@ -1,9 +1,16 @@
 import { defineCollection, reference, z } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { source } from './sanity';
 import { AREAS } from './site';
 
 const area = z.enum(Object.keys(AREAS) as [keyof typeof AREAS]);
-const md = (dir: string) => glob({ pattern: '*.md', base: `./content/${dir}` });
+
+// Animated figure picked in the CMS: a piece from src/art by name, plus how it sits (option A in docs/cms.md)
+const art = z.object({
+  piece: z.string(),
+  variant: z.enum(['color', 'mono', 'dark']).default('color'),
+  accent: z.enum(['scenario', 'skill', 'rule', 'brand']).optional(),
+  zoom: z.number().default(1),
+}).optional();
 
 // Scenario page sections
 const detailPage = z.object({
@@ -43,7 +50,7 @@ const detailPage = z.object({
 }).default({});
 
 const authors = defineCollection({
-  loader: md('authors'),
+  loader: source('authors'),
   schema: z.object({
     name: z.string(),
     role: z.string().optional(),       // job position
@@ -57,7 +64,7 @@ const authors = defineCollection({
 });
 
 const rules = defineCollection({
-  loader: md('rules'),
+  loader: source('rules'),
   schema: z.object({
     number: z.number().int(),
     title: z.string(),
@@ -89,7 +96,7 @@ const rules = defineCollection({
 });
 
 const skills = defineCollection({
-  loader: md('skills'),
+  loader: source('skills'),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -104,6 +111,7 @@ const skills = defineCollection({
     firstRun: z.string().optional(),
     connectors: z.array(z.string()).default([]),
     illustration: z.string().optional(),
+    art,
     page: z.object({
       does: z.object({ headline: z.string(), context: z.string().optional(), body: z.array(z.string()).default([]) }).optional(),
       prompt: z.object({
@@ -129,7 +137,7 @@ const skills = defineCollection({
 });
 
 const scenarios = defineCollection({
-  loader: md('scenarios'),
+  loader: source('scenarios'),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -145,6 +153,7 @@ const scenarios = defineCollection({
     skills: z.array(reference('skills')).default([]),
     rules: z.array(reference('rules')).default([]),
     illustration: z.string().optional(),
+    art,
     cover: z.number().int().min(1).max(20).optional(),   // --pastel-N behind the cover art
     order: z.number().default(99),
     page: detailPage,

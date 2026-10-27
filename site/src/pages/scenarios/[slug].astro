@@ -11,6 +11,7 @@ import UsingTiles from '../../components/detail/UsingTiles.astro';
 import StepFlow from '../../components/detail/StepFlow.astro';
 import Connectors from '../../components/Connectors.astro';
 import ScenarioCover from '../../components/ScenarioCover.astro';
+import ItemArt from '../../components/ItemArt.astro';
 import Sec from '../../components/Sec.astro';
 import SubmitBand from '../../components/SubmitBand.astro';
 import DetailCta from '../../components/detail/DetailCta.astro';
@@ -50,7 +51,7 @@ const cta = {
       {p.get?.source && <a class="btn outlined" href={p.get.source} rel="noopener">Source on GitHub <Fragment set:html={arrow('up', 'ext')} /></a>}
     </Fragment>
     {d.connectors.length > 0 && <div slot="facts"><dt class="lbl">Runs with</dt><dd><Connectors items={d.connectors} /></dd></div>}
-    <Fragment slot="art">{d.illustration ? <img src={d.illustration} alt="" /> : <ScenarioCover />}</Fragment>
+    <ItemArt slot="art" data={d}><ScenarioCover /></ItemArt>
   </DetailHero>
 
   <DetailFrame toc={toc}>
@@ -67,7 +68,7 @@ const cta = {
       </Sec>
     )}
     <DetailCta cover={d.cover} {...(p.get ? { title: cta.headline, context: cta.context, button: cta.button, href: '#h-get' } : { title: `Run a ${T.scenario.toLowerCase()} we don’t have yet?` })}>
-      <Fragment slot="art">{d.illustration ? <img src={d.illustration} alt="" /> : <ScenarioCover />}</Fragment>
+      <ItemArt slot="art" data={d}><ScenarioCover /></ItemArt>
     </DetailCta>
   </DetailFrame>
 

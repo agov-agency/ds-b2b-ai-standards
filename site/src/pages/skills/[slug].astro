@@ -1,6 +1,7 @@
 ---
 // One template for every skill page (Figma 919:23317), built on the scenario page's parts. Only ready skills get a page;
 // "next version" cards link to their rule instead (SkillCard).
+import ItemArt from '../../components/ItemArt.astro';
 import { getCollection, getEntry, getEntries, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import DetailHero from '../../components/detail/DetailHero.astro';
@@ -48,9 +49,7 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
       {p.prompt && <a class="btn filled" href="#h-prompt">Copy the prompt</a>}
       {p.prompt?.source && <a class="btn outlined" href={p.prompt.source} rel="noopener">Source on GitHub <Fragment set:html={arrow('up', 'ext')} /></a>}
     </Fragment>
-    <Fragment slot="art">
-      {d.illustration ? <img src={d.illustration} alt="" /> : <span class="kart" style={`--cover-450: var(--pastel-${cover}-450)`} set:html={icon(d.icon ?? AREA_ICON[d.area])} />}
-    </Fragment>
+    <ItemArt slot="art" data={d}><span class="kart" style={`--cover-450: var(--pastel-${cover}-450)`} set:html={icon(d.icon ?? AREA_ICON[d.area])} /></ItemArt>
   </DetailHero>
 
   <DetailFrame toc={toc}>
@@ -90,7 +89,7 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
     <DetailCta cover={cover} {...(p.prompt
       ? { title: 'Run it on this quarter’s data.', context: 'Paste the prompt into your AI with your exports. It reads them and changes nothing', button: 'Copy the prompt', href: '#h-prompt' }
       : { title: `Built a ${T.skill.toLowerCase()} we don’t have yet?` })}>
-      <Fragment slot="art">{d.illustration ? <img src={d.illustration} alt="" /> : <span class="kart" set:html={icon(d.icon ?? AREA_ICON[d.area])} />}</Fragment>
+      <ItemArt slot="art" data={d}><span class="kart" set:html={icon(d.icon ?? AREA_ICON[d.area])} /></ItemArt>
     </DetailCta>
   </DetailFrame>
 
