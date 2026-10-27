@@ -10,12 +10,12 @@ import { createElement } from 'react';
 export const category = defineType({
   name: 'category', type: 'document',
   fields: [
-    defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),
-    defineField({ name: 'slug', type: 'slug', options: { source: 'title' }, validation: (r) => r.required() }),
-    defineField({ name: 'cover', title: 'Colour', type: 'number', description: 'Behind skill and rule cards in this category', components: { input: CoverInput }, initialValue: randomCover, validation: (r) => r.required() }),
-    defineField({ name: 'icon', type: 'string', description: 'Fallback for rules and skills here that have no picture of their own', components: { input: IconInput }, validation: (r) => r.required() }),
-    defineField({ name: 'headline', title: 'Rules hub headline (black)', type: 'string' }),
-    defineField({ name: 'context', title: 'Rules hub headline (gray)', type: 'string' }),
+    defineField({ name: 'title', type: 'string', validation: (r) => r.required(), description: 'Chip on cards and pages; filter name on the Skills and Rules pages' }),
+    defineField({ name: 'slug', type: 'slug', options: { source: 'title' }, validation: (r) => r.required(), description: 'Used in filter links' }),
+    defineField({ name: 'cover', title: 'Colour', type: 'number', description: 'Default pastel for skills and rules in this category that have no colour of their own', components: { input: CoverInput }, initialValue: randomCover, validation: (r) => r.required() }),
+    defineField({ name: 'icon', type: 'string', description: 'Default icon for skills and rules in this category that have no icon of their own', components: { input: IconInput }, validation: (r) => r.required() }),
+    defineField({ name: 'headline', title: 'Rules page headline (black)', type: 'string', description: 'Headline of this category’s group on the Rules page' }),
+    defineField({ name: 'context', title: 'Rules page headline (gray)', type: 'string', description: 'Continues that headline in gray' }),
     order('category'),
   ],
   orderings: [{ title: 'Order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],
@@ -36,7 +36,7 @@ export const connector = defineType({
   name: 'connector', type: 'document',
   fields: [
     defineField({ name: 'name', type: 'string', validation: (r) => r.required(), description: 'As shown in the tooltip, e.g. “Google Ads export”' }),
-    defineField({ name: 'brand', title: 'Logo', type: 'string', components: { input: LogoInput } }),
+    defineField({ name: 'brand', title: 'Logo', type: 'string', components: { input: LogoInput }, description: 'Pick a logo from the set; “Own” to upload one below' }),
     defineField({ name: 'logo', title: 'Own logo', type: 'image', hidden: ({ parent }) => !!parent?.brand, description: 'Only when the set above has no logo for it. Square SVG or PNG, shown 18px on a white disc' }),
   ],
   preview: { select: { title: 'name', brand: 'brand', media: 'logo' }, prepare: ({ title, brand, media }) => ({ title, media: brand ? createElement('span', { dangerouslySetInnerHTML: { __html: LOGOS.find(([n]) => n === brand)?.[1] ?? '' }, style: { width: '100%', padding: 6 } }) : media }) },

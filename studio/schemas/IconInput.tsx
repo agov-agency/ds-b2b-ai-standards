@@ -9,7 +9,7 @@ const CSS = `.ic path,.ic polygon,.ic ellipse,.ic line{fill:#fff;stroke:#d4d4d4;
 .ic .nf{fill:none}.ic .fo{stroke:none}.ic .sil{stroke:#262626}.ic .hi{stroke:#3b6cff}.ic .lo{stroke:#f0f0f0}.ic .dash{stroke-dasharray:1 3}
 .ic .dot{stroke:none;fill:#3b6cff}.ic .dot.m{fill:#262626}.ic .dot.off{fill:#e5e5e5}`;
 const ICONS = Object.entries(raw).map(([p, svg]) => [p.split('/').pop()!.slice(0, -4), svg] as const);
-// The field's set (options.pool): rules and skills each pick from their own list in site/src/icons.ts
+// The field's set (options.pool): rules and skills each pick from their own list in site/src/icons.ts; categories see all
 
 export function IconInput({ value, onChange, schemaType }: StringInputProps) {
   const pool = ICON_POOLS[(schemaType.options as any).pool as 'rule' | 'skill'];
@@ -23,7 +23,7 @@ export function IconInput({ value, onChange, schemaType }: StringInputProps) {
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(64px, 1fr))', gap: 8 }}>
       <style>{CSS}</style>
       {tile(undefined, <Text muted size={0}>Area</Text>)}
-      {ICONS.filter(([name]) => pool.includes(name)).map(([name, svg]) => tile(name, <span className="ic" style={{ width: 40, height: 40, display: 'block' }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg', '<svg width="40" height="40"') }} />))}
+      {ICONS.filter(([name]) => !pool || pool.includes(name)).map(([name, svg]) => tile(name, <span className="ic" style={{ width: 40, height: 40, display: 'block' }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg', '<svg width="40" height="40"') }} />))}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { defineField, defineType } from 'sanity';
-import { str, txt, slugField, order, featured } from './shared';
+import { str, txt, slugField, order, featured, desc, fieldsets, inSet } from './shared';
 
 // Ready icons are the glyphs the author page draws (site/src/pages/authors/[slug].astro); names match the labels already in content
 const ICONS = [{ title: 'LinkedIn', value: 'linkedin' }, { title: 'X', value: 'x' }, { title: 'GitHub', value: 'github' }, { title: 'Website', value: 'web' }, { title: 'Custom logo', value: 'custom' }];
@@ -7,12 +7,16 @@ const NAMES = [...['LinkedIn', 'X', 'GitHub', 'Website'].map((v) => ({ title: v,
 
 export const author = defineType({
   name: 'author', type: 'document',
+  fieldsets: fieldsets(['settings', 'Settings']),
+  // Fields follow the author page: name, role and photo at the top, the About text, then the link buttons
   fields: [
-    str('name', 'Name', true), slugField('name'), str('role', 'Job position'), str('company'),
-    defineField({ name: 'photo', type: 'image', options: { hotspot: true }, description: 'Initials show until it is set' }),
-    txt('about', 'About (~40 words)'),
+    desc(str('name', 'Name', true), 'Page headline; also on bylines and author cards'),
+    desc(str('role', 'Job position'), 'Line under the name, e.g. “Head of Paid Social”'),
+    desc(str('company'), 'After the job position'),
+    defineField({ name: 'photo', type: 'image', options: { hotspot: true }, description: 'Square portrait. Initials show until it is set' }),
+    desc(txt('about', 'About'), 'Short bio on the author page, about 40 words'),
     defineField({
-      name: 'links', type: 'array',
+      name: 'links', type: 'array', description: 'Buttons under the bio, e.g. LinkedIn or a website',
       of: [{
         type: 'object', name: 'link',
         fields: [
@@ -25,7 +29,7 @@ export const author = defineType({
         preview: { select: { label: 'label', custom: 'customLabel', url: 'url', media: 'logo' }, prepare: ({ label, custom, url, media }) => ({ title: label === 'custom' ? custom : label, subtitle: url, media }) },
       }],
     }),
-    featured, order('author'),
+    ...inSet('settings', desc(slugField('name'), 'Page address: /authors/<slug>'), desc(featured, 'Featured authors show on the home page and in the Directory; DemandSense stays unfeatured'), order('author')),
   ],
   orderings: [{ title: 'Order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],
   preview: { select: { title: 'name', subtitle: 'company', media: 'photo' } },
