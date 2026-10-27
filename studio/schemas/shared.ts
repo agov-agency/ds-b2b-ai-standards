@@ -16,6 +16,8 @@ export const obj = (name: string, title: string, fields: any[], collapsed = true
 export const list = (name: string, title: string, fields: any[], preview = 'title') => defineField({
   name, title, type: 'array', of: [{ type: 'object', fields, preview: { select: { title: preview } } }],
 });
+// Connectors are free tags; a tag that contains a connector document's name gets its logo (built-in ones need no document)
+export const connectorsField = defineField({ name: 'connectors', type: 'array', of: [{ type: 'string' }], options: { layout: 'tags' }, description: 'Built in: Claude, ChatGPT, Gemini, LinkedIn…, …CRM…, DemandSense, …signal/source…. Anything else needs a logo under Connectors, or shows a generic icon' });
 export const order = defineField({ name: 'order', type: 'number', initialValue: 99, description: 'Lower comes first' });
 export const featured = defineField({ name: 'featured', type: 'boolean', initialValue: false });
 

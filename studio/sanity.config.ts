@@ -4,7 +4,7 @@ import { visionTool } from '@sanity/vision';
 import { projectId, dataset } from './env';
 import { schemaTypes } from './schemas';
 
-const LIST = [['scenario', 'Scenarios'], ['skill', 'Skills'], ['rule', 'Rules'], ['author', 'Authors']] as const;
+const LIST = [['scenario', 'Scenarios'], ['skill', 'Skills'], ['rule', 'Rules'], ['author', 'Authors'], ['connector', 'Connectors']] as const;
 
 export default defineConfig({
   name: 'default',

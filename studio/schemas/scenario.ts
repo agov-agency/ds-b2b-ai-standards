@@ -1,9 +1,7 @@
 import { defineField, defineType } from 'sanity';
-import { str, txt, slugField, ref, refs, areaField, obj, list, order, gallery } from './shared';
+import { str, txt, slugField, ref, refs, areaField, obj, list, order, gallery, connectorsField } from './shared';
 import { CadenceInput } from './CadenceInput';
-
-// Hue names for the --pastel-N ramp in design-system/tokens.css
-const COVERS = ['pink', 'red', 'coral', 'orange', 'amber', 'yellow', 'olive', 'lime', 'green', 'emerald', 'teal', 'cyan', 'sky', 'azure', 'blue', 'periwinkle', 'indigo', 'violet', 'purple', 'magenta'];
+import { CoverInput } from './CoverInput';
 
 export const scenario = defineType({
   name: 'scenario', type: 'document',
@@ -12,13 +10,13 @@ export const scenario = defineType({
     defineField({ name: 'cadence', type: 'string', components: { input: CadenceInput }, validation: (r) => r.required() }),
     defineField({ name: 'status', type: 'string', initialValue: 'soon', options: { list: ['ready', 'soon'], layout: 'radio', direction: 'horizontal' }, validation: (r) => r.required(), description: 'Only ready scenarios get a page' }),
     { ...ref('author', 'author'), validation: (r: any) => r.required() },
-    { ...obj('stat', 'Lead number', [str('value', 'Value', true), str('label', 'Label', true)]), description: 'Big number at the start of “What it catches” on the scenario page (only Value is shown there now)' },
+    { ...obj('stat', 'Lead number', [str('value', 'Value (e.g. 49%)', true), { ...str('label', 'Label'), description: 'What the number means. Not shown on the site yet' }]), description: 'Big number at the start of “What it catches” on the scenario page' },
     str('firstRun', 'First run'), str('youNeed', 'You need'), str('youGet', 'You get'),
-    defineField({ name: 'connectors', type: 'array', of: [{ type: 'string' }], options: { layout: 'tags' } }),
+    connectorsField,
     refs('skills', 'skill'), refs('rules', 'rule'),
     defineField({ name: 'art', type: 'art' }),
     defineField({ name: 'illustration', title: 'Static illustration (if no figure)', type: 'image' }),
-    defineField({ name: 'cover', title: 'Cover colour', type: 'number', description: 'Pastel behind the card and hero; empty = neutral', options: { list: COVERS.map((c, i) => ({ value: i + 1, title: `${i + 1} · ${c}` })) } }),
+    defineField({ name: 'cover', title: 'Cover colour', type: 'number', description: 'Pastel behind the card and the page hero; click again to clear (neutral)', components: { input: CoverInput }, validation: (r) => r.integer().min(1).max(20) }),
     order,
     obj('page', 'Scenario page', [
       obj('catches', 'What it catches', [

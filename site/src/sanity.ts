@@ -2,6 +2,7 @@
 // The dataset is public and only published documents are read, so no token is needed.
 import { glob } from 'astro/loaders';
 import type { Loader } from 'astro/loaders';
+import { existsSync } from 'node:fs';
 
 const PROJECT = process.env.SANITY_PROJECT_ID, DATASET = process.env.SANITY_DATASET || 'production';
 
@@ -19,6 +20,7 @@ const QUERIES: Record<string, string> = {
   skills: `*[_type == "skill"]{..., ${SLUG('author')}, "rules": rules[]->slug.current, ${IMG('illustration')}, page{..., output{..., ${ITEMS}}}}`,
   scenarios: `*[_type == "scenario"]{..., ${SLUG('author')}, "skills": skills[]->slug.current, "rules": rules[]->slug.current, ${IMG('illustration')},
     page{..., comesBack{..., ${ITEMS}}, steps[]{..., ${SLUG('skill')}}}}`,
+  connectors: `*[_type == "connector"]{..., "slug": {"current": _id}, ${IMG('logo')}}`,
 };
 
 const sanity = (dir: string): Loader => ({
@@ -38,4 +40,6 @@ const sanity = (dir: string): Loader => ({
   },
 });
 
-export const source = (dir: string): Loader => PROJECT ? sanity(dir) : glob({ pattern: '*.md', base: `./content/${dir}` });
+// CMS-only collections (connectors) have no Markdown folder and stay empty locally
+const none: Loader = { name: 'none', load: async ({ store }) => store.clear() };
+export const source = (dir: string): Loader => PROJECT ? sanity(dir) : existsSync(`./content/${dir}`) ? glob({ pattern: '*.md', base: `./content/${dir}` }) : none;

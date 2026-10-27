@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 // "Runs with": one logo tile per connector, its name in a tooltip on hover and focus.
 // Logos live in design-system/logos, in brand colours (Simple Icons, DS Report mark); list/target are Figma line icons.
 // A CRM export is any CRM, so it shows the most common ones stacked; the AI tools (Claude, ChatGPT, Gemini) share one stack too.
@@ -7,6 +8,9 @@ const logo = (n: string) => raw[`../../../design-system/logos/${n}.svg`] ?? '';
 // Connector names are free text in content; match the known ones, generic exports and sources fall back to line icons
 const pick = (name: string) =>
   /crm/i.test(name) ? 'crm' : /claude/i.test(name) ? 'claude' : /chatgpt|openai/i.test(name) ? 'chatgpt' : /gemini/i.test(name) ? 'gemini' : /linkedin/i.test(name) ? 'linkedin' : /demandsense/i.test(name) ? 'demandsense' : /signal|source/i.test(name) ? 'target' : 'list';
+// CMS connector documents add logos for names the rules below don't know (e.g. "Google Ads" matches "Google Ads export")
+const cms = process.env.SANITY_PROJECT_ID ? (await getCollection('connectors')).map((c) => c.data) : []; // empty locally
+const own = (name: string) => cms.find((c) => name.toLowerCase().includes(c.name.toLowerCase()));
 interface Props { items: string[] }
 const { items: all } = Astro.props;
 const AI = ['claude', 'chatgpt', 'gemini'];
@@ -22,7 +26,9 @@ const stack = (name: string) => (name === aiLabel ? ai.map(pick) : pick(name) ==
     <li class="conn" tabindex="0" aria-label={name}>
       {stack(name)
         ? <span class="stack" aria-hidden="true">{stack(name)!.map((n) => <span class="dot" set:html={logo(n)} />)}</span>
-        : <span class="ic" aria-hidden="true" set:html={logo(pick(name))} />}
+        : own(name)
+          ? <span class="ic" aria-hidden="true"><img src={own(name)!.logo} alt="" /></span>
+          : <span class="ic" aria-hidden="true" set:html={logo(pick(name))} />}
       <span class="tip" role="tooltip">{name}</span>
     </li>
   ))}
@@ -33,7 +39,7 @@ const stack = (name: string) => (name === aiLabel ? ai.map(pick) : pick(name) ==
   .conn { position: relative; display: grid; place-items: center; height: 36px; color: var(--neutral-950); border-radius: 18px; outline-offset: 2px; }
   /* Every logo sits on a white disc with a 1px ring; a CRM export shows three discs overlapping */
   .ic, .dot { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--neutral-0); box-shadow: inset 0 0 0 1px var(--line-card); transition: box-shadow var(--t-fast) var(--ease-out); }
-  .ic :global(svg), .dot :global(svg) { width: 18px; height: 18px; }
+  .ic :global(svg), .dot :global(svg), .ic img { width: 18px; height: 18px; object-fit: contain; }
   .stack { display: flex; }
   .dot { box-shadow: 0 0 0 2px var(--neutral-0), inset 0 0 0 1px var(--line-card); }
   .dot + .dot { margin-left: -12px; }

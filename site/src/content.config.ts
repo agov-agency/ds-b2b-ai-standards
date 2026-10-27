@@ -161,4 +161,7 @@ const scenarios = defineCollection({
   }),
 });
 
-export const collections = { authors, rules, skills, scenarios };
+// Logos for connectors the site doesn't know (Connectors.astro); added in the CMS only
+const connectors = defineCollection({ loader: source('connectors'), schema: z.object({ name: z.string(), logo: z.string() }) });
+
+export const collections = { authors, rules, skills, scenarios, connectors };

@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity';
-import { str, txt, slugField, ref, refs, areaField, obj, list, order, gallery } from './shared';
+import { IconInput } from './IconInput';
+import { str, txt, slugField, ref, refs, areaField, obj, list, order, gallery, connectorsField } from './shared';
 
 const labelText = (name: string, title: string) => list(name, title, [str('label', 'Label', true), txt('text', 'Text', true)], 'label');
 
@@ -9,9 +10,9 @@ export const skill = defineType({
     str('title', 'Title', true), slugField(), txt('description', 'Description', true), areaField(),
     defineField({ name: 'status', type: 'string', initialValue: 'next', options: { list: ['ready', 'next'], layout: 'radio', direction: 'horizontal' }, validation: (r) => r.required() }),
     ref('author', 'author'), refs('rules', 'rule', 'Rules it checks'),
-    str('icon', 'Icon (name in illustrations/icons)'), order,
+    defineField({ name: 'icon', title: 'Card icon', type: 'string', description: 'Small line icon on the skill card (and large on the skill page while it has no illustration). Empty = the category’s icon', components: { input: IconInput } }), order,
     str('changes', 'Changes (e.g. “Reads your data, changes nothing”)'), str('firstRun', 'First run'),
-    defineField({ name: 'connectors', type: 'array', of: [{ type: 'string' }], options: { layout: 'tags' } }),
+    connectorsField,
     defineField({ name: 'art', type: 'art' }),
     defineField({ name: 'illustration', title: 'Static illustration (if no figure)', type: 'image' }),
     obj('page', 'Skill page', [
