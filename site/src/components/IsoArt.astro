@@ -8,10 +8,11 @@
 // under reduced motion. `still` keeps the rest frame (icons). `hover` (scenario cards) rests until the pointer is over
 // the card around it, then plays; it eases in and out of speed so it never jumps. Touch screens keep the rest frame.
 import { pieces } from '../art';
+import { alts } from '../art/alt';
 interface Props { name: string; field?: string; dark?: boolean; blue?: boolean; mono?: boolean; zoom?: number; place?: [number, number, number, number]; clip?: number; accent?: 'scenario' | 'skill' | 'rule' | 'brand'; still?: boolean; hover?: boolean; class?: string }
 const { name, field = 'transparent', dark = false, blue = false, mono = false, zoom = 1, place, clip, accent, still = false, hover = false, class: cls } = Astro.props;
 const lit = accent ? `; --lit: ${accent === 'brand' ? `var(--primary-${dark ? 300 : 450})` : `var(--art-${{ scenario: 'a', skill: 'b', rule: 'c' }[accent]})`}` : '';
-const piece = pieces[name];
+const piece = pieces[name] ?? alts[name].piece; // alternatives render on /art-alts only
 const [fx, fy] = piece.focus ?? [0.5, 0.5];
 const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]}px; --ph: ${place[3]}px` : '';
 ---

@@ -1,0 +1,58 @@
+---
+// Temporary page: every alternative illustration next to the one it could replace. Not linked, not in the CMS.
+// ?only=<original or alt name>  just that row (or that one alternative)
+// &t=<seconds>                  hold every figure at that time instead of playing
+import Base from '../layouts/Base.astro';
+import IsoArt from '../components/IsoArt.astro';
+import { ART_POOLS } from '../art';
+import { SKILL_ICONS } from '../art/icons-skills';
+import { RULE_ICONS } from '../art/icons-rules';
+import { alts } from '../art/alt';
+
+const GROUPS: [string, string[]][] = [
+  ['Сценарії', ART_POOLS.scenario],
+  ['Скіли', ['turnstile', 'metronome', 'siphon', ...Object.keys(SKILL_ICONS)].map((n) => `i-${n}`)],
+  ['Правила', Object.keys(RULE_ICONS).map((n) => `i-${n}`)],
+];
+const HUES = [5, 13, 9, 16, 1, 11, 6, 14];
+const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover: var(--pastel-${n}); --cover-450: var(--pastel-${n}-450)`; };
+const of = (n: string) => Object.entries(alts).filter(([, a]) => a.of === n);
+---
+<Base title="Art alternatives">
+  <main class="alts">
+    {GROUPS.map(([h, names]) => [<h2>{h}</h2>, names.map((n, i) => (
+      <section class:list={['row', { fig: !n.startsWith('i-') }]} data-row={n} style={cover(i)}>
+        <div class="cell orig" data-name={n}><IsoArt name={n} field="var(--cover)" still /><p><code>{n}</code>поточна</p></div>
+        {of(n).map(([a, { idea }]) => <div class="cell" data-name={a} data-alt={a}><IsoArt name={a} field="var(--cover)" still /><p><code>{a}</code>{idea}</p></div>)}
+      </section>
+    ))])}
+  </main>
+</Base>
+<script>
+  import { alts } from '../art/alt';
+  import { figures } from '../art/figures';
+  const q = new URLSearchParams(location.search), only = q.get('only'), hold = q.get('t');
+  if (only) for (const r of document.querySelectorAll<HTMLElement>('[data-row]')) {
+    if (r.dataset.row === only) continue;
+    const cell = r.querySelector<HTMLElement>(`[data-name="${only}"]`);
+    if (!cell) r.remove(); else for (const c of r.querySelectorAll<HTMLElement>('.cell')) if (c !== cell) c.remove();
+  }
+  // Animated figures (originals and alternatives) play here; icons stay still
+  const hosts = [...document.querySelectorAll<HTMLElement>('.row.fig .cell')].map((c) => {
+    const name = c.dataset.name!, piece = alts[name]?.piece ?? figures[name];
+    return { piece, frame: c.querySelector('[data-frame]')!, fig: c.querySelector<HTMLElement>('figure')! };
+  }).filter((h) => h.piece && h.piece.period > 1);
+  const show = (t: number) => { for (const h of hosts) { h.frame.innerHTML = h.piece.draw(t % h.piece.period); h.fig.style.setProperty('--march', String(-(t * 12) % 14)); } };
+  if (hold !== null) show(Number(hold));
+  else if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { const t0 = performance.now(); const tick = (now: number) => { show((now - t0) / 1000 * .6); requestAnimationFrame(tick); }; requestAnimationFrame(tick); }
+</script>
+<style>
+  .alts { max-width: 1600px; margin: 0 auto; padding: 48px 24px 120px; }
+  h2 { font: 500 32px/1.1 var(--font-sans, Inter); margin: 48px 0 16px; }
+  .row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; padding: 16px 0; border-top: 1px solid var(--neutral-100, #eee); }
+  .cell p { margin: 8px 0 0; font: 400 14px/1.4 Inter, sans-serif; color: var(--neutral-600, #666); }
+  .cell code { display: block; font: 600 12px/1.4 var(--font-mono, monospace); color: var(--neutral-950, #111); }
+  .orig p { color: var(--neutral-400, #aaa); }
+  .alts :global(figure.iso-panel) { --art-a: var(--cover-450); --art-b: var(--cover-450); --art-c: var(--cover-450); --lit: var(--cover-450); aspect-ratio: 1; width: 100%; }
+  @media (max-width: 800px) { .row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>
