@@ -13,17 +13,17 @@ import SiteFooter from '../components/SiteFooter.astro';
 import { T } from '../site';
 
 const nRules = (await getCollection('rules')).length;
-// Statements are placeholders until the authors send theirs (live site shows the same)
+// Opening statements: client copy, 28 Oct 2026
 const quotes = [
-  { name: 'Iurii Znak', company: 'DemandSense' },
-  { name: 'Contributor', company: 'Name and company to come' },
-  { name: 'Contributor', company: 'Name and company to come' },
+  { name: 'Iurii Znak', company: 'DemandSense', text: 'There’s a trust problem with AI in LinkedIn Ads. The people we work with every day have tried it, and they still check every answer by hand. That’s why we built the Standard: one open set of rules for running LinkedIn Ads with AI, written with the experts and kept up to date.' },
+  { name: 'AJ Wilcox', company: 'B2Linked', text: 'AI in LinkedIn Ads needs rules because it was trained on recommendations from the platform itself, and advanced practitioners all agree that taking LinkedIn’s recommendations for setting up your ads is a first-class ticket to negative ROI.' },
+  { name: 'Justin Rowe', company: 'Impactable', photo: '/authors/justin-rowe.jpg', text: 'Pretty soon, everyone can “talk with your data”, but raw data needs to be interpreted with actual frameworks, doctrines, and a real point of view. That’s exactly what the Standard delivers.' },
 ];
-// Directory teaser: one card per library list, in a rail (two in view, the third off to the right)
+// How the Standard is built: one card per library list, in build order, in a rail (two in view, the third off to the right)
 const hubs = [
-  { type: 'rule', art: 'rules', label: T.rules, href: '/rules', count: nRules, title: 'The rules your AI works by.', context: 'What an experienced advertiser checks before trusting a number' },
-  { type: 'skill', art: 'skills', label: T.skills, href: '/skills', count: (await getCollection('skills')).length, title: 'Single checks, ready to run.', context: 'Each reads an export, applies one rule and hands back a list' },
-  { type: 'scenario', art: 'scenarios', label: T.scenarios, href: '/scenarios', count: (await getCollection('scenarios')).length, title: 'Whole routines, ready to run.', context: 'Weekly or monthly jobs your AI does the same way' },
+  { type: 'rule', art: 'rules', label: T.rules, href: '/rules', count: nRules, title: 'Start with the judgement AI is missing.', context: `When frequency is too high for an audience, when a CTR drop means fatigue, when an audience is big enough to count as warm. ${nRules} rules to start.` },
+  { type: 'skill', art: 'skills', label: T.skills, href: '/skills', count: (await getCollection('skills')).length, title: 'Let AI apply the rules to your data.', context: 'A skill pulls your numbers, reads them the way the rules say, and tells you what to change.' },
+  { type: 'scenario', art: 'scenarios', label: T.scenarios, href: '/scenarios', count: (await getCollection('scenarios')).length, title: 'Turn routine work into one run.', context: 'The Monday review across accounts, or the list of warm accounts for sales, done in one go. Each step is a skill, and each skill rests on a rule.' },
 ] as const;
 const go = arrow('right', 'go');
 const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
@@ -54,10 +54,9 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
         {quotes.map((q) => (
           <li class="quote">
             <blockquote>
-              <p class="t-h5">Statement to come</p>
-              <p class="t-p2 tone-2">Their opening statement, 25 to 35 words in their own words: why this Standard needed to exist.</p>
+              <p class="t-h6">“{q.text}”</p>
             </blockquote>
-            <p class="by"><span class="ini" aria-hidden="true">{q.name === 'Contributor' ? '' : ini(q.name)}</span><span><span class="t-p2">{q.name}</span><span class="t-p2 tone-2">{q.company}</span></span></p>
+            <p class="by">{q.photo ? <img class="ini" src={q.photo} alt="" width="40" height="40" loading="lazy" /> : <span class="ini" aria-hidden="true">{ini(q.name)}</span>}<span><span class="t-p2">{q.name}</span><span class="t-p2 tone-2">{q.company}</span></span></p>
           </li>
         ))}
       </ul>
@@ -73,7 +72,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
       <section class="blk wrap bleed dir" aria-labelledby="h-dir">
         <div class="dir-head">
           <p class="marker">Directory</p>
-          <h2 id="h-dir" class="headline t-h3">The directory. <span class="tone-2">Every scenario, skill and rule in the Standard, each signed by the practitioner who runs it that way</span></h2>
+          <h2 id="h-dir" class="headline t-h3">How the Standard is built. <span class="tone-2">Each part builds on the one before it, and it all starts with the rules</span></h2>
         </div>
         <ul class="picks scroll-snap-x to-edges" data-picks data-reveal>
           {hubs.map((h) => (
@@ -132,7 +131,8 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
   blockquote { display: grid; gap: 12px; align-content: start; margin: 0; }
   .by { display: flex; align-items: center; gap: 12px; }
   .by > span:last-child { display: grid; }
-  .ini { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-muted); font: 600 12px/1 var(--font-mono); flex: none; }
+  blockquote p { text-wrap: pretty; }
+  .ini { object-fit: cover; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-muted); font: 600 12px/1 var(--font-mono); flex: none; }
 
   .blk { padding-block: var(--section-ruled-top) var(--section-ruled-bottom); }
 
