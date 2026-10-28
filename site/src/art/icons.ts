@@ -2,19 +2,35 @@
 // details and nothing around it that needs explaining. Static: draw() ignores t; one live part in the accent.
 import { kernel, hue, f, type Piece, type V3 } from './iso';
 
-type K = ReturnType<typeof kernel>;
-type P2 = [number, number];
+export type K = ReturnType<typeof kernel>;
+export type P2 = [number, number];
 
-const prism = (K: K, pts: P2[], z: number, h: number, top = 'paper', side = 'body') => K.prism(pts, z, h, top, side);
+export const prism = (K: K, pts: P2[], z: number, h: number, top = 'paper', side = 'body') => K.prism(pts, z, h, top, side);
 // A bar lying flat from r0 to r1 along angle a around (cx, cy)
-const bar = (cx: number, cy: number, a: number, r0: number, r1: number, w: number): P2[] => {
+export const bar = (cx: number, cy: number, a: number, r0: number, r1: number, w: number): P2[] => {
   const c = Math.cos(a), s = Math.sin(a), n = w / 2;
   return [[cx + c * r0 - s * n, cy + s * r0 + c * n], [cx + c * r1 - s * n, cy + s * r1 + c * n], [cx + c * r1 + s * n, cy + s * r1 - c * n], [cx + c * r0 + s * n, cy + s * r0 - c * n]];
 };
-const dot = (K: K, x: number, y: number, z: number, r = 1.1) => { const [px, py] = K.P(x, y, z); return `<ellipse class="f blk" cx="${f(px)}" cy="${f(py)}" rx="${r}" ry="${f(r * .58)}"/>`; };
+export const dot = (K: K, x: number, y: number, z: number, r = 1.1) => { const [px, py] = K.P(x, y, z); return `<ellipse class="f blk" cx="${f(px)}" cy="${f(py)}" rx="${r}" ry="${f(r * .58)}"/>`; };
 // Screw heads on a face plane (local 2D), with the slot
-const screws = (pts: P2[]) => pts.map(([x, y]) => `<circle class="f paper" cx="${x}" cy="${y}" r="1.3"/><line class="det" x1="${x - .9}" y1="${y}" x2="${x + .9}" y2="${y}"/>`).join('');
-const lit = (s: string, a = 1) => (a > .01 ? `<g class="lit"${a < .999 ? ` style="opacity:${f(a)}"` : ''}>${s}</g>` : '');
+export const screws = (pts: P2[]) => pts.map(([x, y]) => `<circle class="f paper" cx="${x}" cy="${y}" r="1.3"/><line class="det" x1="${x - .9}" y1="${y}" x2="${x + .9}" y2="${y}"/>`).join('');
+export const lit = (s: string, a = 1) => (a > .01 ? `<g class="lit"${a < .999 ? ` style="opacity:${f(a)}"` : ''}>${s}</g>` : '');
+
+// The plate every icon stands on, with a screw in each corner
+export const plate = (K: K, x: number, y: number, w: number, d: number) =>
+  K.box(x, y, 0, w, d, 4, 'paper', 'body', 'tint') + [[x + 4, y + 4], [x + w - 4, y + 4], [x + 4, y + d - 4], [x + w - 4, y + d - 4]].map(([px, py]) => dot(K, px, py, 4)).join('');
+// A rope or cable: a band of width w along a 3D path, drawn as a filled outline in screen space
+export function rope(K: K, pts: V3[], w = 3, cls = 'f body') {
+  const q = pts.map((p) => K.P(...p)), n = q.length, L: number[][] = [], R: number[][] = [];
+  q.forEach((p, i) => {
+    const a = q[Math.max(0, i - 1)], b = q[Math.min(n - 1, i + 1)], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1;
+    L.push([p[0] - dy / l * w / 2, p[1] + dx / l * w / 2]); R.push([p[0] + dy / l * w / 2, p[1] - dx / l * w / 2]);
+  });
+  return `<path class="${cls}" d="M${[...L, ...R.reverse()].map((p) => p.map(f).join(' ')).join('L')}Z"/>`;
+}
+// A plane through o spanned by unit steps u and v (both 3D), for drawing flat parts that lean: SVG x along u, y along v
+export const planeAt = (K: K, o: V3, u: V3, v: V3) => { const O = K.P(...o), U = K.D(...u), V = K.D(...v); return `matrix(${[...U, ...V, ...O].map((n) => n.toFixed(3)).join(' ')})`; };
+export const icon = (K: K, aria: string, draw: () => string): Piece => ({ aria, period: 1, rest: 0, viewBox: K.viewBox, focus: [.5, .5], draw: () => hue('a', draw()) });
 
 // ── Turnstile ─────────────────────────────────────────────────────────────────────────────────────────────
 // Landing-page CPC report: you pay per pass. A pedestal with a coin standing in its slot, and the rotor beside it.

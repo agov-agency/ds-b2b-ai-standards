@@ -2,7 +2,6 @@
 // Temporary review page: every item with its figure or icon, before they are assigned in the CMS. Delete after review.
 import Base from '../layouts/Base.astro';
 import IsoArt from '../components/IsoArt.astro';
-import { icon } from '../icons';
 
 const SCENARIOS = [
   ['Warm-lead handoff', 'Поштова сортувальна', 'sorter'],
@@ -54,7 +53,7 @@ const RULES = [
   ['04 Judge awareness formats on reach and CPM', 'Білборд', 'billboard'],
   ['05 Split campaigns only when a segment outperforms', 'Клин у тріщині бетонного блоку', 'wedge'],
   ['06 Watch for budget drifting to junior roles', 'Перехилена таця з перегородкою', 'tilttray'],
-  ['07 To exclude SDRs, exclude Sales', 'Урна зі злитком', 'binbar'],
+  ['07 To exclude SDRs, exclude Sales', 'Кошик для сміття зі злитком', 'binbar'],
   ['08 Check who your ads actually reach', 'Коробка в рентген-рамці', 'xray'],
   ['09 Count an audience as warm only once it can serve', 'Пружинні ваги з позначкою', 'springscale'],
   ['10 Spend on warm audiences before cold', 'Каскад із трьох чаш', 'cascade'],
@@ -64,32 +63,22 @@ const RULES = [
   ['14 Grow a signal list from the same market', 'Ланцюг з однакових ланок', 'chain'],
   ['15 Judge cold ads by the warm audience they build', 'Магніт із тирсою', 'magnet'],
 ];
-const PILOT = [
-  ['Landing-page CPC report', 'Турнікет із монетоприймачем', 'turnstile'],
-  ['Pacing Check Against Schedule', 'Метроном', 'metronome'],
-  ['Budget Re-allocation', 'Сифон між двома баками', 'siphon'],
-];
 const HUES = [5, 13, 9, 16, 1, 11, 6, 14];
 const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover: var(--pastel-${n}); --cover-200: var(--pastel-${n}-200); --cover-450: var(--pastel-${n}-450)`; };
 ---
 <Base title="Art review">
   <main class="rev">
-    <h2>Пілот: іконки в стилі сценаріїв</h2>
-    <p class="sub">Зліва нова (статична, ядро сценаріїв), справа стара.</p>
-    <table>
-      {PILOT.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic pair"><span class="tile"><IsoArt name={`i-${n}`} field="var(--cover)" still /></span><span class="ico" set:html={icon(n)} /></td></tr>)}
-    </table>
     <h2>Сценарії</h2>
     <table>
       {SCENARIOS.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic big"><IsoArt name={n} field="var(--cover)" /></td></tr>)}
     </table>
     <h2>Скіли</h2>
     <table>
-      {SKILLS.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic"><span class="ico" set:html={icon(n)} /></td></tr>)}
+      {SKILLS.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic"><span class="tile"><IsoArt name={`i-${n}`} field="var(--cover)" still /></span></td></tr>)}
     </table>
     <h2>Правила</h2>
     <table>
-      {RULES.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic"><span class="ico" set:html={icon(n)} /></td></tr>)}
+      {RULES.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic"><span class="tile"><IsoArt name={`i-${n}`} field="var(--cover)" still /></span></td></tr>)}
     </table>
   </main>
 </Base>
@@ -104,10 +93,6 @@ const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover:
   .t code { display: block; margin-top: 6px; font: 600 12px/1.4 var(--font-mono, monospace); text-transform: uppercase; color: var(--neutral-500, #888); }
   .pic.big :global(figure.iso-panel) { aspect-ratio: 1; width: 100%; max-width: 560px; }
   .rev :global(figure.iso-panel) { --art-a: var(--cover-450); --art-b: var(--cover-450); --art-c: var(--cover-450); --lit: var(--cover-450); }
-  .pic .ico { display: grid; place-items: center; width: 240px; height: 240px; background: var(--cover); border-radius: 4px; }
-  .sub { color: var(--neutral-500, #888); margin: -8px 0 16px; }
-  .pair { display: flex; gap: 16px; }
   .tile { display: block; width: 240px; height: 240px; }
   .tile :global(figure.iso-panel) { width: 240px; height: 240px; }
-  .pic .ico :global(svg) { width: 160px; height: 160px; }
 </style>
