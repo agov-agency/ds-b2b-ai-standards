@@ -1,6 +1,6 @@
 // One-off, safe to re-run: one fully filled sample per directory type (author, scenario, skill, rule), to see a complete page.
 // Each copies a real item and fills every field it leaves empty. Delete the four `*-sample` documents when real content is complete.
-// Figures and icons come from outside the CMS pools, so they never clash with a real item's pick.
+// The scenario figure and rule icon come from outside the CMS pools, so they never clash with a real item's pick.
 // Run: npx sanity exec migrations/2026-10-28-samples.ts --with-user-token
 import { getCliClient } from 'sanity/cli';
 
@@ -50,7 +50,7 @@ const scenario = {
 const sk = await base('skill-multichannel-performance-rollup');
 const skill = {
   ...sk, _id: 'skill-sample', title: 'Sample skill, every field filled', slug: { _type: 'slug', current: 'sample-skill' }, order: 99,
-  author: r('author-sample'), firstRun: 'About five minutes', icon: 'plug',
+  author: r('author-sample'), firstRun: 'About five minutes', icon: undefined, // no icon: every skill icon belongs to a real skill, so the sample shows its category's
   rules: k([r('rule-sample'), r('rule-count-an-audience-as-warm-only-once-it-can-serve')]),
   page: {
     ...sk.page,
