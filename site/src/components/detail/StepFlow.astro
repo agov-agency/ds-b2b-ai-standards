@@ -1,6 +1,7 @@
 ---
 // "How it works" (scenario and skill pages): the site's horizontal timeline, one column per step; phase labels sit above the line.
 // Needs a container (container-type: inline-size) around it to stack when narrow. `bare`: just the timeline, inside another section (skill pages).
+// More than four steps: four columns show and the rest slide in a rail (arrows above it), so long runs stay readable.
 import { getEntry, type CollectionEntry } from 'astro:content';
 import Sec from '../Sec.astro';
 import StepDot from '../StepDot.astro';
@@ -12,10 +13,15 @@ const { bare = false, label = 'How it runs', context = 'Each one applies a rule 
 const steps = await Promise.all(Astro.props.steps.map(async (s) => ({ ...s, skillEntry: s.skill ? (await getEntry(s.skill)) as CollectionEntry<'skills'> | undefined : undefined })));
 const phased = steps.some((s) => s.phase);
 const go = arrow('right');
+const many = steps.length > 4;
 const Wrap = bare ? Fragment : Sec;
 ---
 <Wrap id="h-how" label={label} title={`${steps.length} steps, in order.`} context={context} small>
-  <ol class="flow" style={`--n: ${steps.length}`} data-reveal>
+  {many && <div class="sbar" data-sbar>
+    <button class="btn outlined icon xs" type="button" data-rail-prev aria-label="Previous steps" disabled><Fragment set:html={arrow('left')} /></button>
+    <button class="btn filled icon xs" type="button" data-rail-next aria-label="Next steps"><Fragment set:html={arrow('right')} /></button>
+  </div>}
+  <ol class:list={['flow', { 'scroll-snap-x rail': many }]} style={`--n: ${steps.length}`} data-reveal>
     {steps.map((s, i) => (
       <li class:list={['stop', { key: s.key }]}>
         {phased && <p class="lbl phase">{s.phase !== steps[i - 1]?.phase ? s.phase : ''}</p>}
@@ -32,8 +38,20 @@ const Wrap = bare ? Fragment : Sec;
   <slot />
 </Wrap>
 
+<script>
+  import { rail } from '../../rail';
+  document.querySelectorAll<HTMLElement>('[data-sbar]').forEach((bar) => {
+    const ol = bar.nextElementSibling as HTMLElement;
+    const sync = rail(() => ol, bar.querySelector('[data-rail-prev]')!, bar.querySelector('[data-rail-next]')!);
+    ol.addEventListener('scroll', sync, { passive: true });
+  });
+</script>
+
 <style>
   .flow { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+  /* Rail: four steps across, the fifth peeks in; runs out to the content's vertical lines and crops there */
+  .sbar { display: flex; justify-content: flex-end; gap: 8px; margin: calc(-1 * var(--header-gap, 0px) + 8px) 0 16px; }
+  .rail { grid-template-columns: none; grid-auto-flow: column; column-gap: 0; grid-auto-columns: calc((100% - 48px) / 4); margin-inline: calc(-1 * var(--pad, 0px)); padding-inline: var(--pad, 0px); scroll-padding-inline: var(--pad, 0px); }
   .stop { display: grid; align-content: start; padding-right: 32px; }
   .stop:last-child { padding-right: 0; }
   .phase { min-height: 1lh; color: var(--text-2); margin-bottom: 8px; }
@@ -49,7 +67,8 @@ const Wrap = bare ? Fragment : Sec;
   @media (hover: hover) and (pointer: fine) { .skill:hover :global(svg) { transform: translateX(3px); } }
   /* Too narrow for one column per step: stack, the line runs down the dots */
   @container (max-width: 760px) {
-    .flow { grid-template-columns: 1fr; gap: 24px; }
+    .flow, .rail { grid-template-columns: 1fr; grid-auto-flow: row; gap: 24px; overflow: visible; margin-inline: 0; padding-inline: 0; }
+    .sbar { display: none; }
     .stop { position: relative; grid-template-columns: 48px minmax(0, 1fr); column-gap: 16px; padding: 0; }
     .stop > * { grid-column: 2; }
     .phase { min-height: 0; margin: 0; }

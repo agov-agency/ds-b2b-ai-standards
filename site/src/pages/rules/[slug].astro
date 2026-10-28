@@ -41,6 +41,7 @@ const relSc = (await getCollection('scenarios')).sort((a, b) => own(scIds, b.id)
 const toc = [['h-rule', 'The rule', hasRule], ['h-signs', 'If you see this', p.signs.length], ['h-voices', 'Who runs it this way', p.voices.length], ['h-run', 'Run it', true]]
   .filter(([, , on]) => on).map(([href, label]) => ({ label: label as string, href: `#${href}` }));
 const ext = arrow('up', 'ext');
+const unquote = (q: string) => q.trim().replace(/^["“„«]+|["”»]+$/g, ''); // some quotes arrive already wrapped
 const count = (n: number, one: string, many: string) => (n === 1 ? one : `${n} ${many}`);
 const cta = {
   headline: 'Run this rule differently?',
@@ -108,7 +109,7 @@ const cta = {
               <p class="t-p2 who">
                 {v.author ? <a class="name ul" href={`/authors/${v.author.id}`}>{v.name}</a> : <span class="name">{v.name}</span>}{v.company && `, ${v.company}`}{v.context && <span class="tone-2"> · {v.context}</span>}
               </p>
-              <blockquote class="t-p1 q">“{v.quote}”</blockquote>
+              <blockquote class="t-p1 q">“{unquote(v.quote)}”</blockquote>
               {v.source && (v.url ? <a class="src ul" href={v.url} rel="noopener">{v.source} <Fragment set:html={ext} /></a> : <p class="src">{v.source}</p>)}
               {v.note && <p class="src">{v.note}</p>}
             </li>
@@ -173,7 +174,9 @@ const cta = {
   .voice { display: flex; flex-direction: column; gap: 16px; padding: 24px; background: var(--bg-subtle); box-shadow: inset 0 2px 0 var(--neutral-950); border-radius: 0 0 var(--radius-4) var(--radius-4); }
   .voices > :only-child { grid-column: span 1; }
   .who .name { color: var(--text); }
-  .q { padding-left: 16px; border-left: 2px solid var(--accent); color: var(--text); }
+  .q { margin: 0; padding-left: 16px; border-left: 2px solid var(--accent); color: var(--text); }
+  .src { display: inline-flex; align-items: center; gap: 4px; justify-self: start; align-self: flex-start; }
+  .src :global(svg) { width: 14px; height: 14px; flex: none; }
 
 
   /* Previous / next: two card-buttons splitting the row between the content lines */
