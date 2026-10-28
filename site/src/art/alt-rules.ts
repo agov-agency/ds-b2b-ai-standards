@@ -5,18 +5,18 @@ import { bar, dot, screws, lit, plate, rope, icon, planeAt, type K, type P2 } fr
 import { ann, ball } from './icons-rules';
 
 // Visible half rings round a cylinder lying along y or x (for bands and grooves)
-const ringY = (cx: number, y: number, cz: number, r: number): V3[] => Array.from({ length: 25 }, (_, i) => { const a = -Math.PI / 4 + Math.PI * i / 24; return [cx + r * Math.cos(a), y, cz + r * Math.sin(a)] as V3; });
-const ringX = (x: number, cy: number, cz: number, r: number): V3[] => Array.from({ length: 25 }, (_, i) => { const a = -Math.PI / 4 + Math.PI * i / 24; return [x, cy + r * Math.cos(a), cz + r * Math.sin(a)] as V3; });
+export const ringY = (cx: number, y: number, cz: number, r: number): V3[] => Array.from({ length: 25 }, (_, i) => { const a = -Math.PI / 4 + Math.PI * i / 24; return [cx + r * Math.cos(a), y, cz + r * Math.sin(a)] as V3; });
+export const ringX = (x: number, cy: number, cz: number, r: number): V3[] => Array.from({ length: 25 }, (_, i) => { const a = -Math.PI / 4 + Math.PI * i / 24; return [x, cy + r * Math.cos(a), cz + r * Math.sin(a)] as V3; });
 // A cone lying along x, r0 at x0 to r1 at x1, with its +x end cap
-const coneX = (K: K, x0: number, x1: number, cy: number, cz: number, r0: number, r1: number, end = 'paper', side = 'body') => {
+export const coneX = (K: K, x0: number, x1: number, cy: number, cz: number, r0: number, r1: number, end = 'paper', side = 'body') => {
   const arc = (x: number, r: number, a0: number, a1: number): V3[] => Array.from({ length: 25 }, (_, i) => { const a = a0 + (a1 - a0) * i / 24; return [x, cy + r * Math.cos(a), cz + r * Math.sin(a)] as V3; });
   return K.poly([...arc(x0, r0, -Math.PI / 4, Math.PI * 3 / 4), ...arc(x1, r1, -Math.PI / 4, Math.PI * 3 / 4).reverse()], `f ${side}`) + K.poly(arc(x1, r1, 0, 2 * Math.PI), `f ${end}`);
 };
 // A wall segment on a top surface, from a to b
-const wall = (K: K, a: P2, b: P2, z: number, h: number, w = 1.6, top = 'paper') => K.prism(bar(a[0], a[1], Math.atan2(b[1] - a[1], b[0] - a[0]), 0, Math.hypot(b[0] - a[0], b[1] - a[1]), w), z, h, top, 'body', 'tint');
+export const wall = (K: K, a: P2, b: P2, z: number, h: number, w = 1.6, top = 'paper') => K.prism(bar(a[0], a[1], Math.atan2(b[1] - a[1], b[0] - a[0]), 0, Math.hypot(b[0] - a[0], b[1] - a[1]), w), z, h, top, 'body', 'tint');
 // A rectangle turned by a around its centre
-const rot = (cx: number, cy: number, w: number, d: number, a: number): P2[] => [[-w / 2, -d / 2], [w / 2, -d / 2], [w / 2, d / 2], [-w / 2, d / 2]].map(([x, y]) => [cx + x * Math.cos(a) - y * Math.sin(a), cy + x * Math.sin(a) + y * Math.cos(a)]);
-const spokes = (n: number, r: number, a0 = 0) => Array.from({ length: n }, (_, i) => { const a = a0 + i * 2 * Math.PI / n; return `<line class="det" x1="0" y1="0" x2="${f(Math.cos(a) * r)}" y2="${f(Math.sin(a) * r)}"/>`; }).join('');
+export const rot = (cx: number, cy: number, w: number, d: number, a: number): P2[] => [[-w / 2, -d / 2], [w / 2, -d / 2], [w / 2, d / 2], [-w / 2, d / 2]].map(([x, y]) => [cx + x * Math.cos(a) - y * Math.sin(a), cy + x * Math.sin(a) + y * Math.cos(a)]);
+export const spokes = (n: number, r: number, a0 = 0) => Array.from({ length: n }, (_, i) => { const a = a0 + i * 2 * Math.PI / n; return `<line class="det" x1="0" y1="0" x2="${f(Math.cos(a) * r)}" y2="${f(Math.sin(a) * r)}"/>`; }).join('');
 
 // ── 01 Padlock: read frequency and penetration together. A combination padlock; its two wheels line up on the index (live).
 const PL = kernel([[0, 0, 0], [64, 0, 0], [0, 40, 0], [64, 40, 0], [32, 20, 62]], 12);
