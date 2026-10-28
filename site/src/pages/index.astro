@@ -21,9 +21,9 @@ const quotes = [
 ];
 // How the Standard is built: one card per library list, in build order, in a rail (two in view, the third off to the right)
 const hubs = [
-  { type: 'rule', art: 'rules', label: T.rules, href: '/rules', count: nRules, title: 'Start with the judgement AI is missing.', context: `When frequency is too high for an audience, when a CTR drop means fatigue, when an audience is big enough to count as warm. ${nRules} rules to start.` },
-  { type: 'skill', art: 'skills', label: T.skills, href: '/skills', count: (await getCollection('skills')).length, title: 'Let AI apply the rules to your data.', context: 'A skill pulls your numbers, reads them the way the rules say, and tells you what to change.' },
-  { type: 'scenario', art: 'scenarios', label: T.scenarios, href: '/scenarios', count: (await getCollection('scenarios')).length, title: 'Turn routine work into one run.', context: 'The Monday review across accounts, or the list of warm accounts for sales, done in one go. Each step is a skill, and each skill rests on a rule.' },
+  { type: 'rule', art: 'rules', label: T.rules, href: '/rules', count: nRules, title: 'Start with the judgement AI is missing.', context: `When frequency is too high for an audience, when a CTR drop means fatigue, when an audience is big enough to count as warm. ${nRules} rules to start` },
+  { type: 'skill', art: 'skills', label: T.skills, href: '/skills', count: (await getCollection('skills')).length, title: 'Let AI apply the rules to your data.', context: 'A skill pulls your numbers, reads them the way the rules say, and tells you what to change' },
+  { type: 'scenario', art: 'scenarios', label: T.scenarios, href: '/scenarios', count: (await getCollection('scenarios')).length, title: 'Turn routine work into one run.', context: 'The Monday review across accounts, or the list of warm accounts for sales, done in one go. Each step is a skill, and each skill rests on a rule' },
 ] as const;
 const go = arrow('right', 'go');
 const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
@@ -54,7 +54,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
         {quotes.map((q) => (
           <li class="quote">
             <blockquote>
-              <p class="t-h6">“{q.text}”</p>
+              <p class="t-h5">{q.text}</p>
             </blockquote>
             <p class="by">{q.photo ? <img class="ini" src={q.photo} alt="" width="40" height="40" loading="lazy" /> : <span class="ini" aria-hidden="true">{ini(q.name)}</span>}<span><span class="t-p2">{q.name}</span><span class="t-p2 tone-2">{q.company}</span></span></p>
           </li>
@@ -80,7 +80,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
               <span class="cover" aria-hidden="true"><IsoArt name={h.art} accent={h.type} mono zoom={1.3} /></span>
               <span class="txt">
                 <span class="marker">{h.label}<span class="cnt">{String(h.count).padStart(2, '0')}</span></span>
-                <span class="t-h4">{h.title} <span class="tone-2">{h.context}</span></span>
+                <span class="t-h6">{h.title} <span class="tone-2">{h.context}</span></span>
                 <span class="more lbl">Explore all {h.count} {h.label.toLowerCase()} <Fragment set:html={arrow('right')} /></span>
               </span>
             </a></li>
@@ -163,7 +163,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
   .pick .cover :global(.iso-art .lit .body) { fill: color-mix(in srgb, var(--lit, var(--h)) 55%, #fff); }
   .txt { display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 32px; }
   .cnt { margin-left: 6px; padding: 0 6px; border-radius: var(--radius-2); background: var(--bg-muted); color: var(--text-body); font-variant-numeric: tabular-nums; }
-  .txt .t-h4 { max-width: 24em; text-wrap: balance; }
+  .txt .t-h6 { text-wrap: balance; }
   .more { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; color: var(--text); }
   .more :global(svg) { width: 16px; height: 16px; transition: translate var(--t-fast) var(--ease-out); }
   @media (hover: hover) and (pointer: fine) { .pick:hover { background: var(--bg-subtle); } .pick:hover .more :global(svg) { translate: 4px 0; } }
