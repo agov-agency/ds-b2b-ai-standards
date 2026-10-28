@@ -15,7 +15,7 @@ import SubmitBand from '../../components/SubmitBand.astro';
 import DetailCta from '../../components/detail/DetailCta.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { arrow } from '../../arrows';
-import { icon } from '../../icons';
+import ItemIcon from '../../components/ItemIcon.astro';
 import { T } from '../../site';
 import { area } from '../../areas';
 
@@ -49,7 +49,7 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
       {p.prompt && <a class="btn filled" href="#h-prompt">Copy the prompt</a>}
       {p.prompt?.source && <a class="btn outlined" href={p.prompt.source} rel="noopener">Source on GitHub <Fragment set:html={arrow('up', 'ext')} /></a>}
     </Fragment>
-    <span slot="art" class="kart" set:html={icon(d.icon ?? area(d.area).icon)} />
+    <ItemIcon slot="art" data={d} class="kart" />
   </DetailHero>
 
   <DetailFrame toc={toc}>
@@ -89,7 +89,7 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
     <DetailCta cover={cover} {...(p.prompt
       ? { title: 'Run it on this quarter’s data.', context: 'Paste the prompt into your AI with your exports. It reads them and changes nothing', button: 'Copy the prompt', href: '#h-prompt' }
       : { title: `Built a ${T.skill.toLowerCase()} we don’t have yet?` })}>
-      <span slot="art" class="kart" set:html={icon(d.icon ?? area(d.area).icon)} />
+      <ItemIcon slot="art" data={d} class="kart" />
     </DetailCta>
   </DetailFrame>
 
@@ -98,11 +98,6 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
 </Base>
 
 <style>
-  /* Skills use line icons (like rules, from their own set), drawn large in the cover's hue */
-  .kart { position: absolute; inset: 12%; display: block; }
-  .kart :global(.hl) { --hairline-hi: var(--cover-450); width: 100%; height: 100%; }
-  @media (max-width: 999px) { .kart { position: static; width: min(100%, 360px); aspect-ratio: 1; margin-inline: auto; } }
-
   .prose { display: grid; gap: 20px; max-width: 680px; margin-top: calc(var(--gap-body) - var(--header-gap)); } /* the body belongs to the headline (DESIGN §6.6 headline -> body) */
   .does-flow { margin-top: 64px; }
   .onote { max-width: 680px; }

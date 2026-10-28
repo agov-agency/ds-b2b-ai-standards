@@ -5,11 +5,11 @@ import { Card, Stack, Text } from '@sanity/ui';
 import { set, unset, type ObjectInputProps } from 'sanity';
 import { pieces, ART_POOLS } from '../../site/src/art';
 
-const CSS = `.f{stroke:#0a0a0a;stroke-width:1.5}.paper{fill:#fff}.tint{fill:#dde8ff}.body{fill:#b8ceff}.blk,.head{fill:#0a0a0a}
+export const CSS = `.f{stroke:#0a0a0a;stroke-width:1.5}.paper{fill:#fff}.tint{fill:#dde8ff}.body{fill:#b8ceff}.blk,.head{fill:#0a0a0a}
 .det{fill:none;stroke:#0a0a0a;stroke-width:1}.hl{fill:none;stroke:#3b6cff;stroke-width:1.5}.dashed{stroke-dasharray:4 3}.nofill{fill:none}
 .dash{fill:none;stroke:#0a0a0a;stroke-width:2;stroke-dasharray:8 6}.lit .body{fill:#3b6cff}.type{fill:#fff;font:600 10px monospace}
 *{vector-effect:non-scaling-stroke;stroke-linejoin:round;stroke-linecap:round}`;
-const still = (name: string) => pieces[name].draw(pieces[name].rest);
+export const still = (name: string) => pieces[name].draw(pieces[name].rest);
 
 function Live({ name }: { name: string }) {
   const g = useRef<SVGGElement>(null);

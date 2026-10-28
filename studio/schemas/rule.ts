@@ -11,10 +11,11 @@ export const rule = defineType({
     desc(str('title', 'Title', true), 'Page headline and card title'),
     desc(txt('why', 'Why', true), 'One line on the card under the title. Also the hero text when “Hero text” is empty'),
     { ...txt('lead', 'Hero text'), description: 'Paragraph under the title at the top of the page. Empty = the Why line' },
-    desc(areaField('area', 'Category'), 'First chip; also groups the rule on the Rules page and gives the default colour and icon'),
+    desc(areaField('area', 'Category'), 'First chip; also groups the rule on the Rules page, gives its colour and the default icon'),
     { ...ref('author', 'author'), description: 'Shown as “By …” in the hero. Empty = DemandSense' },
-    defineField({ name: 'icon', type: 'string', description: 'Line icon on the right of the hero, on the card and in the closing CTA. Rules have their own set, never a skill’s. Empty = the category icon', components: { input: IconInput }, options: { pool: 'rule' } as any, validation: (r) => r.custom(unique('icon')) }),
-    coverField('Pastel behind the hero, the card and the closing CTA; the icon takes its hue. Empty = the category colour; a new rule gets a random one'),
+    defineField({ name: 'icon', type: 'string', description: 'Icon on the right of the hero, on the card and in the closing CTA. Rules have their own set, never a skill’s. Empty = the category icon', components: { input: IconInput }, options: { pool: 'rule' } as any, validation: (r) => r.custom(unique('icon')) }),
+    // A rule's colour is its category's (the site ignores this); kept hidden so older documents don't show an unknown field
+    { ...coverField(), hidden: true },
     pageObj([
       desc(obj('advises', 'The rule: what LinkedIn advises', [
         desc(txt('text', 'Text', true), 'LinkedIn’s own advice, in a sentence or two'),

@@ -1,16 +1,17 @@
 ---
 // Item illustration from the CMS: the animated figure picked by name (src/art), else a static image, else the slot (default cover).
+// Plays by itself (detail hero, CTA); `hover` on cards, `still` never.
 // Unknown names fall through too, so a figure removed from code never breaks a page.
 import IsoArt from './IsoArt.astro';
 import { pieces } from '../art';
 import type { CollectionEntry } from 'astro:content';
 type Data = CollectionEntry<'scenarios'>['data'];
-interface Props { data: Data; still?: boolean; lazy?: boolean }
-const { data, still = false, lazy = false } = Astro.props;
+interface Props { data: Data; still?: boolean; hover?: boolean; lazy?: boolean }
+const { data, still = false, hover = false, lazy = false } = Astro.props;
 const art = data.art && pieces[data.art.piece] ? data.art : undefined;
 ---
 {art
-  ? <IsoArt name={art.piece} dark={art.variant === 'dark'} mono={art.variant === 'mono'} zoom={art.zoom} still={still} class="item-art" />
+  ? <IsoArt name={art.piece} dark={art.variant === 'dark'} mono={art.variant === 'mono'} zoom={art.zoom} still={still} hover={hover} class="item-art" />
   : data.illustration ? <img src={data.illustration} alt="" loading={lazy ? 'lazy' : undefined} /> : <slot />}
 
 <style>

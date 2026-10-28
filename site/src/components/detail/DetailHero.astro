@@ -66,12 +66,15 @@ const hasFacts = facts.length > 0 || Astro.slots.has('facts');
   /* The card sets the hero's height; the illustration fits inside it, centred and nudged right */
   .hart { grid-column: 7 / -1; align-self: stretch; position: relative; translate: 5% 0; }
   .hart > :global(svg), .hart > :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  /* Skill and rule icons sit inset, so a single object doesn't outgrow the scenario figures */
+  .hart > :global(.kart) { position: absolute; inset: 12%; }
   @media (max-width: 999px) {
     .hero-row { grid-template-columns: 1fr; }
     .hcard, .hart { grid-column: 1; }
     .hart { order: -1; max-width: 520px; justify-self: center; translate: none; padding: 24px; }
     .hart > :global(svg), .hart > :global(img) { position: static; height: auto; max-height: 560px; }
     .hart:empty { display: none; }
+    .hart > :global(.kart) { position: relative; inset: auto; width: min(100vw - 112px, 360px); aspect-ratio: 4 / 3; } /* the box has no width of its own here: viewport less margins and its padding */
   }
   @media (max-width: 699px) {
     .hero { padding-block: 32px 40px; }

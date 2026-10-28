@@ -15,7 +15,7 @@ export const skill = defineType({
     desc(ref('author', 'author'), 'Shown as “By …” in the hero, links to the author page'),
     desc(str('changes', 'Changes'), 'Fact under the lead, e.g. “Reads your data, changes nothing”'),
     desc(str('firstRun', 'First run'), 'Fact under the lead, e.g. “About five minutes”'),
-    defineField({ name: 'icon', type: 'string', description: 'Line icon on the right of the hero, on the card and in the closing CTA. Skills have their own set, never a rule’s. Empty = the category icon', components: { input: IconInput }, options: { pool: 'skill' } as any, validation: (r) => r.custom(unique('icon')) }),
+    defineField({ name: 'icon', type: 'string', description: 'Icon on the right of the hero, on the card and in the closing CTA. Skills have their own set, never a rule’s. Empty = the category icon', components: { input: IconInput }, options: { pool: 'skill' } as any, validation: (r) => r.custom(unique('icon')) }),
     coverField('Pastel behind the hero, the card and the closing CTA; the icon takes its hue. Empty = the category colour; a new skill gets a random one'),
     pageObj([
       desc(obj('does', 'What it does', [

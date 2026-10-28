@@ -12,7 +12,7 @@ import DetailCta from '../../components/detail/DetailCta.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { T } from '../../site';
 import { area } from '../../areas';
-import { icon } from '../../icons';
+import ItemIcon from '../../components/ItemIcon.astro';
 import { arrow } from '../../arrows';
 
 export async function getStaticPaths() {
@@ -51,13 +51,13 @@ const cta = {
 };
 ---
 <Base type="rule" title={`${d.title} · ${T.rules} · The B2B AI Standard for LinkedIn Ads`} description={d.why}>
-  <DetailHero cover={d.cover ?? area(d.area).cover} crumbs={[{ label: 'Directory', href: '/directory' }, { label: T.rules, href: '/rules' }, { label: d.title }]}
+  <DetailHero cover={area(d.area).cover} crumbs={[{ label: 'Directory', href: '/directory' }, { label: T.rules, href: '/rules' }, { label: d.title }]}
     chips={[{ label: area(d.area).title }, { label: `${T.rule} ${nn(d.number)}`, out: true }]} author={author} title={d.title} lead={d.lead ?? d.why}>
     <Fragment slot="actions">
       <a class="btn filled" href="#h-run">See where it runs</a>
       <a class="btn outlined" href="/rules">All {T.rules.toLowerCase()}</a>
     </Fragment>
-    <Fragment slot="art" set:html={icon(d.icon ?? area(d.area).icon)} />
+    <ItemIcon slot="art" data={d} class="kart" />
   </DetailHero>
 
   <DetailFrame toc={toc}>
@@ -121,14 +121,14 @@ const cta = {
       <RelatedTabs scenarios={relSc} skills={relSk} />
     </Sec>
 
-    <DetailCta title={cta.headline} context={cta.context} button={cta.button} cover={d.cover ?? area(d.area).cover}>
-      <Fragment slot="art" set:html={icon(d.icon ?? area(d.area).icon)} />
+    <DetailCta title={cta.headline} context={cta.context} button={cta.button} cover={area(d.area).cover}>
+      <ItemIcon slot="art" data={d} class="kart" />
     </DetailCta>
 
     <nav class="pn" aria-label={`Other ${T.rules.toLowerCase()}`}>
       {[['pv', 'Previous', prev], ['nx', 'Next', next]].map(([cls, dir, r]) => r ? (
         <a class={cls} href={`/rules/${r.id}`} aria-label={`${dir} rule: ${r.data.title}`}>
-          <span class="pic" aria-hidden="true" set:html={icon(r.data.icon ?? area(r.data.area).icon)} />
+          <span class="pic" style={`--cover-450: var(--pastel-${area(r.data.area).cover}-450)`}><ItemIcon data={r.data} class="pi" /></span>
           <span class="txt">
             <span class="kick"><span class="chip">{area(r.data.area).title}</span><span class="lbl num">{T.rule} {nn(r.data.number)}</span></span>
             <span class="t-h6 title">{r.data.title}</span>
@@ -182,7 +182,8 @@ const cta = {
   /* Each card: the rule's area figure (no tile, as in rule rows), then area chip + number and title; both left-aligned */
   .pn a { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: 24px; align-items: center; padding: 40px var(--pad); transition: background-color var(--t-fast) var(--ease-out); } /* figure no taller than the text, so the space above and below match */
   .pic { display: block; aspect-ratio: 1; }
-  .pic :global(.hl) { width: 100%; height: 100%; transition: transform 300ms var(--ease-out); }
+  .pic :global(.pi) { width: 100%; height: 100%; }
+  .pic :global(.pi > *) { transition: transform 300ms var(--ease-out); }
   .txt { display: grid; gap: 12px; align-content: start; }
   .kick { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
   .num { color: var(--text-2); }
@@ -191,7 +192,7 @@ const cta = {
   @media (hover: hover) and (pointer: fine) {
     .ul:hover { border-color: var(--text); }
     .pn a:hover { background: var(--bg-subtle); }
-    .pn a:hover .pic :global(.hl) { transform: translateY(-2px); }
+    .pn a:hover .pic :global(.pi > *) { transform: translateY(-2px); }
   }
   @media (max-width: 999px) { .voices { grid-template-columns: 1fr; } }
   @media (max-width: 699px) {

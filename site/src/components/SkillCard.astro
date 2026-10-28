@@ -4,7 +4,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { getEntry } from 'astro:content';
 import { area } from '../areas';
-import { icon } from '../icons';
+import ItemIcon from './ItemIcon.astro';
 import Byline from './Byline.astro';
 interface Props { skill: CollectionEntry<'skills'> }
 const { id, data } = Astro.props.skill;
@@ -14,7 +14,7 @@ const href = next && data.rules[0] ? `/rules/${data.rules[0].id}` : `/skills/${i
 const cover = data.cover ?? area(data.area).cover; // own colour, else the category's
 ---
 <a data-type="skill" class:list={['kcard', { next }]} href={href} style={`--cover: var(--pastel-${cover}); --cover-450: var(--pastel-${cover}-450)`}>
-  <span class="cover"><span class="ico" aria-hidden="true" set:html={icon(data.icon ?? area(data.area).icon)} /></span>
+  <span class="cover"><ItemIcon data={data} class="ico" /></span>
   <p class="chips"><span class="chip">{area(data.area).title}</span></p>
   <h3 class="t-h6">{data.title}</h3>
   <p class="t-p2 body desc">{data.description}</p>
@@ -28,8 +28,8 @@ const cover = data.cover ?? area(data.area).cover; // own colour, else the categ
   .kcard { display: grid; grid-template-rows: auto auto auto 1fr auto; gap: 8px; height: 100%; padding: 24px; border: 1px solid var(--line-card); border-radius: var(--radius-4); overflow: hidden; background: var(--neutral-0); transition: background-color var(--t-fast) var(--ease-out); }
   /* Cover: pastel band across the top, icon on it as before. A real border (not an inset shadow) outlines the whole card, cover included: the cover's fill would paint over a shadow */
   .cover { display: block; margin: -24px -24px 16px; padding: 16px 24px 24px 16px; background: var(--cover); }
-  .ico { display: block; width: 80px; height: 80px; }
-  .ico :global(.hl) { --hairline-hi: var(--cover-450); width: 100%; height: 100%; transition: transform 300ms var(--ease-out); }
+  .cover :global(.ico) { width: 140px; height: 96px; }
+  .cover :global(.ico > *) { transition: transform 300ms var(--ease-out); }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
   .desc { align-self: start; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-top: 16px; }
@@ -41,6 +41,6 @@ const cover = data.cover ?? area(data.area).cover; // own colour, else the categ
     .kcard:not(.next):hover { background: var(--cover); }
     .chip { transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out); }
     .kcard:not(.next):hover .chip:not(.out) { background: var(--neutral-950); color: var(--neutral-0); }
-    .kcard:not(.next):hover .ico :global(.hl) { transform: translateY(-2px); }
+    .kcard:not(.next):hover :global(.ico > *) { transform: translateY(-2px); }
   }
 </style>

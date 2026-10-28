@@ -2,9 +2,10 @@
 const raw = import.meta.glob('../../illustrations/icons/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 export const icon = (name: string) => raw[`../../illustrations/icons/${name}.svg`] ?? '';
 // What the CMS can pick: rules and skills draw from separate sets, so a rule never shares an icon with a skill.
-// A new icon goes into illustrations/icons, then its name into one list here (category fallbacks may come from either)
+// Each name is a code-drawn icon, `i-<name>` in src/art; a new one goes into icons-skills.ts or icons-rules.ts, then its name
+// into one list here. Category fallbacks stay line icons from illustrations/icons.
 export const ICON_POOLS: Record<'rule' | 'skill', string[]> = {
-  rule: ['clock', 'rollerstamp', 'bolts', 'billboard', 'wedge', 'tilttray', 'binbar', 'xray', 'springscale', 'cascade', 'aperture', 'canisters', 'airlock', 'chain', 'magnet'],
-  skill: ['turnstile', 'regulator', 'passcard', 'stanchions', 'adapter', 'keyrack', 'periscope', 'clipboard', 'table', 'tagcounter', 'batteries', 'reels', 'tap', 'trophies', 'rulers', 'logbook',
+  rule: ['clock', 'rollerstamp', 'bolts', 'billboard', 'wedge', 'balance', 'drawer', 'xray', 'springscale', 'cascade', 'aperture', 'canisters', 'airlock', 'chain', 'magnet'],
+  skill: ['turnstile', 'regulator', 'passcard', 'stanchions', 'adapter', 'keyrack', 'periscope', 'clipboard', 'gauge', 'tagcounter', 'charger', 'reels', 'plug', 'trophies', 'rulers', 'logbook',
     'lockout', 'weekpad', 'knocker', 'metronome', 'siphon', 'puzzle', 'bell', 'thermometer', 'drilled', 'sieve', 'mirror', 'bits', 'dial', 'abacus', 'patchpanel'],
 };

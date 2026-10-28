@@ -1,7 +1,10 @@
-// Rule and skill icon: a tile per line icon of the field's set (illustrations/icons); empty = the category's icon
+// Rule and skill icon: a tile per code-drawn icon of the field's set (`i-<name>` in site/src/art, the same still the site
+// shows); empty = the category's icon. Categories pick that fallback from the line icons in illustrations/icons.
 import { Card, Stack, Text } from '@sanity/ui';
 import { set, unset, type StringInputProps } from 'sanity';
 import { ICON_POOLS } from '../../site/src/icons';
+import { pieces } from '../../site/src/art';
+import { CSS as ART_CSS, still } from './ArtInput';
 
 const raw = import.meta.glob('../../illustrations/icons/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 // Same palette the site maps onto the icons (site/src/styles/site.css, .hl)
@@ -27,7 +30,11 @@ export function IconInput({ value, onChange, schemaType }: StringInputProps) {
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 8 }}>
       <style>{CSS}</style>
       {tile(undefined, <Text muted size={1}>None</Text>)}
-      {ICONS.filter(([name]) => !pool || pool.includes(name)).map(([name, svg]) => tile(name, <span className="ic" style={{ width: '62%', aspectRatio: '1', display: 'block' }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg', '<svg width="100%" height="100%"') }} />))}
+      {pool
+        ? pool.map((name) => tile(name, pieces[`i-${name}`]
+          ? <svg viewBox={pieces[`i-${name}`].viewBox} style={{ width: '100%', height: '100%' }}><style>{ART_CSS}</style><g dangerouslySetInnerHTML={{ __html: still(`i-${name}`) }} /></svg>
+          : <Text muted size={1}>Missing</Text>))
+        : ICONS.map(([name, svg]) => tile(name, <span className="ic" style={{ width: '62%', aspectRatio: '1', display: 'block' }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg', '<svg width="100%" height="100%"') }} />))}
     </div>
   );
 }

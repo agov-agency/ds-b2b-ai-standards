@@ -1,0 +1,19 @@
+---
+// Skill or rule icon: the code-drawn icon picked in the CMS (src/art, `i-<name>`), always on its rest frame; else the
+// category's line icon. The box (`class`, sized by the caller) holds it; accent in the hue of the cover it sits on.
+import IsoArt from './IsoArt.astro';
+import { pieces } from '../art';
+import { icon } from '../icons';
+import { area } from '../areas';
+interface Props { data: { icon?: string; area: { id: string } | string }; class?: string }
+const { data, class: cls } = Astro.props;
+const name = data.icon && pieces[`i-${data.icon}`] ? `i-${data.icon}` : undefined;
+---
+<span class:list={['ibox', cls]} aria-hidden="true">{name ? <IsoArt name={name} still class="item-icon" /> : <Fragment set:html={icon(data.icon ?? area(data.area).icon)} />}</span>
+
+<style>
+  :global(:where(.ibox)) { position: relative; display: block; }
+  :global(:where(.ibox) > svg) { --hairline-hi: var(--cover-450); width: 100%; height: 100%; }
+  :global(figure.iso-panel.item-icon) { position: absolute; inset: 0; background: none; border-radius: 0; --art-a: var(--cover-450, var(--primary-450)); --art-b: var(--art-a); --art-c: var(--art-a); --lit: var(--art-a); }
+  :global(figure.iso-panel.item-icon > svg) { inset: 0; width: 100%; height: 100%; }
+</style>

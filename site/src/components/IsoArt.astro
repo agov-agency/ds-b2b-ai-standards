@@ -5,16 +5,17 @@
 // instead pins it at an exact rect from the Figma layout: [right, top, width, height] in px, right measured from the
 // box's right edge (plus --bleed, how far the box runs past its section). The build renders the rest frame;
 // on the page it plays by itself (no pointer or key triggers), pauses off-screen and stays on the rest frame
-// under reduced motion. `still` keeps the rest frame (cards).
+// under reduced motion. `still` keeps the rest frame (icons). `hover` (scenario cards) rests until the pointer is over
+// the card around it, then plays; it eases in and out of speed so it never jumps. Touch screens keep the rest frame.
 import { pieces } from '../art';
-interface Props { name: string; field?: string; dark?: boolean; blue?: boolean; mono?: boolean; zoom?: number; place?: [number, number, number, number]; clip?: number; accent?: 'scenario' | 'skill' | 'rule' | 'brand'; still?: boolean; class?: string }
-const { name, field = 'transparent', dark = false, blue = false, mono = false, zoom = 1, place, clip, accent, still = false, class: cls } = Astro.props;
+interface Props { name: string; field?: string; dark?: boolean; blue?: boolean; mono?: boolean; zoom?: number; place?: [number, number, number, number]; clip?: number; accent?: 'scenario' | 'skill' | 'rule' | 'brand'; still?: boolean; hover?: boolean; class?: string }
+const { name, field = 'transparent', dark = false, blue = false, mono = false, zoom = 1, place, clip, accent, still = false, hover = false, class: cls } = Astro.props;
 const lit = accent ? `; --lit: ${accent === 'brand' ? `var(--primary-${dark ? 300 : 450})` : `var(--art-${{ scenario: 'a', skill: 'b', rule: 'c' }[accent]})`}` : '';
 const piece = pieces[name];
 const [fx, fy] = piece.focus ?? [0.5, 0.5];
 const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]}px; --ph: ${place[3]}px` : '';
 ---
-<figure class:list={['iso-panel', cls]} data-iso={still ? undefined : name} style={`--field: ${field}; --zoom: ${zoom}; --fx: ${fx * 100}%; --fy: ${fy * 100}%${lit}${at}${clip ? `; --cw: ${clip}px` : ''}`}>
+<figure class:list={['iso-panel', cls]} data-iso={still ? undefined : name} data-hover={hover || undefined} style={`--field: ${field}; --zoom: ${zoom}; --fx: ${fx * 100}%; --fy: ${fy * 100}%${lit}${at}${clip ? `; --cw: ${clip}px` : ''}`}>
   <svg class:list={['iso-art', { 'on-dark': dark, 'on-blue': blue, mono, placed: place }]} viewBox={piece.viewBox} role="img" aria-label={piece.aria} preserveAspectRatio="xMidYMid meet">
     {(dark || blue) && <defs><filter id="iso-glow" filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="6000" height="6000"><feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b" /><feComponentTransfer in="b" result="g"><feFuncA type="linear" slope=".7" /></feComponentTransfer><feMerge><feMergeNode in="g" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>}
     <g data-frame set:html={piece.draw(piece.rest)} />
@@ -22,24 +23,36 @@ const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]
 </figure>
 
 <script>
-  import { pieces } from '../art';
-  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  import { figures } from '../art/figures';
+  const still = matchMedia('(prefers-reduced-motion: reduce)'), canHover = matchMedia('(hover: hover) and (pointer: fine)');
   const SPEED = 0.6; // pieces are timed in brisk beats; played slower so each spring move takes about a second
   for (const host of document.querySelectorAll<HTMLElement>('[data-iso]')) {
-    const piece = pieces[host.dataset.iso!], frame = host.querySelector('[data-frame]')!;
-    let raf = 0, t0 = 0;
+    const piece = figures[host.dataset.iso!], frame = host.querySelector('[data-frame]')!;
+    if (!piece) continue;
+    const hover = host.hasAttribute('data-hover');
+    let raf = 0, last = 0, t = piece.rest, v = 0, seen = false, over = !hover;
+    // v is the play speed (0..1): it eases towards 1 while playing and back to 0 on hover out, then the loop stops
     const tick = (now: number) => {
-      raf = requestAnimationFrame(tick);
-      const t = piece.rest + (now - t0) / 1000 * SPEED;
+      const dt = Math.min((now - last) / 1000, .05), want = seen && over ? 1 : 0;
+      last = now;
+      v += (want - v) * Math.min(1, dt * 5);
+      if (!want && v < .01) { raf = 0; return; }
+      t += dt * SPEED * v;
       frame.innerHTML = piece.draw(t);
       host.style.setProperty('--march', String(-(t * 12) % 14)); // dashes travel along their path
-    };
-    new IntersectionObserver(([e]) => {
-      cancelAnimationFrame(raf);
-      if (!e.isIntersecting || still.matches) return;
-      t0 = performance.now();
       raf = requestAnimationFrame(tick);
-    }).observe(host);
+    };
+    const run = () => {
+      if (still.matches || (hover && !canHover.matches)) return;
+      if (!seen) { cancelAnimationFrame(raf); raf = 0; return; }
+      if (over && !raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
+    };
+    new IntersectionObserver(([e]) => { seen = e.isIntersecting; run(); }).observe(host);
+    if (hover) {
+      const card = host.closest('a') ?? host;
+      card.addEventListener('pointerenter', () => { over = true; run(); });
+      card.addEventListener('pointerleave', () => { over = false; });
+    }
   }
 </script>
 
