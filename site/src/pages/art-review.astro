@@ -81,6 +81,39 @@ const ALT_RULES: [string, [string, string][]][] = [
   ['chain', [['bricks', 'Однакові цеглинки конструктора'], ['coupling', 'Новий вагон зчіплюється']]],
   ['magnet', [['printer', '3D-принтер нарощує деталь'], ['winder', 'Намотувач, котушка наповнюється']]],
 ];
+const ALT_SKILLS: [string, [string, string][]][] = [
+  ['turnstile', [['parkmeter', 'Паркомат'], ['farebox', 'Касовий автомат із квитком']]],
+  ['regulator', [['throttle', 'Важіль газу на нижній зарубці'], ['dimmer', 'Димер і лампа, що ще світить']]],
+  ['passcard', [['cardpunch', 'Компостер для карток'], ['coinpress', 'Прес для карбування жетонів']]],
+  ['stanchions', [['boom', 'Шлагбаум'], ['guardcage', 'Захисна сітка над шестернями']]],
+  ['adapter', [['stencil', 'Трафарет і його відбиток'], ['extruder', 'Екструзійна фільєра і профіль']]],
+  ['keyrack', [['mailbox', 'Поштова скринька з піднятим прапорцем'], ['signal', 'Сигнальний ліхтар на щоглі']]],
+  ['periscope', [['cctv', 'Камера спостереження'], ['radar', 'Радарна антена']]],
+  ['clipboard', [['toolbox', 'Відкритий ящик з інструментами'], ['stethoscope', 'Стетоскоп на таці']]],
+  ['gauge', [['filter', 'Фільтр з новим картриджем'], ['tuningfork', 'Камертон на резонаторі']]],
+  ['tagcounter', [['sensorlamp', 'Ліхтар з датчиком руху над дверима'], ['tally', 'Ручний лічильник']]],
+  ['charger', [['inkjet', 'Принтер і новий картридж'], ['tape', 'Диспенсер зі свіжим рулоном']]],
+  ['reels', [['projector', 'Кінопроектор'], ['testcard', 'Монітор з тестовою таблицею']]],
+  ['plug', [['clamp', 'Ремонтний хомут на трубі'], ['hob', 'Газова плита, конфорка вимкнена']]],
+  ['trophies', [['ingots', 'Стоси злитків'], ['flags', 'Прапор на найвищому флагштоку']]],
+  ['rulers', [['caliper', 'Штангенциркуль'], ['tapemeasure', 'Рулетка']]],
+  ['logbook', [['binder', 'Папка на кільцях'], ['dotmatrix', 'Матричний принтер і стос звіту']]],
+  ['lockout', [['handbrake', 'Ручне гальмо'], ['stopwatch', 'Секундомір']]],
+  ['weekpad', [['organizer', 'Органайзер на сім днів'], ['segtimer', 'Механічний таймер зі штифтами']]],
+  ['knocker', [['doorchain', 'Дверний ланцюжок'], ['governor', 'Відцентровий регулятор']]],
+  ['metronome', [['hourglass', 'Пісочний годинник'], ['conveyor', 'Конвеєр з рівними інтервалами']]],
+  ['siphon', [['jibcrane', 'Консольний кран переносить ящик'], ['vessels', 'Сполучені посудини']]],
+  ['puzzle', [['dovetail', 'Зʼєднання «ластівчин хвіст»'], ['zipper', 'Блискавка']]],
+  ['bell', [['searchlight', 'Прожектор'], ['telegraph', 'Телеграфний ключ']]],
+  ['thermometer', [['swatches', 'Віяло колірних зразків'], ['weights', 'Набір еталонних гир']]],
+  ['drilled', [['darts', 'Дартс'], ['stapler', 'Степлер крізь стос']]],
+  ['sieve', [['prism', 'Призма розкладає промінь'], ['binrack', 'Стелаж із контейнерами']]],
+  ['mirror', [['compass', 'Компас на карті'], ['archive', 'Архівна коробка з папками']]],
+  ['bits', [['posterrack', 'Перекидний стенд з постерами'], ['cards', 'Віяло карт']]],
+  ['dial', [['mixer', 'Мікшерний пульт'], ['scope', 'Осцилограф']]],
+  ['abacus', [['merge', 'Три труби в одну'], ['loom', 'Джгут кабелів з одним розʼємом']]],
+  ['patchpanel', [['flowmeter', 'Лічильник потоку з крильчаткою'], ['signpost', 'Вказівник із трьома стрілками']]],
+];
 const HUES = [5, 13, 9, 16, 1, 11, 6, 14];
 const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover: var(--pastel-${n}); --cover-200: var(--pastel-${n}-200); --cover-450: var(--pastel-${n}-450)`; };
 ---
@@ -102,6 +135,10 @@ const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover:
     <p class="note">Поточна іконка і дві альтернативи. Їх немає в CMS, поки не обереш.</p>
     <table>
       {ALT_RULES.map(([cur, alts], i) => <tr style={cover(i)}><td class="t">{RULES.find((r) => r[2] === cur)?.[0]}<span>{alts.map(([, m]) => m).join(' · ')}</span><code>{alts.map(([n]) => n).join(' · ')}</code></td><td class="pic trio">{[`i-${cur}`, ...alts.map(([n]) => `x-${n}`)].map((n) => <span class="tile"><IsoArt name={n} field="var(--cover)" still /></span>)}</td></tr>)}
+    </table>
+    <h2>Альтернативи: скіли</h2>
+    <table>
+      {ALT_SKILLS.map(([cur, alts], i) => <tr style={cover(i)}><td class="t">{SKILLS.find((r) => r[2] === cur)?.[0]}<span>{alts.map(([, m]) => m).join(' · ')}</span><code>{alts.map(([n]) => n).join(' · ')}</code></td><td class="pic trio">{[`i-${cur}`, ...alts.map(([n]) => `x-${n}`)].map((n) => <span class="tile"><IsoArt name={n} field="var(--cover)" still /></span>)}</td></tr>)}
     </table>
   </main>
 </Base>
