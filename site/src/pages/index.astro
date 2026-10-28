@@ -50,11 +50,12 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
         <p class="marker">Why we wrote it</p>
         <h2 id="h-quotes" class="headline t-h3">Why the Standard had to exist. <span class="tone-2">In the words of the people who run the accounts</span></h2>
       </div>
-      <ul class="quotes cells-row to-edges" data-reveal>
+      <ul class="quotes scroll-snap-x to-edges" data-quotes data-reveal>
         {quotes.map((q) => (
           <li class="quote">
+            <svg class="qmark" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13L7 0h6L9 12h5v12zm18 0V13l7-13h6l-4 12h5v12z" /></svg>
             <blockquote>
-              <p class="t-h5">{q.text}</p>
+              <p class="t-h6">{q.text}</p>
             </blockquote>
             <p class="by">{q.photo ? <img class="ini" src={q.photo} alt="" width="40" height="40" loading="lazy" /> : <span class="ini" aria-hidden="true">{ini(q.name)}</span>}<span><span class="t-p2">{q.name}</span><span class="t-p2 tone-2">{q.company}</span></span></p>
           </li>
@@ -98,9 +99,8 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
 
 <script>
   import { wheelX } from '../rail';
-  // Same scroll lock as the Directory's scenario rail: the wheel runs the cards sideways, then the page carries on
-  const picks = document.querySelector<HTMLElement>('[data-picks]');
-  if (picks) wheelX(picks);
+  // Quotes and directory cards: same scroll lock as the Directory's scenario rail: the wheel runs the cards sideways, then the page carries on
+  document.querySelectorAll<HTMLElement>('[data-picks], [data-quotes]').forEach(wheelX);
 </script>
 
 <style>
@@ -119,19 +119,17 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
   .copy > :nth-child(1) { --n: 0; } .copy > :nth-child(2) { --n: 1; } .copy > :nth-child(3) { --n: 2; }
   @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
 
-  /* Grid cells (as the Authors grid): the lines above and below run out to the vertical edge lines, 1px dividers between cells, no outer frame */
-  .cells-row { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; margin-inline: calc(-1 * var(--edge-inset)); padding-inline: var(--edge-inset); border-block: 1px solid var(--line); }
-  .cells-row > li + li { border-left: 1px solid var(--line); }
-
-  /* Quotes: three static cells in a row; a snap rail on phones */
+  /* Quotes: Neutral 950 cards in a rail, two and a half in view so the third reads as "more to the right".
+     Quote text at h6 in the body grey: full white at h5 on black was tiring to read */
   .quotes-sec { display: grid; gap: var(--header-gap); padding-block: var(--section-ruled-top) var(--section-ruled-bottom); }
   .quotes-head { display: grid; gap: var(--gap-overline); }
-  .quote { display: grid; grid-template-rows: 1fr auto; gap: 64px; min-height: 380px; padding: 32px; }
-  .quote:first-child { padding-left: 0; } .quote:last-child { padding-right: 0; } /* outer cells line up with the grid */
-  blockquote { display: grid; gap: 12px; align-content: start; margin: 0; }
-  .by { display: flex; align-items: center; gap: 12px; }
+  .quotes { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 2 * var(--gutter)) / 2.5); gap: var(--gutter); }
+  .quote { display: grid; grid-template-rows: auto 1fr auto; gap: 32px; min-width: 0; min-height: 400px; padding: 40px; border-radius: var(--radius-4); background: var(--neutral-950); box-shadow: inset 0 0 0 1px var(--line-card); }
+  .qmark { width: 28px; height: 21px; fill: var(--neutral-500); }
+  blockquote { margin: 0; }
+  blockquote p { color: var(--neutral-200); line-height: 1.4; text-wrap: pretty; }
+  .by { display: flex; align-items: center; gap: 12px; padding-top: 24px; border-top: 1px solid var(--line-card); }
   .by > span:last-child { display: grid; }
-  blockquote p { text-wrap: pretty; }
   .ini { object-fit: cover; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-muted); font: 600 12px/1 var(--font-mono); flex: none; }
 
   .blk { padding-block: var(--section-ruled-top) var(--section-ruled-bottom); }
@@ -174,14 +172,13 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
     .hero { grid-template-columns: minmax(0, 1fr); min-height: 0; }
     .copy { grid-column: 1; }
     .hero :global(.hero-art) { display: none; }
-    .quotes { grid-auto-columns: min(80%, 420px); overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin-inline: calc(-1 * var(--edge-inset)); padding-inline: var(--edge-inset); scroll-padding-inline: var(--edge-inset); }
-    .quote { scroll-snap-align: start; min-height: 300px; }
-    .quote:first-child { padding-left: 0; } .quote:last-child { padding-right: 32px; }
+    .quotes { grid-auto-columns: calc((100% - var(--gutter)) / 1.5); }
   }
   @media (max-width: 699px) {
     .hero { padding-block: 40px; }
     .ctas > .btn { flex: 1 1 100%; }
-    .quote { padding: 24px; }
+    .quotes { grid-auto-columns: 88%; }
+    .quote { min-height: 380px; padding: 24px; gap: 24px; }
     .picks { grid-auto-columns: 88%; }
     .txt { padding: 24px; }
     .below > .btn { flex: 1; }
