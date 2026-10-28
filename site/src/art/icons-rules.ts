@@ -82,12 +82,12 @@ const wedge = icon(WG, 'A concrete block split by a crack, a steel wedge driven 
   return s;
 });
 
-// ── Tilted tray: watch for budget drifting to junior roles. A tray tipped on its fulcrum; the balls have run to the low
-// side of the divider (live).
+// ── Balance: watch for budget drifting to junior roles. A divided tray held level on its fulcrum, the balls shared evenly;
+// the spirit vial on its rim is live.
 const TT = kernel([[0, 0, 0], [80, 0, 0], [0, 46, 0], [80, 46, 0], [40, 23, 34]], 12);
-const tilttray = icon(TT, 'A tray tipped on a fulcrum with a divider across it; most balls have rolled to the low side.', () => {
-  const K = TT, X = 8, Y = 10, L = 64, D = 26, PX = X + L / 2, PZ = 20, a = -.16, ca = Math.cos(a), sa = Math.sin(a), WT = 1.6, WH = 7;
-  const T = (x: number, y: number, z: number): V3 => [PX + (x - PX) * ca - z * sa, y, PZ + (x - PX) * sa + z * ca];
+const balance = icon(TT, 'A tray with a divider resting level on a fulcrum, the same number of balls on each side, a spirit vial on its rim.', () => {
+  const K = TT, X = 8, Y = 10, L = 64, D = 26, PX = X + L / 2, PZ = 20, WT = 1.6, WH = 7;
+  const T = (x: number, y: number, z: number): V3 => [x, y, PZ + z];
   const q = (...ps: V3[]) => ps.map((p) => T(...p));
   let s = plate(K, 0, 0, 80, 46);
   // Fulcrum: a ridge under the middle
@@ -96,32 +96,34 @@ const tilttray = icon(TT, 'A tray tipped on a fulcrum with a divider across it; 
   s += K.poly(q([X, Y, 2], [X + L, Y, 2], [X + L, Y + D, 2], [X, Y + D, 2]), 'f tint');
   s += K.poly(q([X, Y + WT, 2], [X + L, Y + WT, 2], [X + L, Y + WT, WH], [X, Y + WT, WH]), 'f body') + K.poly(q([X + WT, Y, 2], [X + WT, Y + D, 2], [X + WT, Y + D, WH], [X + WT, Y, WH]), 'f body');
   s += K.poly(q([X, Y, WH], [X + L, Y, WH], [X + L, Y + WT, WH], [X, Y + WT, WH]), 'f paper') + K.poly(q([X, Y, WH], [X + WT, Y, WH], [X + WT, Y + D, WH], [X, Y + D, WH]), 'f paper');
-  const balls = (pts: P2[]) => pts.map(([x, y]) => { const p = T(x, y, 2 + 3.2); return ball(K, p[0], p[1], p[2], 3.4, 'f body'); }).join('');
-  s += balls([[X + 6, Y + 8], [X + 6, Y + 18]]);
-  // Divider, then the balls piled on its low side, then the near walls
-  const DX = PX;
-  s += K.poly(q([DX, Y + WT, 2], [DX, Y + D - WT, 2], [DX, Y + D - WT, WH + 1], [DX, Y + WT, WH + 1]), 'f paper') + K.poly(q([DX - 1, Y + WT, WH + 1], [DX, Y + WT, WH + 1], [DX, Y + D - WT, WH + 1], [DX - 1, Y + D - WT, WH + 1]), 'f paper');
-  s += lit(balls([[X + L - 6, Y + 5.5], [X + L - 6, Y + 12.5], [X + L - 6, Y + 19.5], [X + L - 13, Y + 9], [X + L - 13, Y + 16], [X + L - 20, Y + 12.5], [X + L - 13, Y + 22.4], [X + L - 20, Y + 20]]));
+  const balls = (pts: P2[]) => pts.map(([x, y]) => { const p = T(x, y, 2 + 3.2); return ball(K, p[0], p[1], p[2], 3.4, 'f paper'); }).join('');
+  const side = (x0: number) => [[x0 + 6, Y + 7], [x0 + 6, Y + 19], [x0 + 15, Y + 7], [x0 + 15, Y + 19]] as P2[];
+  s += balls(side(X + WT));
+  // Divider, the other side's balls, then the near walls with the vial
+  s += K.poly(q([PX, Y + WT, 2], [PX, Y + D - WT, 2], [PX, Y + D - WT, WH + 1], [PX, Y + WT, WH + 1]), 'f paper') + K.poly(q([PX - 1, Y + WT, WH + 1], [PX, Y + WT, WH + 1], [PX, Y + D - WT, WH + 1], [PX - 1, Y + D - WT, WH + 1]), 'f paper');
+  s += balls(side(PX + 4));
   s += K.poly(q([X, Y + D, 0], [X + L, Y + D, 0], [X + L, Y + D, WH], [X, Y + D, WH]), 'f tint') + K.poly(q([X + L, Y, 0], [X + L, Y + D, 0], [X + L, Y + D, WH], [X + L, Y, WH]), 'f body');
   s += K.poly(q([X, Y + D - WT, WH], [X + L, Y + D - WT, WH], [X + L, Y + D, WH], [X, Y + D, WH]), 'f paper') + K.poly(q([X + L - WT, Y, WH], [X + L, Y, WH], [X + L, Y + D, WH], [X + L - WT, Y + D, WH]), 'f paper');
+  const vial = K.FRONT(PX - 8, Y + D, PZ + WH - .8);
+  s += K.on(vial, '<rect class="f paper" x="0" y="0" width="16" height="5.4" rx="1"/><rect class="f tint" x="2" y="1.2" width="12" height="3" rx="1.5"/><line class="det" x1="5.6" y1="1.2" x2="5.6" y2="4.2"/><line class="det" x1="10.4" y1="1.2" x2="10.4" y2="4.2"/>');
+  s += lit(K.on(vial, '<ellipse class="f body" cx="8" cy="2.7" rx="1.9" ry="1.2"/>'));
   return s;
 });
 
-// ── Bin and bar: to exclude SDRs, exclude Sales. A wastebasket with a gold bar thrown out with the rest (live).
-const BN = kernel([[0, 0, 0], [70, 0, 0], [0, 46, 0], [70, 46, 0], [30, 14, 66]], 12);
-const binbar = icon(BN, 'A wastebasket seen from above, a gold bar lying in it among the crumpled paper.', () => {
-  const K = BN, CX = 35, CY = 23, R = 19, H = 22, ZR = 4 + H;
-  let s = plate(K, 0, 0, 70, 46);
-  s += K.cyl(CX, CY, 4, R, H, 'body', 'paper') + K.line(K.ring(CX, CY, 8, R, -Math.PI / 4, Math.PI * 3 / 4, 30), 'det') + K.cyl(CX, CY, ZR - 3, R + .8, 3, 'paper', 'paper');
-  // The opening: inner wall dark, the rubbish a little below the rim, the bar lying on it; all cut to the rim
-  const [ox, oy] = K.P(CX, CY, ZR), rx = R * 1.2247 * .93, ry = R * .7071 * .93, el = (dy: number) => `M${f(ox - rx)} ${f(oy + dy)}A${f(rx)} ${f(ry)} 0 1 0 ${f(ox + rx)} ${f(oy + dy)}A${f(rx)} ${f(ry)} 0 1 0 ${f(ox - rx)} ${f(oy + dy)}Z`;
-  const z = ZR - 6, paper = [[-9, -3], [-4, 6], [8, -8], [10, 5]].map(([x, y]) => ball(K, CX + x, CY + y, z + 2.6, 3.4, 'f paper')).join('');
-  const bar = (x0: number, y0: number) => {
-    const b: V3[] = [[x0, y0, z], [x0 + 16, y0, z], [x0 + 16, y0 + 8, z], [x0, y0 + 8, z]], t: V3[] = [[x0 + 1.6, y0 + 1.6, z + 4.4], [x0 + 14.4, y0 + 1.6, z + 4.4], [x0 + 14.4, y0 + 6.4, z + 4.4], [x0 + 1.6, y0 + 6.4, z + 4.4]];
-    return K.poly([b[1], b[2], t[2], t[1]], 'f body') + K.poly([b[3], b[2], t[2], t[3]], 'f body') + K.poly(t, 'f tint') + K.line([[x0 + 4.6, y0 + 3.4, z + 4.4], [x0 + 11.4, y0 + 3.4, z + 4.4]], 'det');
-  };
-  s += `<clipPath id="bb-open"><path d="${el(0)}"/></clipPath><g clip-path="url(#bb-open)"><path class="f tint" d="${el(6)}"/>${paper}${lit(bar(CX - 9, CY - 3))}</g>`;
-  return s + K.box(CX + 8, CY + R - 2, 4, 10, 7, 2.4, 'paper', 'body', 'tint');
+// ── Drawer: to exclude SDRs, exclude Sales. A filing cabinet with one whole drawer taken out and set aside (live).
+const BN = kernel([[0, 0, 0], [72, 0, 0], [0, 48, 0], [72, 48, 0], [10, 8, 56]], 12);
+const drawer = icon(BN, 'A filing cabinet with its middle drawer taken out whole and set down beside it, files still inside.', () => {
+  const K = BN, X = 8, Y = 6, W = 28, D = 22, Z0 = 6, DH = 14, ZT = Z0 + 3 * DH + 2;
+  let s = plate(K, 0, 0, 72, 48) + K.box(X + 1, Y + 1, 4, W - 2, D - 2, 2, 'paper', 'body', 'tint') + K.box(X, Y, Z0, W, D, ZT - Z0, 'paper', 'body', 'tint') + K.box(X - 1, Y - 1, ZT, W + 2, D + 2, 2, 'paper', 'body', 'tint');
+  const front = (v: number) => `<rect class="f paper" x="2" y="${v + 1}" width="${W - 4}" height="${DH - 2}" rx=".6"/><rect class="f tint" x="${W / 2 - 4}" y="${v + 4}" width="8" height="2.2" rx="1.1"/><rect class="det" x="${W / 2 - 3}" y="${v + 8}" width="6" height="3"/>`;
+  // Top and bottom drawers in place, the middle slot empty and dark inside
+  s += K.on(K.FRONT(X, Y + D, ZT), front(1) + `<rect class="f body" x="2" y="${DH + 2}" width="${W - 4}" height="${DH - 2}"/><path class="f tint" d="M2 ${DH + 2}H${W - 2}L${W - 6} ${DH + 5}H6V${2 * DH - 1}L2 ${2 * DH}Z"/>` + front(2 * DH + 1));
+  // The drawer on the plate: open box, file cards standing in it, its front with the handle
+  const DX = 44, DY = 18, DW = W - 4, DD = 22, DZ = 4, H = DH - 2;
+  const g = K.box(DX, DY, DZ, DW, DD, H, 'tint', 'body', 'body') + K.poly([[DX + 1.4, DY + 1.4, DZ + H], [DX + DW - 1.4, DY + 1.4, DZ + H], [DX + DW - 1.4, DY + DD - 1.4, DZ + H], [DX + 1.4, DY + DD - 1.4, DZ + H]], 'f body') +
+    [4, 9, 14].map((y) => K.box(DX + 2.4, DY + y, DZ + H - 1, DW - 4.8, 1, 4, 'paper', 'paper', 'paper') + K.box(DX + 4 + y / 1.6, DY + y, DZ + H + 3, 5, 1, 1.6, 'paper', 'paper', 'paper')).join('') +
+    K.on(K.FRONT(DX, DY + DD, DZ + H), `<rect class="f paper" x="0" y="0" width="${DW}" height="${H}"/><rect class="f tint" x="${DW / 2 - 4}" y="3" width="8" height="2.2" rx="1.1"/><rect class="det" x="${DW / 2 - 3}" y="7" width="6" height="3"/>`);
+  return s + lit(g);
 });
 
 // ── X-ray frame: check who your ads actually reach. A parcel on a belt under an x-ray arch; inside it the real contents
@@ -263,4 +265,4 @@ const magnet = icon(MG, 'A horseshoe magnet lying flat, iron filings gathered in
   return s;
 });
 
-export const RULE_ICONS = { clock, rollerstamp, bolts, billboard, wedge, tilttray, binbar, xray, springscale, cascade, aperture, canisters, airlock, chain, magnet };
+export const RULE_ICONS = { clock, rollerstamp, bolts, billboard, wedge, balance, drawer, xray, springscale, cascade, aperture, canisters, airlock, chain, magnet };
