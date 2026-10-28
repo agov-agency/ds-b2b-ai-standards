@@ -56,13 +56,13 @@ const BB = kernel([[0, 0, 0], [82, 0, 0], [0, 36, 0], [82, 36, 0], [41, 12, 74]]
 const billboard = icon(BB, 'A roadside billboard on two legs, with a catwalk under the face and lamps over it.', () => {
   const K = BB, X = 6, Y = 12, W = 70, Z = 34, H = 32;
   let s = plate(K, 0, 0, 82, 36);
+  s += rope(K, [[24, Y + 2, 10], [56, Y + 2, Z - 4]], 1.4, 'f paper') + rope(K, [[24, Y + 2, Z - 4], [56, Y + 2, 10]], 1.4, 'f paper');
   for (const x of [22, 58]) s += K.box(x - 5, Y - 4, 4, 10, 12, 3, 'paper', 'body', 'tint') + K.box(x - 2, Y, 7, 4, 4, Z - 7, 'paper', 'body', 'tint');
-  s += K.line([[24, Y + 4, 10], [56, Y + 4, Z - 4]], 'det') + K.line([[24, Y + 4, Z - 4], [56, Y + 4, 10]], 'det');
   s += K.box(X, Y, Z, W, 3, H, 'paper', 'body', 'tint');
   s += lit(K.on(K.FRONT(X, Y + 3, Z + H), `<rect class="f body" x="2.4" y="2.4" width="${W - 4.8}" height="${H - 4.8}"/>` + [1, 2, 3].map((i) => `<line class="det" x1="${f(2.4 + i * (W - 4.8) / 4)}" y1="2.4" x2="${f(2.4 + i * (W - 4.8) / 4)}" y2="${H - 2.4}"/>`).join('')));
   s += K.box(X, Y + 3, Z - 2, W, 7, 2, 'paper', 'body', 'tint');
   s += Array.from({ length: 8 }, (_, i) => K.line([[X + 2 + i * 9.4, Y + 9.6, Z], [X + 2 + i * 9.4, Y + 9.6, Z + 5]], 'det')).join('') + K.line([[X + 2, Y + 9.6, Z + 5], [X + W - 2, Y + 9.6, Z + 5]], 'det');
-  for (const x of [20, 41, 62]) s += rope(K, [[x, Y + 3, Z + H], [x, Y + 7, Z + H + 3], [x, Y + 9, Z + H + 3]], 1.2, 'f paper') + K.box(x - 3, Y + 8, Z + H + .6, 6, 4, 3, 'paper', 'body', 'tint');
+  for (const x of [20, 41, 62]) s += rope(K, [[x, Y + 1.5, Z + H], [x, Y + 1.5, Z + H + 3], [x, Y + 8, Z + H + 3]], 1.4, 'f paper') + K.box(x - 3, Y + 8, Z + H + 1, 6, 4, 3.4, 'paper', 'body', 'tint');
   return s;
 });
 
@@ -140,7 +140,6 @@ const xray = icon(XR, 'A parcel on a short belt passing under an x-ray arch, its
   s += K.box(PX, PY, BZ, PW, PD, PH, 'nofill dashed', 'nofill dashed', 'nofill dashed');
   s += K.line([[PX, PY, BZ + PH], [PX, PY, BZ], [PX + PW, PY, BZ]], 'det dashed') + K.line([[PX, PY, BZ], [PX, PY + PD, BZ]], 'det dashed');
   s += post(Y + D + 4) + K.box(CX - 5, Y - 9, 44, 10, D + 18, 5, 'paper', 'body', 'tint') + K.on(K.FRONT(CX - 5, Y + D + 9, 49), '<rect class="f blk" x="3" y="1.6" width="4" height="1.6"/>');
-  s += K.on(K.SIDE(CX + 5, Y + D + 9, 44), `<rect class="f tint" x="7" y=".6" width="${D + 4}" height="1.6"/>`);
   return s;
 });
 

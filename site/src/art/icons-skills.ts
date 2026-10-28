@@ -81,11 +81,12 @@ const keyrack = icon(KR, 'A key board with hooks; tagged keys hang from most of 
     s += K.cylY(Y + 1, Y + 6, x, H - 12, 1.4, 'paper', 'body');
     if (!keyOn[i]) return;
     // Key and tag hang in a plane just in front of the board
-    const key = `<circle class="det" cx="0" cy="0" r="3"/><circle class="f paper" cx="0" cy="7" r="4"/><circle class="det" cx="0" cy="7" r="1.4"/>` +
-      `<path class="f paper" d="M-1.2 11H1.2V24H-1.2Z"/><path class="f paper" d="M1.2 19H4V21H2.6V23H1.2Z"/>`;
-    const tag = `<path class="det" d="M-1 2L-6 9"/><path class="f ${i === live ? 'body' : 'paper'}" d="M-10 9H-2V21L-6 24L-10 21Z"/><circle class="det" cx="-6" cy="12" r="1"/>`;
-    const g = K.on(K.FRONT(x, Y + 6, H - 12), key + (i === live ? '' : tag));
-    s += g + (i === live ? lit(K.on(K.FRONT(x, Y + 6, H - 12), tag)) : '');
+    // Split ring over the hook's tip, the key's bow and the tag's string both through it
+    const ring = `<path class="f paper" fill-rule="evenodd" d="M3.6 3A3.6 3.6 0 1 1 -3.6 3A3.6 3.6 0 1 1 3.6 3ZM2.2 3A2.2 2.2 0 1 0 -2.2 3A2.2 2.2 0 1 0 2.2 3Z"/>`;
+    const key = `<circle class="f paper" cx="0" cy="10" r="4"/><circle class="det" cx="0" cy="10" r="1.4"/><path class="f paper" d="M-1.2 14H1.2V27H-1.2Z"/><path class="f paper" d="M1.2 22H4V24H2.6V26H1.2Z"/>`;
+    const tag = `<path class="f nofill" d="M-2.6 5.6Q-4.6 8 -6 11"/><path class="f ${i === live ? 'body' : 'paper'}" d="M-10 11H-2V23L-6 26L-10 23Z"/><circle class="det" cx="-6" cy="13.6" r="1"/>`;
+    const pl = K.FRONT(x, Y + 6, H - 12);
+    s += K.on(pl, key + (i === live ? '' : tag)) + (i === live ? lit(K.on(pl, tag)) : '') + K.on(pl, ring);
   });
   return s;
 });
@@ -127,20 +128,24 @@ const clipboard = icon(CB, 'A clipboard leaning back on its strut, with a checkl
   return s;
 });
 
-// ── Level table: CRM data health check. A small table with a spirit level on it; the bubble sits dead centre (live).
-const TB = kernel([[0, 0, 0], [70, 0, 0], [0, 52, 0], [70, 52, 0], [10, 8, 48], [60, 44, 44]], 12);
-const leveltable = icon(TB, 'A small table standing square on four legs, a spirit level lying on it with its bubble centred.', () => {
-  const K = TB, X = 10, Y = 8, W = 50, D = 36, Z = 36;
-  let s = plate(K, 0, 0, 70, 52);
-  const leg = (x: number, y: number) => K.box(x, y, 4, 4, 4, Z - 8, 'paper', 'body', 'tint');
-  s += leg(X + 3, Y + 3) + leg(X + W - 7, Y + 3) + leg(X + 3, Y + D - 7) + leg(X + W - 7, Y + D - 7);
-  s += K.box(X + 2, Y + 2, Z - 4, W - 4, D - 4, 4, 'paper', 'body', 'tint') + K.box(X, Y, Z, W, D, 3, 'paper', 'body', 'tint');
-  s += K.on(K.TOP(X, Y, Z + 3), `<rect class="det" x="3" y="3" width="${W - 6}" height="${D - 6}" rx="1"/>`);
-  // The level: an aluminium bar with end caps, the vial window on top
-  const LX = X + 8, LY = Y + D / 2 - 3.5, LW = 34, LZ = Z + 3;
-  s += K.box(LX, LY, LZ, LW, 7, 5, 'paper', 'body', 'tint') + K.box(LX - 1.4, LY - .4, LZ, 1.4, 7.8, 5.4, 'paper', 'body', 'body') + K.box(LX + LW, LY - .4, LZ, 1.4, 7.8, 5.4, 'paper', 'body', 'body');
-  s += K.on(K.TOP(LX, LY, LZ + 5), `<rect class="f tint" x="${LW / 2 - 7}" y="1.6" width="14" height="3.8" rx="1.9"/><line class="det" x1="${LW / 2 - 2.6}" y1="1.6" x2="${LW / 2 - 2.6}" y2="5.4"/><line class="det" x1="${LW / 2 + 2.6}" y1="1.6" x2="${LW / 2 + 2.6}" y2="5.4"/>`);
-  s += lit(K.on(K.TOP(LX, LY, LZ + 5), `<ellipse class="f body" cx="${LW / 2}" cy="3.5" rx="2" ry="1.3"/>`));
+// ── Gauge: CRM data health check. A pressure gauge on its manifold, the needle up in the top zone (live).
+const TB = kernel([[0, 0, 0], [70, 0, 0], [0, 46, 0], [70, 46, 0], [35, 22, 68]], 12);
+const gauge = icon(TB, 'A round pressure gauge on a stem over a manifold block, its needle up at the top of the scale.', () => {
+  const K = TB, CX = 35, Y = 18, CZ = 44, R = 18;
+  let s = plate(K, 0, 0, 70, 46);
+  // Manifold: block on the plate, pipe stubs out both ends, the stem up with a hex nut
+  s += K.cylX(6, 14, Y + 6, 10, 3.4, 'paper', 'tint') + K.box(14, Y - 2, 4, 42, 16, 12, 'paper', 'body', 'tint') + K.on(K.FRONT(14, Y + 14, 16), screws([[4, 3], [38, 3], [4, 9], [38, 9]]));
+  s += K.cylX(56, 64, Y + 6, 10, 3.4, 'paper', 'tint') + K.cyl(CX, Y + 6, 16, 2.4, CZ - R - 12, 'paper', 'body');
+  s += prism(K, Array.from({ length: 6 }, (_, i) => [CX + 3.6 * Math.cos(i * Math.PI / 3), Y + 6 + 3.6 * Math.sin(i * Math.PI / 3)] as P2), 18, 3, 'paper', 'body');
+  s += K.box(CX - 2.6, Y + 3.4, CZ - R - 1, 5.2, 5.2, 3, 'paper', 'body', 'tint');
+  // The case, its bezel and the face
+  s += K.cylY(Y, Y + 8, CX, CZ, R, 'paper', 'body') + K.cylY(Y + 8, Y + 10, CX, CZ, R + .6, 'paper', 'tint');
+  const face = K.FRONT(CX, Y + 10, CZ), A0 = Math.PI * .75, SW = Math.PI * 1.5, a = (q: number) => A0 + SW * q, r = R - 3;
+  const arc = (q0: number, q1: number, r0: number, r1: number, cls: string) => `<path class="${cls}" d="M${f(Math.cos(a(q0)) * r1)} ${f(Math.sin(a(q0)) * r1)}A${r1} ${r1} 0 0 1 ${f(Math.cos(a(q1)) * r1)} ${f(Math.sin(a(q1)) * r1)}L${f(Math.cos(a(q1)) * r0)} ${f(Math.sin(a(q1)) * r0)}A${r0} ${r0} 0 0 0 ${f(Math.cos(a(q0)) * r0)} ${f(Math.sin(a(q0)) * r0)}Z"/>`;
+  s += K.on(face, `<circle class="f paper" r="${R - 1}"/>` + Array.from({ length: 21 }, (_, i) => { const t = a(i / 20), r0 = r - (i % 5 ? 2 : 3.6); return `<line class="det" x1="${f(Math.cos(t) * r0)}" y1="${f(Math.sin(t) * r0)}" x2="${f(Math.cos(t) * r)}" y2="${f(Math.sin(t) * r)}"/>`; }).join(''));
+  const t = a(.92), n = 1.2;
+  s += lit(K.on(face, arc(.8, 1, r - 3.6, r, 'f body') + `<path class="f body" d="M${f(-Math.sin(t) * n)} ${f(Math.cos(t) * n)}L${f(Math.cos(t) * (r - 1))} ${f(Math.sin(t) * (r - 1))}L${f(Math.sin(t) * n)} ${f(-Math.cos(t) * n)}L${f(-Math.cos(t) * 3.4)} ${f(-Math.sin(t) * 3.4)}Z"/>`));
+  s += K.on(face, '<circle class="f paper" r="2"/>');
   return s;
 });
 
@@ -148,7 +153,7 @@ const leveltable = icon(TB, 'A small table standing square on four legs, a spiri
 const TC = kernel([[0, 0, 0], [76, 0, 0], [0, 50, 0], [76, 50, 0], [34, 22, 60]], 12);
 const tagcounter = icon(TC, 'A hand tally counter standing on a plate, with a price tag tied to its finger ring.', () => {
   const K = TC, CX = 32, Y0 = 16, Y1 = 26, CZ = 30, R = 18;
-  let s = plate(K, 0, 0, 76, 50) + K.box(CX - 10, Y0 - 2, 4, 20, 14, 5, 'paper', 'body', 'tint');
+  let s = plate(K, 0, 0, 76, 50) + K.box(CX - 10, Y0 - 2, 4, 20, 14, CZ - R - 4, 'paper', 'body', 'tint');
   // Finger ring at the left, the button on top (live), then the body and its window of blank number wheels
   s += K.cylY(Y0 + 3, Y1 - 3, CX - R - 6, CZ - 4, 7, 'paper', 'body') + K.on(K.FRONT(CX - R - 6, Y1 - 3, CZ - 4), '<circle class="f tint" r="4.4"/>');
   s += K.cyl(CX, (Y0 + Y1) / 2, CZ + R - 2, 3.6, 4, 'paper', 'body') + lit(K.cyl(CX, (Y0 + Y1) / 2, CZ + R + 2, 5, 5, 'body', 'body'));
@@ -183,7 +188,7 @@ const charger = icon(BT, 'Two batteries seated in a charging dock, its cord runn
 });
 
 // ── Reels: video quality check. Two film reels on a rewind bench with the film running between them (live).
-const RL = kernel([[0, 4, 0], [84, 4, 0], [0, 40, 0], [84, 40, 0], [20, 22, 58], [64, 22, 58]], 12);
+const RL = kernel([[0, 4, 0], [84, 4, 0], [0, 40, 0], [84, 40, 0], [20, 22, 58], [64, 22, 58], [20, 18, 56]], 12);
 const reels = icon(RL, 'Two film reels on a rewind bench with a strip of film running between them.', () => {
   const K = RL, Y = 20, CZ = 34, R = 18;
   let s = plate(K, 0, 4, 84, 36);
@@ -192,27 +197,30 @@ const reels = icon(RL, 'Two film reels on a rewind bench with a strip of film ru
     g += K.on(K.FRONT(x, Y + 6, CZ), [0, 1, 2].map((q) => { const a = q * 2.094 - 1.57; return `<circle class="f blk" cx="${f(Math.cos(a) * 9.5)}" cy="${f(Math.sin(a) * 9.5)}" r="4.6"/>`; }).join('') + `<circle class="det" r="${R - 2}"/><circle class="f paper" r="3.4"/><circle class="f body" r="1.6"/>`);
     return g;
   };
+  // The film first, over the tops of both reels, so their discs cover its ends
+  const z0 = CZ + R - .6;
+  s += lit(K.poly([[20, Y + .6, z0], [64, Y + .6, z0], [64, Y + 5.4, z0], [20, Y + 5.4, z0]], 'f body') + K.poly([[20, Y + 5.4, z0], [64, Y + 5.4, z0], [64, Y + 5.4, z0 - 1], [20, Y + 5.4, z0 - 1]], 'f body'));
+  s += Array.from({ length: 10 }, (_, i) => dot(K, 24 + i * 4, Y + 1.8, z0, .5) + dot(K, 24 + i * 4, Y + 4.2, z0, .5)).join('');
   s += reel(20) + reel(64);
-  // The film: off the bottom of one reel, along under both, perforated
-  const z0 = CZ - R + 1;
-  s += lit(K.poly([[20, Y + 1, z0], [64, Y + 1, z0], [64, Y + 5, z0], [20, Y + 5, z0]], 'f body') + K.poly([[20, Y + 5, z0], [64, Y + 5, z0], [64, Y + 5, z0 - 1], [20, Y + 5, z0 - 1]], 'f body'));
-  s += Array.from({ length: 10 }, (_, i) => dot(K, 24 + i * 4, Y + 2, z0, .5)).join('');
   return s;
 });
 
 // ── Plug: waste budget detection. A basin with its tap shut and the drain stoppered; the plug on its chain is live.
-const TP = kernel([[0, 0, 0], [70, 0, 0], [0, 50, 0], [70, 50, 0], [34, 6, 52]], 12);
+const TP = kernel([[0, 0, 0], [70, 0, 0], [0, 50, 0], [70, 50, 0], [34, 6, 44]], 12);
 const plug = icon(TP, 'A basin with its tap turned off and a plug on a chain sitting in the drain.', () => {
   const K = TP;
   let s = plate(K, 0, 0, 70, 50) + K.box(8, 0, 4, 54, 46, 16, 'paper', 'body', 'tint');
   // The well: floor and the two far walls inside the rim, the drain; the back deck is wide enough for the tap
-  s += K.poly([[14, 18, 12], [56, 18, 12], [56, 42, 12], [14, 42, 12]], 'f tint') + K.poly([[14, 18, 12], [56, 18, 12], [56, 18, 20], [14, 18, 20]], 'f body') + K.poly([[14, 18, 12], [14, 42, 12], [14, 42, 20], [14, 18, 20]], 'f body');
-  s += K.on(K.TOP(35, 32, 12), '<circle class="f paper" r="4.6"/>');
-  // The plug in the drain, its chain up to the tap's base
-  s += lit(K.cyl(35, 32, 12, 4, 1.8, 'body', 'body') + K.cyl(35, 32, 13.8, 1, 1.6, 'body', 'body') + rope(K, [[35, 32, 15.4], [35, 24, 13], [35, 18, 16], [35, 12, 21]], 1, 'f body'));
+  // Everything inside is cut to the opening, so the floor never spills over the near rim
+  const open = ([[14, 18], [56, 18], [56, 42], [14, 42]] as P2[]).map(([x, y]) => K.P(x, y, 20).map(f).join(' ')).join(' ');
+  let inside = K.poly([[14, 18, 12], [56, 18, 12], [56, 42, 12], [14, 42, 12]], 'f tint') + K.poly([[14, 18, 12], [56, 18, 12], [56, 18, 20], [14, 18, 20]], 'f body') + K.poly([[14, 18, 12], [14, 42, 12], [14, 42, 20], [14, 18, 20]], 'f body');
+  inside += K.on(K.TOP(35, 35, 12), '<circle class="f paper" r="4.6"/>') + lit(K.cyl(35, 35, 12, 4, 1.8, 'body', 'body') + K.cyl(35, 35, 13.8, 1, 1.6, 'body', 'body'));
+  s += `<clipPath id="pl-open"><polygon points="${open}"/></clipPath><g clip-path="url(#pl-open)">${inside}</g>`;
+  // The plug's chain over the back rim to the tap's base
+  s += lit(rope(K, [[35, 35, 15.4], [35, 26, 13.4], [35, 19, 19], [35, 15, 20.2], [35, 11.6, 20.4]], 1, 'f body'));
   // Faucet on the back deck: base, pillar, spout out over the drain, the lever on top
-  s += K.cyl(35, 8, 20, 4.4, 2, 'paper', 'body') + K.cyl(35, 8, 22, 2.6, 20, 'paper', 'body') + K.cylY(8, 32, 35, 42, 2.4, 'paper', 'body') + K.cyl(35, 32, 37, 2.2, 5, 'paper', 'body');
-  s += K.cyl(35, 8, 42, 3.4, 4, 'paper', 'tint') + prism(K, bar(35, 8, -.6 + Math.PI / 2, 0, 12, 2.4), 46, 2, 'paper', 'body');
+  s += K.cyl(35, 8, 20, 4.4, 2, 'paper', 'body') + K.cyl(35, 8, 22, 2.6, 12, 'paper', 'body') + K.cylY(8, 35, 35, 32, 2.2, 'paper', 'body') + K.cyl(35, 35, 26, 2, 6.2, 'paper', 'body');
+  s += K.cyl(35, 8, 34, 3.4, 3.6, 'paper', 'tint') + prism(K, bar(35, 8, -.6 + Math.PI / 2, 0, 11, 2.4), 37.6, 2, 'paper', 'body');
   return s;
 });
 
@@ -300,8 +308,9 @@ const weekpad = icon(WP, 'A tent desk calendar showing one week in seven columns
   const pl = planeAt(K, top, [1, 0, 0], [0, sn, -cs]);
   let face = `<rect class="f paper" width="${W}" height="${H}"/><rect class="f tint" x="3" y="6" width="${W - 6}" height="7"/>`;
   for (let i = 0; i < 7; i++) face += `<rect class="det" x="${f(3 + i * (W - 6) / 7)}" y="16" width="${f((W - 6) / 7)}" height="${H - 20}"/><rect class="f tint" x="${f(4.4 + i * (W - 6) / 7)}" y="17.4" width="2.6" height="2.2"/>`;
-  const tabs = [12, 22, 32].map((y, i) => `<rect class="f ${i === 1 ? 'body' : 'tint'}" x="${W}" y="${y}" width="4.6" height="7" rx=".6"/>`);
-  s += K.on(pl, face + tabs[0] + tabs[2]) + lit(K.on(pl, tabs[1]));
+  const tabs = [12, 22, 32].map((y, i) => `<rect class="f ${i === 1 ? 'body' : 'tint'}" x="${W - 3}" y="${y}" width="7.6" height="7" rx=".6"/>`);
+  // Tabs first, so the page's edge covers where they go in between the leaves
+  s += K.on(pl, tabs[0] + tabs[2]) + lit(K.on(pl, tabs[1])) + K.on(pl, face);
   // Wire binding along the ridge
   s += Array.from({ length: 9 }, (_, i) => K.on(planeAt(K, [X + 4 + i * 4.75, Y0, ZT + .6], [0, 1, 0], [0, 0, -1]), '<ellipse class="f nofill" rx="1.8" ry="2"/>')).join('');
   return s;
@@ -415,7 +424,8 @@ const mirror = icon(MR, 'A windscreen standing on a dashboard, with a rear-view 
   const top: V3 = [X, Y0 + H * sn, ZD + H * cs];
   let s = plate(K, 0, 0, 76, 50) + K.box(6, 6, 4, 64, 14, ZD - 4, 'paper', 'body', 'tint') + K.on(K.FRONT(6, 20, ZD), '<rect class="det" x="6" y="3" width="52" height="4" rx=".6"/>');
   // The pane's edge, then its face: frame, glass, two glints
-  s += K.poly([[X + W, Y0, ZD], [X + W - 5, top[1], top[2]], [X + W - 5, top[1] - 1.8 * cs, top[2] + 1.8 * sn], [X + W, Y0 - 1.8 * cs, ZD + 1.8 * sn]], 'f body');
+  const ed = (v: number): V3 => [X + W - 5 * (1 - v / H), top[1] - v * sn, top[2] - v * cs], th2 = 1.2;
+  s += K.poly([ed(H), ed(2.4), [ed(2.4)[0], ed(2.4)[1] - th2 * cs, ed(2.4)[2] + th2 * sn], [ed(H)[0], ed(H)[1] - th2 * cs, ed(H)[2] + th2 * sn]], 'f body');
   const pl = planeAt(K, top, [1, 0, 0], [0, -sn, -cs]);
   s += K.on(pl, `<path class="f body" d="M0 ${H}L5 2Q5.4 0 7.4 0H${W - 7.4}Q${W - 5.4} 0 ${W - 5} 2L${W} ${H}Z"/><path class="f tint" d="M4.2 ${H - 3.4}L8.4 5Q8.7 3.4 10.4 3.4H${W - 10.4}Q${W - 8.7} 3.4 ${W - 8.4} 5L${W - 4.2} ${H - 3.4}Z"/><path class="det" d="M12 ${H - 10}L26 10M17 ${H - 8}L29 16"/>`);
   // Mirror: stem off the top of the glass, the housing, its glass facing us
@@ -499,4 +509,4 @@ const patchpanel = icon(PP, 'A rack patch panel with two rows of jacks and marke
   return s;
 });
 
-export const SKILL_ICONS = { regulator, passcard, stanchions, adapter, keyrack, periscope, clipboard, leveltable, tagcounter, charger, reels, plug, trophies, rulers, logbook, lockout, weekpad, knocker, puzzle, bell, thermometer, drilled, sieve, mirror, bits, dial, abacus, patchpanel };
+export const SKILL_ICONS = { regulator, passcard, stanchions, adapter, keyrack, periscope, clipboard, gauge, tagcounter, charger, reels, plug, trophies, rulers, logbook, lockout, weekpad, knocker, puzzle, bell, thermometer, drilled, sieve, mirror, bits, dial, abacus, patchpanel };
