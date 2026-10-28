@@ -23,6 +23,36 @@ export const ease = (u: number) => step(u * SETTLE) / step(SETTLE);
 export const k = (t: number, a: number, b: number) => ease(Math.min(1, Math.max(0, (t - a) / (b - a))));
 export const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 
+// After Effects-style keys, after the fun-isometric skill's kit/motions.ts: values between keys follow a cubic-bezier ease
+// (AE influence handles), held before the first key and after the last. Times in seconds.
+export type Ease = [number, number, number, number];
+export const EASY: Ease = [.333, 0, .667, 1], POP: Ease = [.75, 0, .25, 1], SNAP: Ease = [.8, 0, .2, 1], OUT: Ease = [0, 0, 0, 1], IN: Ease = [1, 0, .8, 1], SOFT: Ease = [.2, 0, 0, 1];
+export function bez([x1, y1, x2, y2]: Ease, x: number) {
+  const b = (u: number, p: number, q: number) => 3 * (1 - u) * (1 - u) * u * p + 3 * (1 - u) * u * u * q + u * u * u;
+  let lo = 0, hi = 1, u = x;
+  for (let i = 0; i < 24; i++) { u = (lo + hi) / 2; if (b(u, x1, x2) < x) lo = u; else hi = u; }
+  return b(u, y1, y2);
+}
+export type Key = [number, number, Ease?];
+export function keys(t: number, ks: Key[]) {
+  if (t <= ks[0][0]) return ks[0][1];
+  for (let i = 0; i < ks.length - 1; i++) {
+    const [t0, v0, e = EASY] = ks[i], [t1, v1] = ks[i + 1];
+    if (t < t1) return v0 + (v1 - v0) * bez(e, (t - t0) / (t1 - t0));
+  }
+  return ks[ks.length - 1][1];
+}
+// The skill's baked spring: overshoots, swings halving, rests after 91 frames (1.5 s) at pace 1. `amp` scales the
+// overshoot: 1 is the sticker bounce, our machines use about .3 so heavy parts settle instead of bouncing.
+const SPR: Ease[] = [[.17, .17, .55, 1], [.35, 0, .62, 1], [.31, 0, .67, 1], [.31, 0, .64, 1], [.3, 0, .64, 1], [.24, 0, .57, 1]];
+const REACH = [1.448, .778, 1.11, .95, 1.012, 1], GAPS = [13, 16, 16, 15, 15, 16];
+export function spring(t: number, start: number, from: number, to: number, { pace = 1, amp = .3 } = {}) {
+  const ks: Key[] = [[start, from, SPR[0]]];
+  let s = start;
+  REACH.forEach((r, i) => { s += GAPS[i] * pace / 60; ks.push([s, from + (to - from) * (1 + (r - 1) * amp), SPR[i + 1]]); });
+  return keys(t, ks);
+}
+
 export function kernel(extremes: V3[], pad = 16) {
   const d = extremes.map(([x, y, z]) => [(x - y) * C, (x + y) * S - z]);
   const x0 = Math.min(...d.map((p) => p[0])) - pad, y0 = Math.min(...d.map((p) => p[1])) - pad;
