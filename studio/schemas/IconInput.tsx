@@ -5,6 +5,7 @@ import { set, unset, type StringInputProps } from 'sanity';
 import { ICON_POOLS } from '../../site/src/icons';
 import { pieces } from '../../site/src/art';
 import { CSS as ART_CSS, still } from './ArtInput';
+import { artLabel } from './artLabels';
 
 const raw = import.meta.glob('../../illustrations/icons/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 // Same palette the site maps onto the icons (site/src/styles/site.css, .hl)
@@ -22,7 +23,7 @@ export function IconInput({ value, onChange, schemaType }: StringInputProps) {
       style={{ cursor: 'pointer', outline: value === name ? '2px solid var(--card-focus-ring-color)' : undefined }}>
       <Stack space={2}>
         <div style={{ aspectRatio: '4 / 3', display: 'grid', placeItems: 'center' }}>{body}</div>
-        <Text size={1} align="center">{name ?? 'Category icon'}</Text>
+        <Text size={1} align="center" title={name}>{name ? (pool ? artLabel(name) : name) : 'Category icon'}</Text>
       </Stack>
     </Card>
   );
@@ -31,7 +32,7 @@ export function IconInput({ value, onChange, schemaType }: StringInputProps) {
       <style>{CSS}</style>
       {tile(undefined, <Text muted size={1}>None</Text>)}
       {pool
-        ? pool.map((name) => tile(name, pieces[`i-${name}`]
+        ? [...pool].sort((a, b) => artLabel(a).localeCompare(artLabel(b))).map((name) => tile(name, pieces[`i-${name}`]
           ? <svg viewBox={pieces[`i-${name}`].viewBox} style={{ width: '100%', height: '100%' }}><style>{ART_CSS}</style><g dangerouslySetInnerHTML={{ __html: still(`i-${name}`) }} /></svg>
           : <Text muted size={1}>Missing</Text>))
         : ICONS.map(([name, svg]) => tile(name, <span className="ic" style={{ width: '62%', aspectRatio: '1', display: 'block' }} dangerouslySetInnerHTML={{ __html: svg.replace('<svg', '<svg width="100%" height="100%"') }} />))}

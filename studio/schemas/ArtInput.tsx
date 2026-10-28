@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { Card, Stack, Text } from '@sanity/ui';
 import { set, unset, type ObjectInputProps } from 'sanity';
 import { pieces, ART_POOLS } from '../../site/src/art';
+import { artLabel } from './artLabels';
 
 export const CSS = `.f{stroke:#0a0a0a;stroke-width:1.5}.paper{fill:#fff}.tint{fill:#dde8ff}.body{fill:#b8ceff}.blk,.head{fill:#0a0a0a}
 .det{fill:none;stroke:#0a0a0a;stroke-width:1}.hl{fill:none;stroke:#3b6cff;stroke-width:1.5}.dashed{stroke-dasharray:4 3}.nofill{fill:none}
@@ -34,7 +35,7 @@ function Tile({ name, on, pick }: { name?: string; on: boolean; pick: () => void
             ? <svg viewBox={pieces[name].viewBox} style={{ width: '100%', height: '100%' }}><style>{CSS}</style><g dangerouslySetInnerHTML={{ __html: still(name) }} /></svg>
             : <Text muted size={1}>None</Text>}
         </div>
-        <Text size={1} align="center">{name ?? 'Default cover'}</Text>
+        <Text size={1} align="center" title={name}>{name ? artLabel(name) : 'Default cover'}</Text>
       </Stack>
     </Card>
   );
