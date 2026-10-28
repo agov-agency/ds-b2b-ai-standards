@@ -35,12 +35,16 @@ const machine = (x: number, w = 26) =>
 
 const hanger = (x: number) => box(x - 4, -6, SZ, 8, 12, 22, 'paper', 'body', 'tint') + cylX(x - 5, x + 5, 0, SZ, 6, 'paper', 'tint');
 
+// The clutched pulleys spin up and coast down with the belt: their angle is the integral of the drive share, scaled
+// so a loop ends on a quarter turn (four spokes look the same) and the loop seam doesn't jump
+const drive = (s: number) => k(s, 1.9, 3) - k(s, 6.2, 7.2), RATE = TAU * TURNS / PERIOD * CR1 / CR2;
+const integ = (t: number, fn: (s: number) => number, n = 64) => { let a = 0; for (let i = 0; i < n; i++) a += fn(t * (i + .5) / n) * t / n; return a * RATE; };
+const turned = (t: number, fn: (s: number) => number) => { const all = integ(PERIOD, fn, 256), q = Math.PI / 2; return integ(t, fn) * Math.max(1, Math.round(all / q)) * q / all; };
+
 function draw(t: number) {
   t = ((t % PERIOD) + PERIOD) % PERIOD;
   const th = TAU * TURNS * t / PERIOD, on1 = k(t, 1.6, 2.4) - k(t, 6.4, 7.2);     // belt fork position: 0 idle, 1 fixed
-  // Fixed pulley angle: the belt's drive ramps in and out with the fork, integrated so the spin builds up smoothly
-  let spin = 0;
-  for (let i = 0, n = 48; i < n; i++) { const s = t * i / n; spin += (k(s, 1.9, 3) - k(s, 6.2, 7.2)) * TAU * TURNS / PERIOD * CR1 / CR2 * t / n; }
+  const spin = turned(t, (s) => drive(s)), idle = turned(t, (s) => 1 - drive(s));
   let s = box(-10, -10, SZ + 22, 260, 20, 10, 'paper', 'body', 'blk');
   s += cylX(-6, 236, 0, SZ, 3);
   const parts: [number, string][] = [];
@@ -50,7 +54,7 @@ function draw(t: number) {
   const bx = IDLE + (FIXED - IDLE) * on1;
   const fork = box(CX + 26, FY - 2, 0, 6, 6, FZ + 22, 'paper', 'body') + box(bx - CW / 2 - 4, FY - 4, FZ + 18, CX + 32 - bx + CW / 2 + 4, 4, 4, 'paper', 'body', 'tint') +
     box(bx - CW / 2 - 4, FY - 4, FZ + 12, 2, 4, 8, 'paper', 'body') + box(bx + CW / 2 + 2, FY - 4, FZ + 12, 2, 4, 8, 'paper', 'body');
-  parts.push([CX, machine(CX, 46) + drum(IDLE, CW, FY, FZ, CR2, -th * CR1 / CR2 * (1 - on1), 'tint') +
+  parts.push([CX, machine(CX, 46) + drum(IDLE, CW, FY, FZ, CR2, -idle, 'tint') +
     `<g class="lit">${drum(FIXED, CW, FY, FZ, CR2, -spin)}</g>` + `<g class="lit">${belt(bx, CW - 1, CR1, CR2)}</g>` + drum(CX, CW * 2 + 6, 0, SZ, CR1, -th) + fork]);
   s += parts.sort((a, b) => a[0] - b[0]).map((p) => p[1]).join('');
   return hue('a', s) + arrow(K.curve([CX + 40, FY + 30, FZ + 40], [CX + 30, FY + 40, FZ + 50], [CX + 14, FY + 36, FZ + 46]), { dot: true });

@@ -20,15 +20,19 @@ const near = (a: number) => { const d = ((a - POST) % TAU + TAU) % TAU; return d
 
 function arm(i: number, a: number) {
   const A = ARMS[i], x = A.r * Math.cos(a), y = A.r * Math.sin(a), bz = A.z - A.drop;
-  // Flag: rises while the arm crosses the post, folds down after
-  const d = near(a), up = k(d, -.5, -.1) * (1 - k(d, .35, .8));
-  let g = line([[5.5 * Math.cos(a), 5.5 * Math.sin(a), A.z], [x, y, A.z]], 'f') + line([[x, y, A.z], [x, y, bz + A.ball]], 'f');
-  if (up > .01) {
-    const h = 18 * up, top: V3 = [x, y, bz + A.ball + h];
-    const flag = `<g class="lit">${poly([top, [x + 9 * Math.cos(a + 1.7), y + 9 * Math.sin(a + 1.7), top[2] - 2], [x, y, top[2] - 6]], 'f body')}</g>`;
-    g += line([[x, y, bz + A.ball], top], 'f') + flag;
-  }
-  return g + ball(x, y, bz, A.ball, up > .5 ? 'body' : 'paper');
+  // Flag: a hinged vane on top of the ball, folded back along the path; it tips up as the arm crosses the post and
+  // folds down after. It takes the accent as it rises.
+  const d = near(a), up = k(d, -.5, -.1) * (1 - k(d, .35, .8)), phi = .12 + (Math.PI / 2 - .12) * up;
+  const bk = [Math.sin(a), -Math.cos(a)], rx = Math.cos(a), ry = Math.sin(a), L = 10;
+  const hz = bz + A.ball, p = [bk[0] * Math.cos(phi), bk[1] * Math.cos(phi), Math.sin(phi)];
+  const top: V3 = [x + p[0] * L, y + p[1] * L, hz + p[2] * L], at = (u: number, o: number): V3 => [top[0] - p[0] * u + rx * o, top[1] - p[1] * u + ry * o, top[2] - p[2] * u];
+  const vane = poly([top, at(2.5, 6.5), at(5, 0)], 'f paper');
+  const rod: V3[] = [[5.5 * Math.cos(a), 5.5 * Math.sin(a), A.z], [x, y, A.z], [x, y, hz]];
+  const g = line(rod, 'tube-o') + line(rod, 'tube-i');
+  const flag = line([[x, y, hz], top], 'f') + vane + (up > .01 ? `<g class="lit" style="opacity:${f(up)}">${poly([top, at(2.5, 6.5), at(5, 0)], 'f body')}</g>` : '');
+  // The folded vane lies behind the ball when its arm points away from us; draw it first then
+  const behind = bk[0] + bk[1] < 0 && up < .5;
+  return g + (behind ? flag : '') + ball(x, y, bz, A.ball) + (behind ? '' : flag);
 }
 
 function draw(t: number) {
@@ -47,7 +51,7 @@ function draw(t: number) {
   const back = order.filter((i) => Math.cos(as[i]) + Math.sin(as[i]) < 0), front = order.filter((i) => Math.cos(as[i]) + Math.sin(as[i]) >= 0);
   const c = Math.cos(POST), sn = Math.sin(POST), px = (BR + 12) * c, py = (BR + 12) * sn;
   const post = cyl(px, py, 0, 7, 4, 'paper', 'body') + cyl(px, py, 4, 2.6, 70, 'paper', 'body') +
-    line([[px, py, 72], [(BR - 20) * c, (BR - 20) * sn, 72]], 'f') + cyl((BR - 20) * c, (BR - 20) * sn, 66, 1.6, 6, 'blk', 'blk');
+    line([[px, py, 72], [(BR - 20) * c, (BR - 20) * sn, 72]], 'tube-o') + line([[px, py, 72], [(BR - 20) * c, (BR - 20) * sn, 72]], 'tube-i') + cyl((BR - 20) * c, (BR - 20) * sn, 66, 1.6, 6, 'blk', 'blk');
   const postBack = Math.cos(POST) + Math.sin(POST) < 0;
   s += (postBack ? post : '') + back.map((i) => arm(i, as[i])).join('');
   s += cyl(0, 0, BZ + 6, 3.2, CZ - CR - BZ - 4, 'paper', 'body') + ARMS.map((A) => cyl(0, 0, A.z - 1.5, 5.5, 3, 'paper', 'body')).join('') + ball(0, 0, CZ, CR, 'tint');

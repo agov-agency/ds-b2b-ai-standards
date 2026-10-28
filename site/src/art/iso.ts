@@ -108,7 +108,20 @@ export function kernel(extremes: V3[], pad = 16) {
       `<path class="head" d="M${h.map((p) => p.map(f).join(' ')).join('L')}Z"/>` +
       (dot ? `<circle class="head" cx="${f(s[0])}" cy="${f(s[1])}" r="4"/>` : '');
   };
-  return { P, D, TOP, FRONT, SIDE, on, poly, line, box, cyl, cylX, cylY, ring, curve, arrow, viewBox: `0 0 ${f(W)} ${f(H)}` };
+  // Upright prism over any convex plan (a box turned to any angle, a hexagonal post): the walls facing the viewer
+  // back to front, then the top. Walls facing +y more than +x take the `front` fill, like box().
+  const prism = (plan: [number, number][], z: number, h: number, top = 'paper', side = 'body', front = side) => {
+    const cx = plan.reduce((s, p) => s + p[0], 0) / plan.length, cy = plan.reduce((s, p) => s + p[1], 0) / plan.length;
+    return plan.map((a, i) => {
+      const b = plan[(i + 1) % plan.length], mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+      let nx = b[1] - a[1], ny = a[0] - b[0];
+      if (nx * (mx - cx) + ny * (my - cy) < 0) { nx = -nx; ny = -ny; }
+      return { a, b, d: mx + my, nx, ny };
+    }).filter((w) => w.nx + w.ny > 1e-6).sort((p, q) => p.d - q.d)
+      .map(({ a, b, nx, ny }) => poly([[a[0], a[1], z], [b[0], b[1], z], [b[0], b[1], z + h], [a[0], a[1], z + h]], `f ${ny > nx ? front : side}`)).join('') +
+      poly(plan.map(([x, y]) => [x, y, z + h] as V3), `f ${top}`);
+  };
+  return { P, D, TOP, FRONT, SIDE, on, poly, line, box, prism, cyl, cylX, cylY, ring, curve, arrow, viewBox: `0 0 ${f(W)} ${f(H)}` };
 }
 
 // Hue groups: wrap a part in hue('b', svg) and its body / tint fills take that hue (DESIGN §8.17, coloured slots).

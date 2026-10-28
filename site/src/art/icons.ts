@@ -5,18 +5,7 @@ import { kernel, hue, f, type Piece, type V3 } from './iso';
 type K = ReturnType<typeof kernel>;
 type P2 = [number, number];
 
-// Upright prism over any convex plan: the walls that face the viewer (+x / +y), back to front, then the top
-function prism(K: K, pts: P2[], z: number, h: number, top = 'paper', side = 'body') {
-  const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length, cy = pts.reduce((s, p) => s + p[1], 0) / pts.length;
-  const walls = pts.map((a, i) => {
-    const b = pts[(i + 1) % pts.length], mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
-    let nx = b[1] - a[1], ny = a[0] - b[0];
-    if (nx * (mx - cx) + ny * (my - cy) < 0) { nx = -nx; ny = -ny; }
-    return { a, b, d: mx + my, show: nx + ny > 1e-6 };
-  }).filter((w) => w.show).sort((p, q) => p.d - q.d);
-  return walls.map(({ a, b }) => K.poly([[a[0], a[1], z], [b[0], b[1], z], [b[0], b[1], z + h], [a[0], a[1], z + h]], `f ${side}`)).join('') +
-    K.poly(pts.map(([x, y]) => [x, y, z + h] as V3), `f ${top}`);
-}
+const prism = (K: K, pts: P2[], z: number, h: number, top = 'paper', side = 'body') => K.prism(pts, z, h, top, side);
 // A bar lying flat from r0 to r1 along angle a around (cx, cy)
 const bar = (cx: number, cy: number, a: number, r0: number, r1: number, w: number): P2[] => {
   const c = Math.cos(a), s = Math.sin(a), n = w / 2;
