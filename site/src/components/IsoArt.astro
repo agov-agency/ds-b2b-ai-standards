@@ -53,20 +53,20 @@ const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]
   .iso-art :global(.ha) { --h: var(--art-a); }
   .iso-art :global(.hb) { --h: var(--art-b); }
   .iso-art :global(.hc) { --h: var(--art-c); }
-  .iso-art :global(.f) { stroke: var(--ink); stroke-width: 1; }
+  .iso-art :global(.f) { stroke: var(--ink); stroke-width: var(--art-line); }
   .iso-art :global(.paper) { fill: #fff; }
   .iso-art :global(.tint) { fill: color-mix(in srgb, var(--h) 30%, #fff); }
   .iso-art :global(.body) { fill: color-mix(in srgb, var(--h) 60%, #fff); }
   .iso-art :global(.blk), .iso-art :global(.head) { fill: var(--ink); }
-  .iso-art :global(.det) { fill: none; stroke: var(--ink); stroke-width: .6; }
-  .iso-art :global(.hl) { fill: none; stroke: var(--h); stroke-width: 1; }
+  .iso-art :global(.det) { fill: none; stroke: var(--ink); stroke-width: var(--art-detail); }
+  .iso-art :global(.hl) { fill: none; stroke: var(--h); stroke-width: var(--art-line); }
   .iso-art :global(.dashed) { stroke-dasharray: 4 3; }
   .iso-art :global(.nofill) { fill: none; }
-  .iso-art :global(.dash) { fill: none; stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 6 5; stroke-linecap: butt; }
+  .iso-art :global(.dash) { fill: none; stroke: var(--ink); stroke-width: var(--art-dash); stroke-dasharray: 6 5; stroke-linecap: butt; }
   /* A bent tube: an ink stroke with a paper stroke inside, so its outline matches .f; .flow runs along it */
-  .iso-art :global(.tube-o) { fill: none; stroke: var(--ink); stroke-width: 5; }
-  .iso-art :global(.tube-i) { fill: none; stroke: #fff; stroke-width: 3; }
-  .iso-art :global(.flow) { fill: none; stroke: var(--lit, var(--h)); stroke-width: 1.6; stroke-dasharray: 3 4; stroke-linecap: butt; stroke-dashoffset: var(--march, 0); }
+  .iso-art :global(.tube-o) { fill: none; stroke: var(--ink); stroke-width: calc(3px + 2 * var(--art-line)); }
+  .iso-art :global(.tube-i) { fill: none; stroke: #fff; stroke-width: 3px; }
+  .iso-art :global(.flow) { fill: none; stroke: var(--lit, var(--h)); stroke-width: calc(2 * var(--art-dash)); stroke-dasharray: 3 4; stroke-linecap: butt; stroke-dashoffset: var(--march, 0); }
   .iso-art :global(.march) { stroke-dashoffset: var(--march, 0); }
   /* `mono` on a light surface: grey and white like the heroes, colour only on the live part */
   .iso-art.mono, .mono :global(:is(.ha, .hb, .hc)) { --h: var(--neutral-300); }
@@ -74,13 +74,13 @@ const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]
   /* On black heroes (iso-glow look): dark faces, grey hairlines; only the live part (.lit) takes colour and glows:
      the hero's own item colour (`accent`), else the hue of the group it sits in */
   .on-dark { --line: color-mix(in srgb, var(--neutral-500) 55%, var(--neutral-800)); }
-  .on-dark :global(.f) { stroke: var(--line); stroke-width: .6; }
-  .on-dark :global(.det) { stroke: var(--neutral-800); stroke-width: .45; }
+  .on-dark :global(.f) { stroke: var(--line); }
+  .on-dark :global(.det) { stroke: var(--neutral-800); }
   .on-dark :global(.paper) { fill: var(--neutral-950); }
   .on-dark :global(.tint) { fill: var(--neutral-950); }
   .on-dark :global(.body) { fill: var(--neutral-1000); }
   .on-dark :global(.blk) { fill: var(--neutral-1000); }
-  .on-dark :global(.dash) { stroke: var(--line); stroke-width: .9; }
+  .on-dark :global(.dash) { stroke: var(--line); }
   .on-dark :global(.head) { fill: var(--line); }
   .on-dark :global(.lit) { filter: url(#iso-glow); }
   .on-dark :global(.lit .f) { stroke: var(--lit, var(--h)); }
@@ -91,14 +91,14 @@ const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]
   /* `blue`: on the blue CTA card. Faces take the card colour, light white hairlines; the live part goes white and glows */
   .on-blue { --card: var(--primary-500); }
   /* Faces a step lighter than the card, so the machine lifts off the blue instead of melting into it */
-  .on-blue :global(.f) { stroke: rgb(255 255 255 / .62); stroke-width: .6; }
-  .on-blue :global(.det) { stroke: rgb(255 255 255 / .32); stroke-width: .45; }
+  .on-blue :global(.f) { stroke: rgb(255 255 255 / .62); }
+  .on-blue :global(.det) { stroke: rgb(255 255 255 / .32); }
   .on-blue :global(.paper) { fill: color-mix(in srgb, var(--neutral-0) 20%, var(--card)); }
   .on-blue :global(.tint) { fill: color-mix(in srgb, var(--neutral-0) 11%, var(--card)); }
   .on-blue :global(.body) { fill: color-mix(in srgb, var(--neutral-0) 5%, var(--card)); }
   .on-blue :global(.blk) { fill: color-mix(in srgb, var(--card) 60%, #000); }
   .on-blue :global(.lit) { filter: url(#iso-glow); }
-  .on-blue :global(.lit .f) { stroke: var(--neutral-0); stroke-width: .9; }
+  .on-blue :global(.lit .f) { stroke: var(--neutral-0); }
   .on-blue :global(.lit .paper) { fill: color-mix(in srgb, var(--neutral-0) 34%, var(--card)); }
   .on-blue :global(.lit .body) { fill: color-mix(in srgb, var(--neutral-0) 40%, var(--card)); }
   .iso-art :global(.type) { fill: var(--neutral-0); font: 600 10px/1 var(--font-mono); letter-spacing: 0; }

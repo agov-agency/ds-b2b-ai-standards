@@ -1,7 +1,7 @@
 // Scenario "Warm-lead handoff": a post sorting wall. Letters slide down a chute onto a shuttle. A letter that already
 // has an owner in the CRM (the black stamp) drops through a flap into the reject bin; the others ride the shuttle to
 // their owner's pigeonhole and are pushed in. The hand-off is the letter landing in the right box.
-import { kernel, hue, k, lerp, f, type Piece, type V3 } from './iso';
+import { kernel, hue, k, keys, spring, lerp, f, IN, OUT, EASY, type Ease, type Piece, type V3 } from './iso';
 
 const PERIOD = 7.2, STEP = 2.4;
 const CW = 176, CD = 40, CH = 156;                                      // cabinet: x 0…CW, y 0…CD (front face), z 0…CH
@@ -13,25 +13,44 @@ const LW = 28, LDp = 18, LT = 1.8;                                       // lett
 const TRAY = 34, HOME = LX0 + 2, ZT = SILL + 3;                           // shuttle tray, its home x, tray top
 const XA = -132, ZA = 152, XB = LX0, ZB = ZT + 1;                         // chute: top end, bottom end (lands on the tray)
 const FLAP = 24, BIN: [number, number, number, number] = [-82, LX0 - 2, CD - 2, CD + 34]; // flap length; bin x0, x1, y0, y1
-const BH = 34;
+const BH = 22;
 const zc = (x: number) => ZA + (ZB - ZA) * (x - XA) / (XB - XA);         // chute floor height at x
 const TARGET = [1, -1, 3];                                               // per step: column the letter goes to (-1 = owned, rejected)
 
-const K = kernel([[XA - 10, CD + 2, 0], [XA - 10, CD + LD, ZA + 10], [CW + 4, 0, 0], [CW + 4, CD + LD, 0], [0, -4, CH + 8], [CW, -4, CH + 8], [BIN[0], BIN[3], 0], [CW, CD + LD, SILL]], 24);
+const K = kernel([[XA - 44, CD + 2, 0], [XA - 44, CD + LD, ZA + 80], [CW + 4, 0, 0], [CW + 4, CD + LD, 0], [0, -4, CH + 8], [CW, -4, CH + 8], [BIN[0], BIN[3], 0], [CW, CD + LD, SILL]], 24);
 const { on, poly, line, box, cyl, cylX, FRONT, TOP, arrow, curve } = K;
 
 const lit = (s: string, a: number) => (a > .01 ? `<g class="lit" style="opacity:${f(Math.min(1, a))}">${s}</g>` : '');
 
 // A letter lying flat with its long side along x; z(x) gives the floor under it (a slope on the chute), tilt drops the front.
-function letter(x: number, y: number, z: (x: number) => number, stamp = false) {
-  const x1 = x + LW, y1 = y + LDp, a: V3 = [x, y, z(x) + LT], b: V3 = [x1, y, z(x1) + LT], c: V3 = [x1, y1, z(x1) + LT], d: V3 = [x, y1, z(x) + LT];
-  const dn = (p: V3): V3 => [p[0], p[1], p[2] - LT];
-  const m = (u: number, v: number): V3 => { const xx = lerp(x, x1, u); return [xx, lerp(y, y1, v), z(xx) + LT]; };
+// The stamp sits at the rear, so it is still under the magazine when a stamped letter starts to come out.
+function letter(x: number, y: number, z: (x: number) => number, stamp = false, w = LW, lt = LT) {
+  if (lt < .05) return '';
+  const x1 = x + w, y1 = y + LDp, a: V3 = [x, y, z(x) + lt], b: V3 = [x1, y, z(x1) + lt], c: V3 = [x1, y1, z(x1) + lt], d: V3 = [x, y1, z(x) + lt];
+  const dn = (p: V3): V3 => [p[0], p[1], p[2] - lt];
+  const m = (u: number, v: number): V3 => { const xx = lerp(x, x1, u); return [xx, lerp(y, y1, v), z(xx) + lt]; };
   let g = poly([b, c, dn(c), dn(b)], 'f body') + poly([d, c, dn(c), dn(d)], 'f body') + poly([a, b, c, d], 'f paper');
   g += line([a, m(.5, .55), b], 'det');
-  g += poly([m(.74, .62), m(.88, .62), m(.88, .86), m(.74, .86)], stamp ? 'f blk' : 'f tint');
+  g += poly([m(.12, .62), m(.26, .62), m(.26, .86), m(.12, .86)], stamp ? 'f blk' : 'f tint');
   return g;
 }
+// A rigid letter by its centre: bottom centre at (cx, cz), pitched by p (radians, front down)
+const plank = (cx: number, y: number, cz: number, p: number, stamp = false, lt = LT) => {
+  const w = LW * Math.cos(p), tp = Math.tan(p);
+  return letter(cx - w / 2, y, (xx) => cz - (xx - cx) * tp, stamp, w, lt);
+};
+// The floor a letter rides on: the magazine platform, the chute slope, the shuttle tray, with rounded kinks so a
+// letter tips over each edge instead of snapping to the new angle
+const SLOPE = -(ZA - ZT) / (XB - XA), RK = 9;
+function floor(x: number): [number, number] {
+  const fil = (xk: number, zk: number, m1: number, m2: number) => { const d = x - xk; return [zk + m1 * d + (m2 - m1) * (d + RK) ** 2 / (4 * RK), m1 + (m2 - m1) * (d + RK) / (2 * RK)] as [number, number]; };
+  if (x < XA - RK) return [ZA, 0];
+  if (x < XA + RK) return fil(XA, ZA, 0, SLOPE);
+  if (x < XB - RK) return [ZA + SLOPE * (x - XA), SLOPE];
+  if (x < XB + RK) return fil(XB, ZT, SLOPE, 0);
+  return [ZT, 0];
+}
+const onFloor = (cx: number, stamp = false) => { const [z, m] = floor(cx); return plank(cx, LY + 4, z, -Math.atan(m), stamp); };
 
 // Pigeonhole interiors (back wall, floor, left wall), drawn before the front frame cuts the openings
 function cubbies() {
@@ -45,8 +64,8 @@ function cubbies() {
   return s;
 }
 
-// Letters already filed: a small stack in most pigeonholes, the middle row's two targets start empty
 const FILED: [number, number, number][] = [[0, 0, 2], [1, 0, 1], [3, 0, 3], [0, 1, 1], [2, 1, 2], [0, 2, 3], [1, 2, 1], [2, 2, 2], [3, 2, 1]];
+// Letters already filed: a small stack in most pigeonholes; the middle row's two targets hold one letter that the new one lands on
 const filed = () => FILED.map(([c, r, n]) => {
   let s = '';
   for (let i = 0; i < n; i++) s += letter(CX(c) + 3.5 - i * .6, 12 + i * 1.4, () => CH - ROWS[r] - CUH + i * LT);
@@ -98,47 +117,76 @@ const cylY2 = (x: number, y0: number, y1: number, z: number) => line([[x, y0 - 1
 const bin = (inner: string) => {
   const [x0, x1, y0, y1] = BIN;
   let s = poly([[x0, y0, 2], [x1, y0, 2], [x1, y1, 2], [x0, y1, 2]], 'f tint') + box(x0, y0, 0, x1 - x0, 3, BH) + box(x0, y0, 0, 3, y1 - y0, BH);
-  s += box(x0 + 6, y0 + 6, 2, LW, LDp, LT, 'paper', 'body') + box(x0 + 9, y0 + 8, 2 + LT, LW, LDp, LT, 'paper', 'body');
   s += inner;
   s += box(x0, y1 - 3, 0, x1 - x0, 3, BH, 'paper', 'body', 'tint') + box(x1 - 3, y0, 0, 3, y1 - y0, BH);
   return s + on(FRONT(x0, y1, BH), `<rect class="f paper" x="${(x1 - x0) / 2 - 9}" y="8" width="18" height="7" rx=".5"/>`);
 };
 
+// A stack that takes one more letter each loop and settles back by the end: the new letter lands on top, then the
+// bottom one thins out as the stack sinks by one letter, so the loop closes without anything popping
+function stack(x: number, y: number, z: number, n: number, settle: number, stamp: boolean) {
+  let g = '';
+  for (let i = 0; i < n; i++) g += letter(x, y, () => z + Math.max(0, i - settle) * LT, stamp, LW, i === 0 ? LT * (1 - settle) : LT);
+  return g;
+}
+
+const MX0 = XA - 36, MW = 32;                                            // magazine on its platform at the chute's top
+const PUSH: Ease = [.4, 0, .2, 1], SLIDE: Ease = [.42, 0, .3, 1];
+const CX0 = XA - 20;                                                     // a waiting letter's centre under the magazine
+
 function draw(t: number) {
   t = ((t % PERIOD) + PERIOD) % PERIOD;
   const j = Math.floor(t / STEP), u = t - j * STEP, col = TARGET[j], owned = col < 0;
-  // Letter down the chute: the slide is along the trough floor, the last bit lands it on the tray
-  const slide = k(u, 0, .7), lx = lerp(XA + 4, HOME + 3, slide);
-  const open = owned ? k(u, .55, .85) - k(u, 1.5, 2) : 0;
-  const tx = col >= 0 ? CX(col) + (CUW - TRAY) / 2 : HOME, carry = k(u, .75, 1.35), back = k(u, 1.85, 2.4);
-  const sx = col >= 0 ? lerp(lerp(HOME, tx, carry), HOME, back) : HOME, push = col >= 0 ? k(u, 1.3, 1.65) - k(u, 1.7, 2) : 0;
-  // A delivered letter stays in its pigeonhole for the rest of the loop and is taken out at the end (fade)
-  const out = 1 - k(t, PERIOD - .6, PERIOD);
-  let inside = '', front = '';
+  const settle = k(t, PERIOD - .55, PERIOD - .05);
+  // Feed: the pusher shoves the bottom letter out of the magazine, it slides down the chute and comes to rest
+  const cxEnd = owned ? XB - FLAP + 10 : HOME + 3 + LW / 2;
+  const cx = keys(u, [[0, CX0, PUSH], [.28, XA - 4, SLIDE], [owned ? .62 : .78, cxEnd]]);
+  const pusher = keys(u, [[0, 0, PUSH], [.28, 16, EASY], [.7, 0]]);
+  const open = owned ? keys(u, [[.66, 0, [.5, 0, .7, 1]], [.9, 1, EASY], [1.6, 1, EASY], [2.1, 0]]) : 0;
+  const tx = col >= 0 ? CX(col) + (CUW - TRAY) / 2 : HOME, carry = k(u, .8, 1.35), back = k(u, 1.85, 2.4);
+  const sx = col >= 0 ? lerp(lerp(HOME, tx, carry), HOME, back) : HOME, push = col >= 0 ? k(u, 1.3, 1.62) - k(u, 1.7, 2) : 0;
+  // Delivered letters stay on their pigeonhole's stack to the end of the loop
+  let inside = '';
   TARGET.forEach((c, i) => {
-    if (c < 0 || i > j || (i === j && u < 1.6)) return;
-    const s = letter(CX(c) + 3.5, 12, () => SILL);
-    inside += `<g style="opacity:${f(out)}">${s}${lit(s, i === j ? 1 - k(u, 1.9, 2.4) : 0)}</g>`;
+    if (c < 0) return;
+    const landed = i < j || (i === j && u >= 1.62);
+    const g = stack(CX(c) + 3.5, 12, SILL, landed ? 2 : 1, landed ? settle : 0, false);
+    inside += landed && i === j ? g + lit(letter(CX(c) + 3.5, 12, () => SILL + LT), 1 - k(u, 1.9, 2.4)) : g;
   });
   // The moving letter
-  let moving = '', fall = '';
-  const XS = XB - FLAP - 6;                                              // an owned letter stops on the flap
-  if (owned) {
-    const v = k(u, .7, 1.2), x = lerp(lerp(XA + 4, XS, k(u, 0, .6)), BIN[0] + 8, v), z = lerp(zc(XS), 2 + 2 * LT, v * v);
-    if (u < .7) moving = letter(lerp(XA + 4, XS, k(u, 0, .6)), LY + 4, zc, true);
-    else if (u < 1.9) fall = `<g style="opacity:${f(1 - k(u, 1.5, 1.9))}">${letter(x, LY + 4, () => z, true)}</g>`;
-  } else if (u >= .7 && u < 1.3) {
+  let moving = '', fall = '', drop = '';                                 // drop: above the bin's rim, drawn over the chute
+  const xh = XB - FLAP, rideP = (o: number) => -Math.atan(SLOPE) + o * 1.1;
+  const rideAt = (o: number): [number, number, number] => { const p = rideP(o), r = cxEnd - xh; return [xh + r * Math.cos(p), zc(xh) - r * Math.sin(p), p]; };
+  if (owned && u >= .66) {
+    // Rides the flap as it drops, slides off and falls flat onto the reject pile
+    const T0 = .76, [x0, z0, p0] = rideAt(open);
+    if (u < T0) drop = plank(x0, LY + 4, z0, p0, true);
+    else {
+      const [x1, z1, p1] = rideAt(keys(T0, [[.66, 0, [.5, 0, .7, 1]], [.9, 1]])), v = keys(u, [[T0, 0, IN], [1.06, 1]]);
+      const top = 2 + 2 * LT, p = keys(u, [[T0, p1, OUT], [1.06, .12, EASY], [1.22, 0]]);
+      const z = lerp(z1, top, v), g = plank(lerp(x1, BIN[0] + 6 + LW / 2, keys(u, [[T0, 0, EASY], [1.06, 1]])), LY + 4, z, p, true);
+      if (u < 1.22) { if (z > BH + 4) drop = g; else fall = g; }
+    }
+  } else if (u < (owned ? .66 : .8)) {
+    moving = onFloor(cx, owned);
+  } else if (!owned && u < 1.3) {
     moving = letter(sx + 3, LY + 4, () => ZT);
-  } else if (u >= 1.3 && u < 1.6) {
-    moving = letter(sx + 3, lerp(LY + 4, 12, k(u, 1.3, 1.6)), () => ZT - (u > 1.5 ? 3 : 0));
-  } else if (u < .7) {
-    moving = letter(lx, LY + 4, u < .62 ? zc : () => ZT);
+  } else if (!owned && u < 1.62) {
+    moving = letter(sx + 3, lerp(LY + 4, 12, k(u, 1.3, 1.6)), () => ZT - (ZT - SILL - LT) * k(u, 1.48, 1.62));
   }
+  // Reject pile: two stamped letters, a third once this loop's stamped letter has landed (it is the fall until then)
+  const pileN = j > 1 || (j === 1 && u >= 1.22) ? 3 : 2;
+  const pile = stack(BIN[0] + 6, LY + 4, 2, pileN, pileN === 3 ? settle : 0, true);
   const ch = chute(open);
+  // Magazine: platform, the waiting letter (always there: the stack drops one down as one leaves), walls, pusher
+  const mag = box(MX0 - 4, LY + 1, ZA - 5, MW + 8, LD - 2, 5, 'paper', 'body', 'tint') + onFloor(CX0) +
+    box(MX0 - 3 + pusher, LY + 6, ZA, 3, LD - 12, 6, 'paper', 'body') + box(MX0 + 2, LY + 2, ZA + LT + 1.4, MW - 4, LD - 4, 40, 'tint', 'body', 'paper') +
+    on(TOP(MX0 + 2, LY + 2, ZA + LT + 41.4), `<rect class="f paper" x="3" y="2" width="${MW - 10}" height="${LD - 8}" rx=".5"/>`) +
+    on(FRONT(MX0 + 2, LY + LD - 2, ZA + LT + 41.4), `<rect class="det" x="6" y="8" width="${MW - 16}" height="22" rx=".8"/>`);
   return hue('a',
-    bin(fall) + plinth() + cubbies() + filed() + inside + cabinet() + frame() + ledge() + shuttle(sx, push) + ch.back +
-    (owned ? moving : moving + lit(moving, 1)) + ch.front) +
-    arrow(curve([XA - 6, LY + LD / 2, ZA + 30], [XA + 20, LY + LD / 2, ZA + 34], [XA + 40, LY + LD / 2, zc(XA + 40) + 18]), { dot: true });
+    bin(pile + fall) + plinth() + cubbies() + filed() + inside + cabinet() + frame() + ledge() + shuttle(sx, push) + ch.back +
+    (owned ? moving : moving + lit(moving, 1)) + ch.front + drop + mag) +
+    arrow(curve([MX0 - 30, LY + LD / 2, ZA + 70], [MX0 - 6, LY + LD / 2, ZA + 84], [MX0 + MW / 2, LY + LD / 2, ZA + 52]), { dot: true });
 }
 
 export const sorter: Piece = {

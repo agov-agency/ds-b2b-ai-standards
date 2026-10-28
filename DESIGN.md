@@ -632,11 +632,13 @@ Applies to every illustration on the site: hub heroes, footer CTA, scenario cove
 
 **Ink.** One near-black ink, `--neutral-950`, for every line. Never coloured strokes.
 
-| Line | Width at 1× | Use |
-|---|---|---|
-| Silhouette | 1.5 | Outer contour of each part |
-| Detail | 1 | Inner edges, ribs, rings, glyphs, text-stand-in bars |
-| Figure | 2–2.5 | Only for organic figures (people, clouds); hand-drawn feel, slight wobble allowed |
+**One set of line weights for every illustration** (decided 2026-10-28): scenario figures, item icons, hub heroes and the CTA, light, dark and blue alike. Screen pixels (`vector-effect: non-scaling-stroke`), so a line is the same width at any size. Set once in `tokens.css`; never write a stroke width in a piece or a page.
+
+| Line | Token | Width | Use |
+|---|---|---|---|
+| Outline | `--art-line` | 0.6px | Outer contour of each part, the live part too |
+| Detail | `--art-detail` | 0.45px | Inner edges, ribs, rings, ticks, glyphs, text-stand-in bars |
+| Dash | `--art-dash` | 0.9px | Dashed motion paths; flow inside a tube at 2× |
 
 Round joins and caps. Lines close cleanly at corners; no sketchy overshoot except on figures.
 

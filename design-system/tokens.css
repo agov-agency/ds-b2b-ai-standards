@@ -114,6 +114,10 @@
   --radius-0: 0;
   --radius-1: 1px;      /* number badge, chart segment */
   --radius-2: 2px;      /* chips, tooltip, dark card, inner insight panel */
+  /* Illustration line weights (DESIGN §8.17): one set for every figure and icon, light, dark and blue alike */
+  --art-line: .6px;     /* outline of every part */
+  --art-detail: .45px;  /* inner edges, ribs, ticks */
+  --art-dash: .9px;     /* dashed paths, flow */
   --radius-4: 4px;      /* cards, form card, FAQ open, container */
   --radius-6: 6px;      /* outline chip, chart tooltip */
   --radius-8: 8px;      /* side tab, dialog */

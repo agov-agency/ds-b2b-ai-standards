@@ -75,9 +75,9 @@ const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover:
 <Base title="Art review">
   <main class="rev">
     <h2>Пілот: іконки в стилі сценаріїв</h2>
-    <p class="sub">Зліва нова (ядро сценаріїв, ключі руху з fun-isometric), справа стара.</p>
+    <p class="sub">Зліва нова (статична, ядро сценаріїв), справа стара.</p>
     <table>
-      {PILOT.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic pair"><span class="tile"><IsoArt name={`i-${n}`} field="var(--cover)" /></span><span class="ico" set:html={icon(n)} /></td></tr>)}
+      {PILOT.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic pair"><span class="tile"><IsoArt name={`i-${n}`} field="var(--cover)" still /></span><span class="ico" set:html={icon(n)} /></td></tr>)}
     </table>
     <h2>Сценарії</h2>
     <table>
