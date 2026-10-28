@@ -1,5 +1,6 @@
 // Safe to re-run: every contributor from the Contributors tab of the tracker sheet as an author, with company, LinkedIn,
-// job title and photo (both read from LinkedIn into $CONTRIB_DIR/linkedin.json + photos/) and a one-line About from their piece.
+// job title and photo (both read from LinkedIn into $CONTRIB_DIR/linkedin.json + photos/).
+// About stays empty until the authors send their bios.
 // Backs up all author documents to $CONTRIB_DIR first. DRY=1 prints the plan without writing.
 // Run: CONTRIB_DIR=<folder> npx sanity exec migrations/2026-10-28-contributors.ts --with-user-token
 import { createReadStream, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -12,19 +13,19 @@ if (!dir) throw new Error('Set CONTRIB_DIR to the folder with linkedin.json and 
 const dry = !!process.env.DRY;
 const li: Record<string, { role?: string; photo?: string | null }> = JSON.parse(readFileSync(join(dir, 'linkedin.json'), 'utf8'));
 
-// slug, name, company, LinkedIn, About (empty until their piece is in)
-const PEOPLE: [string, string, string, string, string?][] = [
-  ['justin-rowe', 'Justin Rowe', 'Impactable', 'https://www.linkedin.com/in/justin-rowe-4043339b/', 'Author of the warm-lead handoff scenario in the Standard.'],
-  ['roman-slobodzianyk', 'Roman Slobodzianyk', 'Impactable', 'https://www.linkedin.com/in/roman-slobodzianyk-b67549140/', 'Author of the account audit by cadence scenario in the Standard: eight checks on a schedule.'],
-  ['george-coudounaris', 'George Coudounaris', 'The B2B Playbook', 'https://www.linkedin.com/in/b2b-marketing-expert/', 'Author of the monthly targeting review scenario in the Standard: targeting versus who actually buys.'],
-  ['joshua-stout', 'Joshua Stout', 'Beyond The Funnel', 'https://www.linkedin.com/in/joshua-stout/', 'Author of the company-level account routing scenario in the Standard.'],
-  ['jonathan-belliveau', 'Jonathan Belliveau', 'GrowthMotiv', 'https://www.linkedin.com/in/jonathan-belliveau/', 'Author of the LinkedIn fit gate skill and the daily fit check in the Standard.'],
-  ['bogdan-liutic', 'Bogdan Liutic', 'CR8', 'https://www.linkedin.com/in/bgdn/', 'Author of the signal loop scenario in the Standard.'],
-  ['alfredo-talib', 'Alfredo Talib', 'Cornersight', 'https://www.linkedin.com/in/alfredo-iscandar-talib/', 'Author of the scenario in the Standard that turns social signals into pipeline.'],
-  ['moby-hayat', 'Moby Hayat', 'The Fire Show', 'https://www.linkedin.com/in/moby/', 'Author of the weekly check for conversion campaigns in the Standard.'],
-  ['ivars-krutainis', 'Ivars Krutainis', 'Otter', 'https://www.linkedin.com/in/krutainis/', 'Author of the landing-page CPC report skill in the Standard.'],
-  ['aj-wilcox', 'AJ Wilcox', 'B2Linked', 'https://www.linkedin.com/in/wilcoxaj/', 'Proposed four skills for the Standard, from the lowest bid that still spends to retargeting guardrails.'],
-  ['ivan-falco', 'Ivan Falco', 'Frontal AI', 'https://www.linkedin.com/in/ivanfalco/', 'Commented on 13 of the Standard’s 15 rules.'],
+// slug, name, company, LinkedIn
+const PEOPLE: [string, string, string, string][] = [
+  ['justin-rowe', 'Justin Rowe', 'Impactable', 'https://www.linkedin.com/in/justin-rowe-4043339b/'],
+  ['roman-slobodzianyk', 'Roman Slobodzianyk', 'Impactable', 'https://www.linkedin.com/in/roman-slobodzianyk-b67549140/'],
+  ['george-coudounaris', 'George Coudounaris', 'The B2B Playbook', 'https://www.linkedin.com/in/b2b-marketing-expert/'],
+  ['joshua-stout', 'Joshua Stout', 'Beyond The Funnel', 'https://www.linkedin.com/in/joshua-stout/'],
+  ['jonathan-belliveau', 'Jonathan Belliveau', 'GrowthMotiv', 'https://www.linkedin.com/in/jonathan-belliveau/'],
+  ['bogdan-liutic', 'Bogdan Liutic', 'CR8', 'https://www.linkedin.com/in/bgdn/'],
+  ['alfredo-talib', 'Alfredo Talib', 'Cornersight', 'https://www.linkedin.com/in/alfredo-iscandar-talib/'],
+  ['moby-hayat', 'Moby Hayat', 'The Fire Show', 'https://www.linkedin.com/in/moby/'],
+  ['ivars-krutainis', 'Ivars Krutainis', 'Otter', 'https://www.linkedin.com/in/krutainis/'],
+  ['aj-wilcox', 'AJ Wilcox', 'B2Linked', 'https://www.linkedin.com/in/wilcoxaj/'],
+  ['ivan-falco', 'Ivan Falco', 'Frontal AI', 'https://www.linkedin.com/in/ivanfalco/'],
   ['fivos-aresti', 'Fivos Aresti', 'Workflows.io', 'https://www.linkedin.com/in/fivosaresti/'],
   ['kristof-bardos', 'Kristof Bardos', 'Marketixa', 'https://www.linkedin.com/in/kristof-bardos/'],
   ['mason-cosby', 'Mason Cosby', 'Scrappy ABM', 'https://www.linkedin.com/in/masoncosby/'],
@@ -41,12 +42,11 @@ const existing = new Map(before.filter((d) => !d._id.startsWith('drafts.')).map(
 let next = Math.max(0, ...before.filter((d) => (d.order ?? 0) < 99).map((d) => d.order ?? 0)) + 1;
 
 const tx = client.transaction();
-for (const [slug, name, company, url, about] of PEOPLE) {
+for (const [slug, name, company, url] of PEOPLE) {
   const _id = `author-${slug}`;
   const { role, photo } = li[slug] ?? {};
   const set: Record<string, unknown> = { name, company };
   if (role) set.role = role;
-  if (about) set.about = about;
   const file = photo && join(dir, photo);
   if (file && existsSync(file) && !existing.get(_id)?.photo) {
     if (!dry) {
