@@ -164,6 +164,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
   .txt { display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 32px; }
   .cnt { margin-left: 6px; padding: 0 6px; border-radius: var(--radius-2); background: var(--bg-muted); color: var(--text-body); font-variant-numeric: tabular-nums; }
   .txt .t-h6 { text-wrap: balance; }
+  .pick[data-type="skill"] .txt .t-h6 { max-width: 21em; } /* shorter copy: narrower so all three cards read as three lines */
   .more { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; color: var(--text); }
   .more :global(svg) { width: 16px; height: 16px; transition: translate var(--t-fast) var(--ease-out); }
   @media (hover: hover) and (pointer: fine) { .pick:hover { background: var(--bg-subtle); } .pick:hover .more :global(svg) { translate: 4px 0; } }
