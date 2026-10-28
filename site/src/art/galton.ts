@@ -5,7 +5,7 @@
 import { kernel, hue, keys, lerp, f, IN, OUT, EASY, type Piece, type V3 } from './iso';
 
 const PERIOD = 10, DT = .25, BW = 150, BT = 14, BZ = 34, BH = 214, TOP = BZ + BH;  // board width, thickness, bottom, height
-const PIN0 = 70, ROWS = 8, PH = 9, PW = 9, BIN0 = 154, NB = 8, BINW = (BW - 20) / NB, BALL = 3.1;
+const PIN0 = 70, ROWS = 8, PH = 9, PW = 9, BIN0 = 154, NB = 8, BINW = (BW - 20) / NB, BALL = 4;
 const PAY = 6, XD = 10 + PAY * BINW;                                         // bins from PAY up feed the deals box; trough divide
 const PIV = [BW / 2, 46], FL = 36, SW = 1.2;                                 // flipper pivot, length, swing (rad)
 const SERVE = 1.15, YC = BT + 6, ZW = (x: number) => 30 - (XD - x) * .034, ZP = (x: number) => 30 - (x - XD) * .06;  // trough floor
@@ -88,8 +88,8 @@ function face(t: number, T: number, live: Ball[]) {
   // Hopper with its pile of balls (the source), and the flipper under its throat
   g += `<path class="f paper" d="M14 10H${BW - 14}L${BW / 2 + 8} 40H${BW / 2 - 8}Z"/>`;
   for (let r = 0; r < 3; r++) {
-    const y = 34 - r * 5.4, n = Math.floor((68 - (y - 10) * 2 - BALL - 1) / 6.4 - (r % 2) / 2);
-    for (let c = -n; c <= n; c++) g += circ('paper', BW / 2 + (c + (r % 2) / 2) * 6.4, y);
+    const y = 36 - r * 7, n = Math.floor((68 - (y - 10) * 2 - BALL - 1) / 8.4 - (r % 2) / 2);
+    for (let c = -n; c <= n; c++) g += circ('paper', BW / 2 + (c + (r % 2) / 2) * 8.4, y);
   }
   const [ex, ey] = tipOf(a), nx = Math.cos(a) * 1.6, ny = -Math.sin(a) * 1.6;
   g += `<g class="lit"><path class="f body" d="M${f(PIV[0] - nx)} ${f(PIV[1] - ny)}L${f(ex - nx)} ${f(ey - ny)}L${f(ex + nx)} ${f(ey + ny)}L${f(PIV[0] + nx)} ${f(PIV[1] + ny)}Z"/></g><circle class="f paper" cx="${PIV[0]}" cy="${PIV[1]}" r="2.4"/>`;
@@ -101,7 +101,7 @@ function face(t: number, T: number, live: Ball[]) {
   for (const b of live) { const p = where(b, T); if (p?.face) g += circ(b.bin >= PAY && p.face[1] > BIN0 ? 'body' : 'paper', ...p.face); }
   // Frame lip round the face, with a slot at the foot of every bin
   g += `<path class="f paper" fill-rule="evenodd" d="M-4 -4H${BW + 4}V${BH + 4}H-4ZM4 4V${BH - 4}H${BW - 4}V4Z"/>`;
-  for (let b = 0; b < NB; b++) g += `<rect class="f blk" x="${f(binX(b) - 3.6)}" y="${BH - 4}" width="7.2" height="4"/>`;
+  for (let b = 0; b < NB; b++) g += `<rect class="f blk" x="${f(binX(b) - 4.6)}" y="${BH - 4}" width="9.2" height="4"/>`;
   return g;
 }
 

@@ -11,7 +11,7 @@ const TURN: Record<string, number> = { on: 0, table: Math.PI / 2, back: -Math.PI
 const X0 = -26, LD = 15, AD = V * V / (2 * LD), TD = 2 * LD / V;              // start inside the entry tunnel; braking
 const A = (CXJ - LD - X0) / V + TD, E = A + .5;                              // stops on the turntable; leaves it
 const K = kernel([[-36, -8, 0], [-36, BWD + 8, TH + 5], [JX - 8, -84, 0], [JX + 38, -84, TH + 5], [XO + 28, -8, 0], [XO + 28, BWD + 8, 0],
-  [JX - 8, YT + 28, 0], [JX + 38, YT + 28, 0], [GX, -10, ZB + 58]], 16);
+  [JX - 8, YT + 28, 0], [JX + 38, YT + 28, 0], [GX, -19, ZB + 58]], 16);
 const { on, poly, line, box, prism, cyl, ring, TOP, FRONT, SIDE } = K;
 const BAGS = [[24, 18, 16], [26, 20, 20], [22, 16, 14]];
 
@@ -109,21 +109,20 @@ function draw(t: number) {
   const behind = bags.filter((b) => b.y + BAGS[b.i % 3][0] / 2 < -1);
   const rest = bags.filter((b) => !behind.includes(b)).sort((p, q) => p.x + p.y - q.x - q.y);
 
-  // Back branch: belt, tunnel, then the bags rolling into its curtain
-  let s = belt(JX, -74, JX + BWD, 0, t, false, -1) + tunnel(JX - 6, -82, BWD + 12, 26, 'y') + behind.map(draw1).join('');
+  // Tunnels whose mouth we see go first and their belt starts at the mouth, so the belt runs into the opening
+  let s = tunnel(JX - 6, -82, BWD + 12, 26, 'y') + belt(JX, YB, JX + BWD, 0, t, false, -1) + behind.map(draw1).join('');
+  s += tunnel(-34, -6, 28, BWD + 12, 'x') + box(GX - 6, -19, 0, 12, 12, 2, 'paper', 'body', 'tint') + box(GX - 3, -16, 2, 6, 6, ZB + 50, 'paper', 'body');  // the frame's back post stands behind the belt
   // Main line, the junction with its turntable, the straight-on run and the inspection branch
-  s += belt(-28, 0, JX, BWD, t, true) + belt(JX + BWD, 0, XO + 14, BWD, t, true) + belt(JX, BWD, JX + BWD, YT + 14, t, false);
+  s += belt(XE, 0, JX, BWD, t, true) + belt(JX + BWD, 0, XO + 14, BWD, t, true) + belt(JX, BWD, JX + BWD, YT + 14, t, false);
   s += box(JX, 0, ZB - 6, BWD, BWD, 4, 'tint', 'body') + cyl(CXJ, CYJ, ZB - 2, R, 2, 'paper', 'body');
   const c = Math.cos(turn), sn = Math.sin(turn);
   s += [-8, -4, 0, 4, 8].map((lx) => { const ly = Math.sqrt(R * R - lx * lx) - 1.5; return line([[CXJ + lx * c + ly * sn, CYJ + lx * sn - ly * c, ZB], [CXJ + lx * c - ly * sn, CYJ + lx * sn + ly * c, ZB]], 'det'); }).join('');
   s += line(ring(CXJ, CYJ, ZB, R - 3, 0, 2 * Math.PI, 32), 'det');
-  s += tunnel(-34, -6, 28, BWD + 12, 'x');
   // Sizing frame: posts each side, a cross beam over the belt; bags pass under it
-  s += box(GX - 3, -10, 0, 6, 6, ZB + 52, 'paper', 'body');
   s += rest.filter((b) => b.x < GX).map((b) => draw1(b) + scan(b.x, b.i)).join('');
-  s += box(GX - 3, -10, ZB + 52, 6, BWD + 20, 6, 'paper', 'body', 'tint');
+  s += box(GX - 3, -16, ZB + 52, 6, BWD + 32, 6, 'paper', 'body', 'tint');
   s += rest.filter((b) => b.x >= GX).map((b) => draw1(b) + (b.a === 0 && b.y === CYJ ? scan(b.x, b.i) : '')).join('');
-  s += box(GX - 3, BWD + 4, 0, 6, 6, ZB + 52, 'paper', 'body') + on(FRONT(GX - 3, BWD + 10, ZB + 40), '<rect class="f blk" x="1" y="2" width="4" height="8" rx=".5"/>');
+  s += box(GX - 6, BWD + 7, 0, 12, 12, 2, 'paper', 'body', 'tint') + box(GX - 3, BWD + 10, 2, 6, 6, ZB + 50, 'paper', 'body') + on(FRONT(GX - 3, BWD + 16, ZB + 40), '<rect class="f blk" x="1" y="2" width="4" height="8" rx=".5"/>');
   s += tunnel(XO, -6, 26, BWD + 12) + tunnel(JX - 6, YT, BWD + 12, 26);
   return hue('a', s);
 }

@@ -8,6 +8,7 @@ const BR = 64, BZ = 12, CZ = 92, CR = 15;                                    // 
 const ARMS = [0, 1, 2, 3, 4, 5, 6, 7].map((i) => ({
   r: 30 + i * 4.6, z: 26 + i * 5.2, turns: [4, 4, 3, 3, 2, 2, 1, 1][i], ph: i * 2.1, ball: [4, 4.5, 5.5, 5, 6.5, 6, 7.5, 7][i], drop: 6 + (i % 3) * 5,
 }));
+const LIVE = [1, 4, 6];                                                       // checks that carry the accent all the way round
 const POST = Math.PI / 4 + .62;                                               // inspection post angle (front right)
 const K = kernel([[-BR, -BR, 0], [BR, BR, 0], [-BR, BR, 0], [BR, -BR, 0], [0, 0, CZ + CR + 4], [BR + 18, 0, 20], [BR + 20, BR + 20, 80]], 22);
 const { P, on, poly, line, cyl, ring, cylX, TOP } = K;
@@ -32,7 +33,8 @@ function arm(i: number, a: number) {
   const flag = line([[x, y, hz], top], 'f') + vane + (up > .01 ? `<g class="lit" style="opacity:${f(up)}">${poly([top, at(2.5, 6.5), at(5, 0)], 'f body')}</g>` : '');
   // The folded vane lies behind the ball when its arm points away from us; draw it first then
   const behind = bk[0] + bk[1] < 0 && up < .5;
-  return g + (behind ? flag : '') + ball(x, y, bz, A.ball) + (behind ? '' : flag);
+  const b = LIVE.includes(i) ? `<g class="lit">${ball(x, y, bz, A.ball, 'body')}</g>` : ball(x, y, bz, A.ball);
+  return g + (behind ? flag : '') + b + (behind ? '' : flag);
 }
 
 function draw(t: number) {

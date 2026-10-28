@@ -4,7 +4,7 @@
 import { kernel, hue, k, keys, f, EASY, type Piece } from './iso';
 
 const PERIOD = 8, TAU = 2 * Math.PI;
-const BZ = 26, AX0 = 96, AX1 = 176, AD = 64, AH = 104;                         // bench top; analyzer x range, depth, height
+const BZ = 12, AX0 = 96, AX1 = 176, AD = 64, AH = 104;                         // plinth top; analyzer x range, depth, height
 const CY = 26, CW = 66, CD = 14, TR = 3.6, TH = 28, CZ = 36;                  // cassette lane y, cassette length / depth / height; tube radius, height
 const XL = -46, XR = AX1 + 6, BX1 = 256;                                      // cassette rises at XL, sinks at XR; bench end
 const HIT = [1, 3];                                                           // the tubes that react
@@ -40,7 +40,7 @@ function draw(t: number) {
   // Up out of the left hatch, along the lane through the analyzer, down into the right hatch
   const dz = keys(t, [[0, -CZ - 4, EASY], [1, 0], [5.6, 0, EASY], [6.6, -CZ - 4]]), x = keys(t, [[1.1, XL - 2, EASY], [3.9, XR]]);
   const knob = TAU / 6 * k(t, 4.4, 5.4), pulse = k(t, 3.9, 4.4) * (1 - k(t, 5.6, 6.4));
-  let s = box(-52, -14, 0, BX1 + 52, AD + 36, BZ, 'paper', 'body', 'tint') + on(FRONT(-52, AD + 22, BZ), [40, 140, 240].map((u) => `<rect class="det" x="${u}" y="6" width="36" height="${BZ - 12}" rx="1"/>`).join(''));
+  let s = K.plinth(-52, -14, BX1 + 52, AD + 36);
   s += on(TOP(XL - 6, CY - 5, BZ), `<rect class="f tint" x="0" y="0" width="${XR + CW - XL + 12}" height="${CD + 10}"/><line class="det" x1="0" y1="3" x2="${XR + CW - XL + 12}" y2="3"/><line class="det" x1="0" y1="${CD + 7}" x2="${XR + CW - XL + 12}" y2="${CD + 7}"/>`) + hatch(XL - 2) + hatch(XR - 2);
   // Rack at the back left: two rows of spare tubes, five slots of the front row empty (they ride in the cassette)
   s += box(-46, -6, BZ, 84, 18, 14, 'paper', 'body', 'tint');

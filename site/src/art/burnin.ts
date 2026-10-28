@@ -4,7 +4,7 @@
 import { kernel, hue, k, keys, lerp, f, IN, OUT, type Piece } from './iso';
 
 const PERIOD = 8, TAU = 2 * Math.PI;
-const BW = 124, BD = 104, BZ = 40, SY = 0, N = 6;                                   // bench; lamps are drawn at their cell's origin
+const BW = 124, BD = 104, BZ = 12, SY = 0, N = 6;                                   // bench; lamps are drawn at their cell's origin
 const CELL = (i: number): [number, number] => [22 + (i % 3) * 40, 38 + Math.floor(i / 3) * 52];  // socket x, y: back row 0-2, front row 3-5
 const DUD = 2, BEST = 0, NEW = [4, 5];                                              // the lamp that never lights, the one copied
 const LOOK = ['body', 'tint', 'paper', 'tint'];                                      // glass per test lamp: bright, dim, dark, dim
@@ -66,7 +66,7 @@ function draw(t: number) {
   t = ((t % PERIOD) + PERIOD) % PERIOD;
   const trip = tripAt(t), used = Math.min(1, t / 3.6) * (1 - k(t, 7.3, 8));
   const lifts = NEW.map((_, q) => lift(q, t)), glow = lifts.map((l) => l.glow);
-  let s = box(0, 0, 0, BW, BD, BZ, 'paper', 'body', 'tint') + on(TOP(0, 0, BZ), `<rect class="det" x="4" y="4" width="${BW - 8}" height="${BD - 8}" rx="1"/>`);
+  let s = K.plinth(0, 0, BW, BD);
   for (let i = 0; i < N; i++) {
     const test = i < 4, q = i - 4;
     let c = meter(i === DUD ? turned(t, (u) => 3 * (1 - tripAt(u)), 'dud') : test ? TAU * 3 * 1.2 * t / PERIOD : turned(t, (u) => 1.2 * glowAt(q, u), `n${q}`), i === DUD ? used : test ? .35 + .1 * (i % 2) : .2 * glow[q]);

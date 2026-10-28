@@ -121,7 +121,16 @@ export function kernel(extremes: V3[], pad = 16) {
       .map(({ a, b, nx, ny }) => poly([[a[0], a[1], z], [b[0], b[1], z], [b[0], b[1], z + h], [a[0], a[1], z + h]], `f ${ny > nx ? front : side}`)).join('') +
       poly(plan.map(([x, y]) => [x, y, z + h] as V3), `f ${top}`);
   };
-  return { P, D, TOP, FRONT, SIDE, on, poly, line, box, prism, cyl, cylX, cylY, ring, curve, arrow, viewBox: `0 0 ${f(W)} ${f(H)}` };
+  // The low stepped plinth every scenario stands on (the orrery's drum, squared): a body step, a tinted step, a scale
+  // of ticks round the top. Its top is at z = 12.
+  const plinth = (x: number, y: number, w: number, d: number) => {
+    const tick = (L: number) => Array.from({ length: Math.floor((L - 8) / 6) + 1 }, (_, i) => 4 + i * 6);
+    const ticks = tick(w).map((u, i) => `<path class="det" d="M${u} 2V${i % 4 ? 4 : 5}M${u} ${d - 10}V${d - (i % 4 ? 12 : 13)}"/>`).join('') +
+      tick(d - 8).map((v, i) => `<path class="det" d="M2 ${v + 4}H${i % 4 ? 4 : 5}M${w - 10} ${v + 4}H${w - (i % 4 ? 12 : 13)}"/>`).join('');
+    return box(x, y, 0, w, d, 8, 'paper', 'body') + box(x + 4, y + 4, 8, w - 8, d - 8, 4, 'paper', 'tint') +
+      `<g transform="${TOP(x + 4, y + 4, 12)}">${ticks}<rect class="det" x="7" y="7" width="${w - 22}" height="${d - 22}"/></g>`;
+  };
+  return { P, D, TOP, FRONT, SIDE, on, poly, line, box, prism, plinth, cyl, cylX, cylY, ring, curve, arrow, viewBox: `0 0 ${f(W)} ${f(H)}` };
 }
 
 // Hue groups: wrap a part in hue('b', svg) and its body / tint fills take that hue (DESIGN §8.17, coloured slots).

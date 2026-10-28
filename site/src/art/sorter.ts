@@ -134,6 +134,11 @@ const MX0 = XA - 36, MW = 32;                                            // maga
 const PUSH: Ease = [.4, 0, .2, 1], SLIDE: Ease = [.42, 0, .3, 1];
 const CX0 = XA - 20;                                                     // a waiting letter's centre under the magazine
 
+// The shuttle and the letter it pushes are drawn twice: before the cabinet's front, so the part inside a pigeonhole
+// shows only through its opening, and again clipped to the space in front of that face (y > CD, at ledge height)
+const FRONT_CLIP = `<clipPath id="so-front"><path d="M${[[-400, CD, ZT + 14], [CW + 400, CD, ZT + 14], [CW + 400, CD, SILL - 2], [CW + 400, CD + 300, SILL - 2], [-400, CD + 300, SILL - 2], [-400, CD + 300, ZT + 14]]
+  .map(([x, y, z]) => K.P(x, y, z).map(f).join(' ')).join('L')}Z"/></clipPath>`;
+
 function draw(t: number) {
   t = ((t % PERIOD) + PERIOD) % PERIOD;
   const j = Math.floor(t / STEP), u = t - j * STEP, col = TARGET[j], owned = col < 0;
@@ -169,11 +174,11 @@ function draw(t: number) {
     }
   } else if (u < (owned ? .66 : .8)) {
     moving = onFloor(cx, owned);
-  } else if (!owned && u < 1.3) {
-    moving = letter(sx + 3, LY + 4, () => ZT);
-  } else if (!owned && u < 1.62) {
-    moving = letter(sx + 3, lerp(LY + 4, 12, k(u, 1.3, 1.6)), () => ZT - (ZT - SILL - LT) * k(u, 1.48, 1.62));
   }
+  let near = '';                                                         // on the shuttle, then pushed into the pigeonhole
+  if (!owned && u >= .8 && u < 1.3) near = letter(sx + 3, LY + 4, () => ZT);
+  else if (!owned && u >= 1.3 && u < 1.62) near = letter(sx + 3, lerp(LY + 4, 12, k(u, 1.3, 1.6)), () => ZT - (ZT - SILL - LT) * k(u, 1.3, 1.45));
+  near = shuttle(sx, push) + (near ? near + lit(near, 1) : '');
   // Reject pile: two stamped letters, a third once this loop's stamped letter has landed (it is the fall until then)
   const pileN = j > 1 || (j === 1 && u >= 1.22) ? 3 : 2;
   const pile = stack(BIN[0] + 6, LY + 4, 2, pileN, pileN === 3 ? settle : 0, true);
@@ -183,8 +188,8 @@ function draw(t: number) {
     box(MX0 - 3 + pusher, LY + 6, ZA, 3, LD - 12, 6, 'paper', 'body') + box(MX0 + 2, LY + 2, ZA + LT + 1.4, MW - 4, LD - 4, 40, 'tint', 'body', 'paper') +
     on(TOP(MX0 + 2, LY + 2, ZA + LT + 41.4), `<rect class="f paper" x="3" y="2" width="${MW - 10}" height="${LD - 8}" rx=".5"/>`) +
     on(FRONT(MX0 + 2, LY + LD - 2, ZA + LT + 41.4), `<rect class="det" x="6" y="8" width="${MW - 16}" height="22" rx=".8"/>`);
-  return hue('a',
-    bin(pile + fall) + plinth() + cubbies() + filed() + inside + cabinet() + frame() + ledge() + shuttle(sx, push) + ch.back +
+  return FRONT_CLIP + hue('a',
+    bin(pile + fall) + plinth() + cubbies() + filed() + inside + near + cabinet() + frame() + ledge() + `<g clip-path="url(#so-front)">${near}</g>` + ch.back +
     (owned ? moving : moving + lit(moving, 1)) + ch.front + drop + mag) +
     arrow(curve([MX0 - 30, LY + LD / 2, ZA + 70], [MX0 - 6, LY + LD / 2, ZA + 84], [MX0 + MW / 2, LY + LD / 2, ZA + 52]), { dot: true });
 }
