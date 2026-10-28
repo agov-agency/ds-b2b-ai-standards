@@ -63,6 +63,24 @@ const RULES = [
   ['14 Grow a signal list from the same market', 'Ланцюг з однакових ланок', 'chain'],
   ['15 Judge cold ads by the warm audience they build', 'Магніт із тирсою', 'magnet'],
 ];
+// Alternatives, two per item (`x-<name>`), not in the CMS pools until picked: [current piece, [alt, Ukrainian name] x2]
+const ALT_RULES: [string, [string, string][]][] = [
+  ['clock', [['padlock', 'Кодовий замок, два диски в лінію'], ['binoculars', 'Бінокль на тринозі']]],
+  ['rollerstamp', [['manifold', 'Колектор: віялова форсунка і тонкий струмінь'], ['gearlever', 'Важіль у кулісі з двома пазами']]],
+  ['bolts', [['lockbox', 'Скринька з двома ключами'], ['press2', 'Прес із двома кнопками']]],
+  ['billboard', [['lighthouse', 'Маяк'], ['mast', 'Радіощогла з антенами']]],
+  ['wedge', [['points', 'Залізнична стрілка'], ['chute', 'Жолоб із заслінкою']]],
+  ['balance', [['gyroscope', 'Гіроскоп'], ['plumb', 'Висок над центром']]],
+  ['drawer', [['fusebox', 'Щиток із вийнятим запобіжником'], ['cutters', 'Кусачки на одному з двох дротів']]],
+  ['xray', [['extinguisher', 'Вогнегасник із біркою перевірки'], ['magnifier', 'Лупа на кронштейні над жетонами']]],
+  ['springscale', [['watertower', 'Водонапірна башта з поплавцем'], ['sluice', 'Шлюз: вода вище позначки, затвор піднятий']]],
+  ['cascade', [['selector', 'Перемикач на першу з трьох ємностей'], ['filler', 'Розлив у першу з трьох пляшок']]],
+  ['aperture', [['wrench', 'Розвідний ключ на гайці'], ['reducer', 'Перехідник труби з засувкою']]],
+  ['canisters', [['cointray', 'Лоток із трьома відсіками'], ['testtubes', 'Три пробірки з різним рівнем']]],
+  ['airlock', [['spike', 'Наколка з чеками'], ['keycutter', 'Верстат для копіювання ключів']]],
+  ['chain', [['bricks', 'Однакові цеглинки конструктора'], ['coupling', 'Новий вагон зчіплюється']]],
+  ['magnet', [['printer', '3D-принтер нарощує деталь'], ['winder', 'Намотувач, котушка наповнюється']]],
+];
 const HUES = [5, 13, 9, 16, 1, 11, 6, 14];
 const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover: var(--pastel-${n}); --cover-200: var(--pastel-${n}-200); --cover-450: var(--pastel-${n}-450)`; };
 ---
@@ -80,10 +98,15 @@ const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover:
     <table>
       {RULES.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic"><span class="tile"><IsoArt name={`i-${n}`} field="var(--cover)" still /></span></td></tr>)}
     </table>
+    <h2>Альтернативи: правила</h2>
+    <p class="note">Поточна іконка і дві альтернативи. Їх немає в CMS, поки не обереш.</p>
+    <table>
+      {ALT_RULES.map(([cur, alts], i) => <tr style={cover(i)}><td class="t">{RULES.find((r) => r[2] === cur)?.[0]}<span>{alts.map(([, m]) => m).join(' · ')}</span><code>{alts.map(([n]) => n).join(' · ')}</code></td><td class="pic trio">{[`i-${cur}`, ...alts.map(([n]) => `x-${n}`)].map((n) => <span class="tile"><IsoArt name={n} field="var(--cover)" still /></span>)}</td></tr>)}
+    </table>
   </main>
 </Base>
 <style>
-  .rev { max-width: 1100px; margin: 0 auto; padding: 48px 24px 120px; }
+  .rev { max-width: 1240px; margin: 0 auto; padding: 48px 24px 120px; }
   h2 { font: 500 32px/1.1 var(--font-sans, Inter); margin: 48px 0 16px; }
   table { width: 100%; border-collapse: collapse; }
   tr { border-top: 1px solid var(--neutral-100, #eee); }
@@ -93,6 +116,10 @@ const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover:
   .t code { display: block; margin-top: 6px; font: 600 12px/1.4 var(--font-mono, monospace); text-transform: uppercase; color: var(--neutral-500, #888); }
   .pic.big :global(figure.iso-panel) { aspect-ratio: 1; width: 100%; max-width: 560px; }
   .rev :global(figure.iso-panel) { --art-a: var(--cover-450); --art-b: var(--cover-450); --art-c: var(--cover-450); --lit: var(--cover-450); }
+  .note { color: var(--neutral-500, #888); margin: -8px 0 16px; }
+  .trio { display: flex; gap: 8px; }
+  .trio .tile { width: 200px; height: 200px; }
+  .trio .tile :global(figure.iso-panel) { width: 200px; height: 200px; }
   .tile { display: block; width: 240px; height: 240px; }
   .tile :global(figure.iso-panel) { width: 240px; height: 240px; }
 </style>
