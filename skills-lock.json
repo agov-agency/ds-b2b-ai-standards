@@ -7,6 +7,12 @@
       "skillPath": "SKILL.md",
       "computedHash": "37fe1f16683eddee1b3723a3fe8e4a5b92bb653a6991128a372d3268730cdc90"
     },
+    "fun-isometric": {
+      "source": "kelvinkn17/skills",
+      "sourceType": "github",
+      "skillPath": "skills/fun-isometric/SKILL.md",
+      "computedHash": "46d46971ab74e89971e1ee61545e3514ac002bde0f0bc72fa2499e371a6cea2d"
+    },
     "hairline-adopt": {
       "source": "lucasmarkes/hairline",
       "sourceType": "github",

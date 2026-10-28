@@ -78,6 +78,7 @@ Installed at project level (`.claude/skills/`, `.claude/agents/`, `.claude/setti
 | `ponytail` | https://github.com/dietrichgebert/ponytail | Lazy-senior bias: smallest working diff, no over-engineering |
 | `hairline-create` / `hairline-adopt` | `npx skills add lucasmarkes/hairline` (source in `.agents/skills/`, symlinked into `.claude/skills/`) | Illustrations: isometric line figures that react to the pointer (see below) |
 | `anatomy` | `npx skills add wheresryan22/anatomy` (source in `.agents/skills/`, symlinked into `.claude/skills/`) | Detailed shaded isometric SVG machines that explain an idea (see below) |
+| `fun-isometric` | `npx skills add kelvinkn17/skills@fun-isometric` (source in `.agents/skills/`, symlinked into `.claude/skills/`) | Reference only: After Effects-grade motion keys (`kit/motions.ts`) and part-by-part construction. Not its look (thick outlines, sparkles, Riso colours) |
 
 Security note: `hallmark` and `hairline` scored "Med Risk" (`anatomy`: Low Risk) on Snyk in the installer; skim `.claude/skills/hallmark/` and `.agents/skills/hairline-*/` before trusting them.
 
