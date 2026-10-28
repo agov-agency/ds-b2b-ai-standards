@@ -19,7 +19,7 @@ const PHRASES = LINES.map((s) => ({ rows: wrap(s), n: s.length }));
 const DUR = PHRASES.map((p) => p.n / CPS + HOLD + FEED);
 const PERIOD = DUR.reduce((a, b) => a + b, 0);
 
-const K = kernel([[-36 - SWING, PLY, PLZ], [BW + 36 + SWING, 0, 0], [0, BD, 0], [BW, BD, 0], [PX - SWING, PY, PZ + PH], [PX + PW + SWING, PY, PZ + PH]], 4);
+const K = kernel([[-36 - SWING, PLY, PLZ], [BW + 36 + SWING, 0, 0], [0, BD, 0], [BW, BD, 0], [PX - SWING, PY, PZ + PH + 6], [PX + PW + SWING, PY, PZ + PH + 6]], 4);
 const { on, poly, line, box, cyl, cylX, FRONT, TOP, SIDE } = K;
 
 function machine(dx: number, typed: string[], fade: number, key: number, press: number) {

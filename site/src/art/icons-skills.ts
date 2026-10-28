@@ -53,7 +53,7 @@ const stanchions = icon(ST, 'Two stanchion posts with a rope hanging between the
 });
 
 // ── Adapter: matched audience lists. A travel plug adapter: one standard's socket on top, the other's prongs out the side.
-const AD = kernel([[0, 0, 0], [78, 0, 0], [0, 50, 0], [78, 50, 0], [30, 25, 40]], 12);
+const AD = kernel([[0, 0, 0], [78, 0, 0], [0, 50, 0], [78, 50, 0], [30, 25, 42]], 12);
 const adapter = icon(AD, 'A plug adapter: a socket on top for one standard, prongs for another sticking out of its side.', () => {
   const K = AD, X = 12, Y = 10, W = 40, D = 32, H = 30;
   let s = plate(K, 0, 0, 78, 50);
@@ -318,7 +318,7 @@ const weekpad = icon(WP, 'A tent desk calendar showing one week in seven columns
 
 // ── Knocker: capping recommendation. A door with a ring knocker (live); a row of tally marks scratched under it, one
 // group closed off.
-const KN = kernel([[0, 0, 0], [72, 0, 0], [0, 40, 0], [72, 40, 0], [36, 12, 72]], 12);
+const KN = kernel([[0, 0, 0], [72, 0, 0], [0, 40, 0], [72, 40, 0], [36, 12, 78]], 12);
 const knocker = icon(KN, 'A door with a ring knocker; under it a row of scratched tally marks, the first group of five struck through.', () => {
   const K = KN, X = 8, Y = 16;
   let s = plate(K, 0, 0, 72, 40) + K.box(X - 2, Y - 8, 4, 60, 4, 68, 'paper', 'body', 'tint') + K.box(X, Y - 4, 4, 56, 4, 64, 'paper', 'body', 'tint');
@@ -387,7 +387,7 @@ const thermometer = icon(TH, 'A standing thermometer on a scale board, a band ma
 
 // ── Drilled blocks: ABM account penetration. Three blocks drilled from the top, cut open at the front to show how deep
 // each hole goes; the one drilled right through is live.
-const DR = kernel([[0, 0, 0], [84, 0, 0], [0, 40, 0], [84, 40, 0], [40, 20, 28]], 12);
+const DR = kernel([[0, 0, 0], [84, 0, 0], [0, 40, 0], [84, 40, 0], [40, 20, 31], [20, 0, 26]], 12);
 const drilled = icon(DR, 'Three blocks drilled from the top and cut open at the front: the holes go a quarter, half and all the way through.', () => {
   const K = DR, Y = 10, S = 20;
   let s = plate(K, 0, 0, 84, 40);
@@ -468,7 +468,7 @@ const dial = icon(DL, 'A panel meter on a stand: a pale needle where last period
 });
 
 // ── Abacus: multichannel rollup. A frame with three rods, each strung with a different kind of bead; one row is live.
-const AB = kernel([[0, 0, 0], [80, 0, 0], [0, 40, 0], [80, 40, 0], [40, 20, 58]], 12);
+const AB = kernel([[0, 0, 0], [80, 0, 0], [0, 40, 0], [80, 40, 0], [40, 20, 62]], 12);
 const abacus = icon(AB, 'An abacus with three rods; each rod carries a different kind of bead, discs, cubes and balls, counted to one side.', () => {
   const K = AB, Y = 20, X0 = 10, X1 = 70, ZS = [44, 31, 18];
   let s = plate(K, 0, 0, 80, 40);
@@ -491,7 +491,7 @@ const abacus = icon(AB, 'An abacus with three rods; each rod carries a different
 
 // ── Patch panel: traffic analysis. A rack panel with two rows of jacks, marked patch cables looping between them; one
 // cable is live.
-const PP = kernel([[0, 0, 0], [80, 0, 0], [0, 46, 0], [80, 46, 0], [40, 10, 40]], 12);
+const PP = kernel([[0, 0, 0], [80, 0, 0], [0, 46, 0], [80, 46, 0], [40, 10, 42]], 12);
 const patchpanel = icon(PP, 'A rack patch panel with two rows of jacks and marked patch cables looping from one jack to another.', () => {
   const K = PP, X = 6, Y = 8, W = 68, ZB = 12, ZT = 36, ZR = [30, 19], YF = Y + 6;
   let s = plate(K, 0, 0, 80, 46);

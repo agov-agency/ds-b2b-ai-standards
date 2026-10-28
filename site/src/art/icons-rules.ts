@@ -3,8 +3,8 @@ import { kernel, f, type V3 } from './iso';
 import { prism, dot, screws, lit, plate, rope, icon, planeAt, type K, type P2 } from './icons';
 
 // A ring in a face plane (local 2D): outer and inner circle cut out, so what is behind shows through
-const ann = (r0: number, r1: number, cls = 'f body') => `<path class="${cls}" fill-rule="evenodd" d="M${r0} 0A${r0} ${r0} 0 1 1 ${-r0} 0A${r0} ${r0} 0 1 1 ${r0} 0ZM${r1} 0A${r1} ${r1} 0 1 0 ${-r1} 0A${r1} ${r1} 0 1 0 ${r1} 0Z"/>`;
-const ball = (K: K, x: number, y: number, z: number, r: number, cls = 'f tint') => { const [px, py] = K.P(x, y, z); return `<circle class="${cls}" cx="${f(px)}" cy="${f(py)}" r="${r}"/><path class="det" d="M${f(px - r * .62)} ${f(py - r * .1)}A${r * .7} ${r * .7} 0 0 1 ${f(px + r * .1)} ${f(py - r * .62)}"/>`; };
+export const ann = (r0: number, r1: number, cls = 'f body') => `<path class="${cls}" fill-rule="evenodd" d="M${r0} 0A${r0} ${r0} 0 1 1 ${-r0} 0A${r0} ${r0} 0 1 1 ${r0} 0ZM${r1} 0A${r1} ${r1} 0 1 0 ${-r1} 0A${r1} ${r1} 0 1 0 ${r1} 0Z"/>`;
+export const ball = (K: K, x: number, y: number, z: number, r: number, cls = 'f tint') => { const [px, py] = K.P(x, y, z); return `<circle class="${cls}" cx="${f(px)}" cy="${f(py)}" r="${r}"/><path class="det" d="M${f(px - r * .62)} ${f(py - r * .1)}A${r * .7} ${r * .7} 0 0 1 ${f(px + r * .1)} ${f(py - r * .62)}"/>`; };
 
 // ── Clock: read frequency and penetration together. A mantel clock; its two hands are the live part.
 const CK = kernel([[0, 0, 0], [70, 0, 0], [0, 40, 0], [70, 40, 0], [35, 16, 64]], 12);
@@ -37,7 +37,7 @@ const rollerstamp = icon(RS, 'A paint roller beside a hand stamp, each next to t
 });
 
 // ── Two bolts: call it fatigue only when both signs show. A door held by two barrel bolts, both shot home (live).
-const BO = kernel([[0, 0, 0], [72, 0, 0], [0, 40, 0], [72, 40, 0], [36, 12, 72]], 12);
+const BO = kernel([[0, 0, 0], [72, 0, 0], [0, 40, 0], [72, 40, 0], [36, 12, 78]], 12);
 const bolts = icon(BO, 'A door with two barrel bolts, both slid home into keepers on the frame.', () => {
   const K = BO, X = 8, Y = 16, W = 48;
   let s = plate(K, 0, 0, 72, 40) + K.box(X - 2, Y - 8, 4, W + 12, 4, 68, 'paper', 'body', 'tint') + K.box(X, Y - 4, 4, W, 4, 64, 'paper', 'body', 'tint');
@@ -84,7 +84,7 @@ const wedge = icon(WG, 'A concrete block split by a crack, a steel wedge driven 
 
 // ── Balance: watch for budget drifting to junior roles. A divided tray held level on its fulcrum, the balls shared evenly;
 // the spirit vial on its rim is live.
-const TT = kernel([[0, 0, 0], [80, 0, 0], [0, 46, 0], [80, 46, 0], [40, 23, 34]], 12);
+const TT = kernel([[0, 0, 0], [80, 0, 0], [0, 46, 0], [80, 46, 0], [40, 23, 38]], 12);
 const balance = icon(TT, 'A tray with a divider resting level on a fulcrum, the same number of balls on each side, a spirit vial on its rim.', () => {
   const K = TT, X = 8, Y = 10, L = 64, D = 26, PX = X + L / 2, PZ = 20, WT = 1.6, WH = 7;
   const T = (x: number, y: number, z: number): V3 => [x, y, PZ + z];

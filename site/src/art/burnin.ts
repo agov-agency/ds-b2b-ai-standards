@@ -8,7 +8,7 @@ const BW = 124, BD = 104, BZ = 12, SY = 0, N = 6;                               
 const CELL = (i: number): [number, number] => [22 + (i % 3) * 40, 38 + Math.floor(i / 3) * 52];  // socket x, y: back row 0-2, front row 3-5
 const DUD = 2, BEST = 0, NEW = [4, 5];                                              // the lamp that never lights, the one copied
 const LOOK = ['body', 'tint', 'paper', 'tint'];                                      // glass per test lamp: bright, dim, dark, dim
-const K = kernel([[0, 0, 0], [BW, 0, 0], [0, BD, 0], [BW, BD, 0], [22, 38, BZ + 100], [102, 38, BZ + 56], [22, 90, BZ + 96]], 20);
+const K = kernel([[0, 0, 0], [BW, 0, 0], [0, BD, 0], [BW, BD, 0], [22, 38, BZ + 100], [102, 38, BZ + 56], [22, 90, BZ + 96], [BW, BD, -29]], 20);
 const { P, on, line, box, cyl, FRONT, TOP } = K;
 const at = (i: number, g: string) => { const [x, y] = CELL(i), [dx, dy] = K.D(x, y, 0); return `<g transform="translate(${f(dx)} ${f(dy)})">${g}</g>`; };
 
