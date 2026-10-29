@@ -97,7 +97,7 @@ svg.ext { rotate: 45deg; }
 .hl :where(.dot) { stroke: none; fill: var(--hairline-hi); } .hl :where(.dot.m) { fill: var(--hairline-edge); } .hl :where(.dot.off) { fill: var(--hairline-lo); }
 
 /* Black band across a detail page's content column (scenario "Get it", skill "The prompt"), stopping 1px short of the vertical lines so they stay visible (--pad from DetailFrame) */
-.content .sec.get-band.surface-black:not(:first-child) { margin-inline: calc(1px - var(--pad)); padding: var(--section-ruled-top) calc(var(--pad) - 1px) var(--section-ruled-bottom); }
+.content .sec.get-band.surface-black { margin-inline: calc(1px - var(--pad)); padding: var(--section-ruled-top) calc(var(--pad) - 1px) var(--section-ruled-bottom); }
 .sec.get-band::before, .sec.get-band + .sec::before { display: none; }
 
 /* Hub heroes with art (DESIGN §8.17): copy on the left; the tally is gone but the hero keeps its old height (deeper bottom padding),
