@@ -8,13 +8,13 @@ export const T = {
 
 // Categories (former areas) live in content/categories or the CMS: see src/areas.ts
 
-// Two levels of navigation: the site header (every page) and the library tab bar (Directory and the three hubs only)
+// Two levels of navigation: the site header (every page) and the library tab bar (Collection and the three hubs only)
 export const SITE_NAV = [
-  { href: '/directory', label: 'Directory', match: ['/directory', '/scenarios', '/skills', '/rules'], badge: 'New' }, // badge hardcoded for now
+  { href: '/directory', label: 'Collection', match: ['/directory', '/scenarios', '/skills', '/rules'], badge: 'New' }, // badge hardcoded for now
   { href: '/authors', label: T.authors, match: ['/authors'] },
 ];
 export const LIB_NAV = [
-  { href: '/directory', label: 'Directory' },
+  { href: '/directory', label: 'Collection' },
   { href: '/scenarios', label: T.scenarios },
   { href: '/skills', label: T.skills },
   { href: '/rules', label: T.rules },

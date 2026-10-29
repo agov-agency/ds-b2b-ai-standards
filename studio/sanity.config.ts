@@ -16,7 +16,7 @@ export default defineConfig({
   projectId,
   dataset,
   plugins: [
-    structureTool({ structure: (S) => S.list().title('Directory').items([...LIST.map(([type, title]) => S.documentTypeListItem(type).title(title)), S.divider(), ...LISTS.map(([type, title]) => S.documentTypeListItem(type).title(title))]) }),
+    structureTool({ structure: (S) => S.list().title('Collection').items([...LIST.map(([type, title]) => S.documentTypeListItem(type).title(title)), S.divider(), ...LISTS.map(([type, title]) => S.documentTypeListItem(type).title(title))]) }),
     visionTool(),
   ],
   schema: { types: schemaTypes },

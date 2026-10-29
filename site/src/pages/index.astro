@@ -1,6 +1,6 @@
 ---
 // Home: the Standard's landing. Copy from the live site (the-ai-standard-site.netlify.app); structure from the brief of 26 Oct 2026.
-// Black from the hero through the problem scene, white for the why-AI-fails block and the directory, black again for authors + form.
+// Black from the hero through the problem scene, white for the why-AI-fails block and the collection, black again for authors + form.
 import { getCollection } from 'astro:content';
 import { arrow } from '../arrows';
 import Base from '../layouts/Base.astro';
@@ -72,7 +72,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
 
       <section class="blk wrap bleed dir" aria-labelledby="h-dir">
         <div class="dir-head">
-          <p class="marker">Directory</p>
+          <p class="marker">Collection</p>
           <h2 id="h-dir" class="headline t-h3">How the Standard is built. <span class="tone-2">Each part builds on the one before it, and it all starts with the rules</span></h2>
         </div>
         <ul class="picks scroll-snap-x to-edges" data-picks data-reveal>
@@ -87,7 +87,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
             </a></li>
           ))}
         </ul>
-        <div class="below"><a class="btn brand lg" href="/directory">Explore full directory <Fragment set:html={go} /></a></div>
+        <div class="below"><a class="btn brand lg" href="/directory">Explore full collection <Fragment set:html={go} /></a></div>
       </section>
     </div>
 
@@ -99,7 +99,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
 
 <script>
   import { wheelX } from '../rail';
-  // Quotes and directory cards: same scroll lock as the Directory's scenario rail: the wheel runs the cards sideways, then the page carries on
+  // Quotes and collection cards: same scroll lock as the Collection's scenario rail: the wheel runs the cards sideways, then the page carries on
   document.querySelectorAll<HTMLElement>('[data-picks], [data-quotes]').forEach(wheelX);
 </script>
 

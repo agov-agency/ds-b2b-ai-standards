@@ -1,4 +1,4 @@
-// Directory hero: a card-catalogue cabinet, one bank of drawers per library (scenarios a, skills b, rules c).
+// Collection hero: a card-catalogue cabinet, one bank of drawers per library (scenarios a, skills b, rules c).
 // A drawer in each bank opens in turn and an index card lifts out: everything in the Standard, filed and findable.
 import { kernel, hue, k, f, type Piece } from './iso';
 

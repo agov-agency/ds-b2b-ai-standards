@@ -107,12 +107,12 @@ svg.ext { rotate: 45deg; }
 /* 160px fades into the black at the top (under the header) and the bottom of the hero, as in Figma 962:39212 */
 .top .hero.has-art > .hero-art { --fade: linear-gradient(transparent, #000 160px, #000 calc(100% - 160px), transparent); -webkit-mask-image: var(--fade); mask-image: var(--fade); }
 .top .hero.has-art > :not(.hero-art) { position: relative; }
-/* Authors running line (Directory and hubs): pinned to the hero's bottom edge, clipped to the text column */
+/* Authors running line (Collection and hubs): pinned to the hero's bottom edge, clipped to the text column */
 .top .hero.has-art > .marquee { position: absolute; left: var(--margin); bottom: 32px; width: min(760px, calc(100% - 2 * var(--margin))); }
 @media (max-width: 999px) { .top .hero.has-art > .hero-art { display: none; } } /* no room beside the headline */
 @media (max-width: 699px) { .top .hero.has-art { gap: 24px; padding-bottom: 120px; } }
 
-/* Area filter chips (Skills hub, Directory skills) */
+/* Area filter chips (Skills hub, Collection skills) */
 .fchip { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border: 0; border-radius: var(--radius-pill); background: var(--bg-muted); color: var(--text); font: 600 12px/1.4 var(--font-mono); text-transform: uppercase; white-space: nowrap; cursor: pointer; transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out); }
 .fchip .n { color: var(--text-body); font-variant-numeric: tabular-nums; transition: color var(--t-fast) var(--ease-out); }
 .fchip[aria-pressed=true] { background: var(--neutral-950); color: var(--neutral-0); }

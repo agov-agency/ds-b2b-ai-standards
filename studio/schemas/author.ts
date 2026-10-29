@@ -29,7 +29,7 @@ export const author = defineType({
       }],
     }),
     part('settingsPart', 'Settings', 'Address, featuring and other housekeeping'),
-    desc(slugField('name'), 'Page address: /authors/<slug>'), desc(featured, 'Featured authors show on the home page and in the Directory; DemandSense stays unfeatured'), order('author'),
+    desc(slugField('name'), 'Page address: /authors/<slug>'), desc(featured, 'Featured authors show on the home page and in the Collection; DemandSense stays unfeatured'), order('author'),
   ],
   orderings: [{ title: 'Order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],
   preview: { select: { title: 'name', subtitle: 'company', media: 'photo' } },

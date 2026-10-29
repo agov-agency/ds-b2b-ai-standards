@@ -22,7 +22,7 @@ const two = (n: number) => String(n).padStart(2, '0');
     <SiteHeader />
     <div class="wrap hero">
       <div class="copy">
-        <Breadcrumbs items={[{ label: 'Directory', href: '/directory' }, { label: T.authors }]} />
+        <Breadcrumbs items={[{ label: 'Collection', href: '/directory' }, { label: T.authors }]} />
         <h1 class="headline t-display">The people behind the work. <span class="tone-2">Practitioners who run LinkedIn Ads every week and sign each routine they hand over</span></h1>
       </div>
       <dl class="tally" aria-label="In the library">
@@ -48,7 +48,7 @@ const two = (n: number) => String(n).padStart(2, '0');
 <style>
   .top { position: relative; overflow: hidden; background: var(--bg); color: var(--text); }
   .top > :global(:not(.site-header)) { position: relative; }
-  /* Same hero as the hubs (4-line headline room, §8.16) so the title holds its place between Directory and Authors */
+  /* Same hero as the hubs (4-line headline room, §8.16) so the title holds its place between Collection and Authors */
   .hero { display: flex; justify-content: space-between; align-items: end; gap: 40px; padding-block: 40px; }
   .copy { display: grid; gap: 24px; }
   .copy .headline { max-width: 760px; min-height: 4lh; }
@@ -58,7 +58,7 @@ const two = (n: number) => String(n).padStart(2, '0');
 
   main { background: var(--bg); color: var(--text); border-top: 1px solid var(--line); } /* hero is black too: the edge lines need a rule to start from */
   .blk { padding-block: var(--section-ruled-top) 0; }
-  /* Cells as in Directory's featured authors, wrapped into rows: no gaps, 1px lines only between cards (the page's edge lines
+  /* Cells as in the Collection's featured authors, wrapped into rows: no gaps, 1px lines only between cards (the page's edge lines
      already close the sides), the row lines run on to the edge lines, and the outer cards' content lines up with the headline */
   .cells { --cols: 4; display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); margin-inline: calc(-1 * var(--edge-inset)); padding-inline: var(--edge-inset); border-top: 1px solid var(--line); }
   .cells > li { position: relative; border-bottom: 1px solid var(--line); }
