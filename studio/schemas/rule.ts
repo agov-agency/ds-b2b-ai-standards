@@ -40,7 +40,7 @@ export const rule = defineType({
     ]),
     part('settingsPart', 'Settings', 'Address, status and other housekeeping'),
     desc(slugField(), 'Page address: /rules/<slug>'),
-    desc(featured, 'Featured rules come first in the Directory'),
+    desc(featured, 'Featured rules come first in the Collection'),
   ],
   orderings: [{ title: 'Number', name: 'number', by: [{ field: 'number', direction: 'asc' }] }],
   preview: { select: { title: 'title', n: 'number' }, prepare: ({ title, n }) => ({ title, subtitle: `Rule ${n ?? ''}` }) },

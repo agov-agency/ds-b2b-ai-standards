@@ -52,7 +52,7 @@ const cta = {
 };
 ---
 <Base type="rule" title={`${d.title} · ${T.rules} · The B2B AI Standard for LinkedIn Ads`} description={d.why}>
-  <DetailHero cover={area(d.area).cover} crumbs={[{ label: 'Directory', href: '/directory' }, { label: T.rules, href: '/rules' }, { label: d.title }]}
+  <DetailHero cover={area(d.area).cover} crumbs={[{ label: 'Collection', href: '/directory' }, { label: T.rules, href: '/rules' }, { label: d.title }]}
     chips={[{ label: area(d.area).title }, { label: `${T.rule} ${nn(d.number)}`, out: true }]} author={author} title={d.title} lead={d.lead ?? d.why}>
     <Fragment slot="actions">
       <a class="btn filled" href="#h-run">See where it runs</a>

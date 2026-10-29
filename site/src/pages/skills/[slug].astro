@@ -43,7 +43,7 @@ const facts = [['Changes', d.changes], ['First run', d.firstRun]].filter(([, v])
 const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 ---
 <Base type="skill" title={`${d.title} · ${T.skills} · The B2B AI Standard for LinkedIn Ads`} description={d.description}>
-  <DetailHero cover={cover} crumbs={[{ label: 'Directory', href: '/directory' }, { label: T.skills, href: '/skills' }, { label: d.title }]}
+  <DetailHero cover={cover} crumbs={[{ label: 'Collection', href: '/directory' }, { label: T.skills, href: '/skills' }, { label: d.title }]}
     chips={[{ label: area(d.area).title }, { label: T.skill, out: true }]} author={author} title={d.title} lead={d.description} facts={facts}>
     <Fragment slot="actions">
       {p.prompt && <a class="btn filled" href="#h-prompt">Copy the prompt</a>}
