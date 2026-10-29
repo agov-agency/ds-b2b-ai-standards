@@ -28,9 +28,10 @@ export const author = defineType({
         preview: { select: { label: 'label', custom: 'customLabel', url: 'url', media: 'logo' }, prepare: ({ label, custom, url, media }) => ({ title: label === 'custom' ? custom : label, subtitle: url, media }) },
       }],
     }),
+    defineField({ name: 'top', title: 'Top contributor', type: 'boolean', initialValue: false, description: 'Leads the Authors page and the home page spotlight (in the agreed order), even if not featured' }),
     part('settingsPart', 'Settings', 'Address, featuring and other housekeeping'),
     desc(slugField('name'), 'Page address: /authors/<slug>'), desc(featured, 'Featured authors show on the home page and in the Collection; DemandSense stays unfeatured'), order('author'),
   ],
-  orderings: [{ title: 'Order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],
-  preview: { select: { title: 'name', subtitle: 'company', media: 'photo' } },
+  orderings: [{ title: 'Order', name: 'order', by: [{ field: 'top', direction: 'desc' }, { field: 'order', direction: 'asc' }] }],
+  preview: { select: { title: 'name', company: 'company', top: 'top', media: 'photo' }, prepare: ({ title, company, top, media }) => ({ title, subtitle: [top && 'Top contributor', company].filter(Boolean).join(' · '), media }) },
 });

@@ -64,6 +64,7 @@ const authors = defineCollection({
     // icon: a ready glyph (linkedin, x, github, web) or 'custom' with a logo URL; old entries carry only the label
     links: z.array(z.object({ label: z.string(), url: z.string().url(), icon: z.string().optional(), logo: z.string().optional() })).default([]),
     featured: z.boolean().default(false),
+    top: z.boolean().default(false),    // Top contributor: leads the Authors page and the home spotlight
     order: z.number().default(99),
   }),
 });

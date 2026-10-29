@@ -5,6 +5,7 @@ about: "Runs LinkedIn programmes for B2B software teams selling into enterprise 
 name: "Justin Rowe"
 photo: "/authors/justin-rowe.jpg"   # Unsplash placeholder
 featured: true
+top: true
 order: 1
 links:   # placeholders until the author sends theirs
   - { label: "LinkedIn", url: "https://www.linkedin.com/in/justin-rowe" }
