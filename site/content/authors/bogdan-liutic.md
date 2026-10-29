@@ -6,6 +6,7 @@ name: "Bogdan Liutic"
 company: "CR8"
 photo: "/authors/bogdan-liutic.jpg"   # Unsplash placeholder
 featured: true
+top: true
 order: 2
 links:   # placeholders until the author sends theirs
   - { label: "LinkedIn", url: "https://www.linkedin.com/in/bogdan-liutic" }

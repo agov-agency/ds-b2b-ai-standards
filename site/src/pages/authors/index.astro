@@ -9,8 +9,8 @@ import SubmitBand from '../../components/SubmitBand.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { T } from '../../site';
 
-// Practitioners first, by order; DemandSense (not featured) closes the list
-const authors = (await getCollection('authors')).sort((a, b) => (a.data.featured === b.data.featured ? a.data.order - b.data.order : a.data.featured ? -1 : 1));
+// Top contributors first, then the other practitioners, by order; DemandSense (not featured) closes the list
+const authors = (await getCollection('authors')).sort((a, b) => +b.data.top - +a.data.top || +b.data.featured - +a.data.featured || a.data.order - b.data.order);
 const signed = (e: { data: { author?: { id: string } } }) => !!e.data.author && e.data.author.id !== 'demandsense';
 const nWork = (await getCollection('scenarios', signed)).length + (await getCollection('skills', signed)).length;
 const two = (n: number) => String(n).padStart(2, '0');
