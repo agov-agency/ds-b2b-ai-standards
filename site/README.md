@@ -7,4 +7,4 @@ The tool: the community-built B2B AI Standard for LinkedIn Ads as a browsable si
 - Names that may change ("Scenarios"), areas and nav live in `src/site.ts`.
 - Shared design system: `public/design-system` and `public/illustrations` are symlinks to the repo-root folders, so pages use the same `/design-system/...` paths as the landing. Base styles: `src/styles/site.css`; each component keeps its own styles.
 - Shared components (`src/components/`): `SiteHeader`, `TabBar`, `SectionHead`, `ScenarioCard`, `SkillCard`, `RuleRow`, `AuthorCard`, `SubmitBand`, `SiteFooter`. Layout: `src/layouts/Base.astro`.
-- Pages: `/` Home, `/directory` (library), `/scenarios`, `/skills`, `/rules`, `/authors` (hubs + `[slug]` detail pages), `/contribute`, `/art-lab` (figure previews).
+- Pages: `/` Home, `/collection` (library; `/directory` redirects), `/scenarios`, `/skills`, `/rules`, `/authors` (hubs + `[slug]` detail pages), `/contribute`, `/art-lab` (figure previews).
