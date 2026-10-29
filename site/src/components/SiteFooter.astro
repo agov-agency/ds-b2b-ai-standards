@@ -33,6 +33,8 @@ import { arrow } from '../arrows';
 
 <script>
   // The wave bundle (three.js, ~480 KB) loads only when the footer comes near the screen; it mounts every [data-wave] itself
+  const REST = { white: '#000000', gradientColor1: '#3875f6', gradientColor2: '#fa8c16', gradientColor3: '#3875f6', saturation: 0.44, contrast: 1.59 }; // wave/settings.json
+  const HOVER = { white: '#5a8bfb', gradientColor1: '#4aa8ff', gradientColor2: '#8a7cff', gradientColor3: '#4aa8ff', saturation: 1, contrast: 1 }; // DS Report CTA wave (cta-wave.png): cyan-blue ribbon, violet fold
   const host = document.querySelector('.foot [data-wave]');
   if (host) {
     const io = new IntersectionObserver(([e]) => {
@@ -43,6 +45,10 @@ import { arrow } from '../arrows';
       document.head.append(s);
     }, { rootMargin: '400px 0px' });
     io.observe(host);
+    // Hover: the card fills primary 400 and the ribbon eases from the brand blue/orange to the report's CTA blues
+    const card = host.closest('a')!;
+    const set = (on: boolean) => (host as HTMLElement & { wave?: { tint: (o: object) => void } }).wave?.tint(on ? HOVER : REST);
+    for (const [ev, on] of [['pointerenter', true], ['pointerleave', false], ['focus', true], ['blur', false]] as const) card.addEventListener(ev, () => set(on));
   }
 </script>
 
@@ -66,12 +72,14 @@ import { arrow } from '../arrows';
   /* Wave: the canvas ground is black, so screen blend drops it and leaves the ribbon over whatever fill the card has */
   .ds .art { width: 100%; opacity: .6; mix-blend-mode: screen; -webkit-mask-image: linear-gradient(to right, transparent 30%, #000 70%); mask-image: linear-gradient(to right, transparent 30%, #000 70%); }
   .ds .art :global(canvas) { animation: wave-in 1600ms var(--ease-out) both; }
+  .ds .art { transition: opacity var(--t); }
   .agov .art img { position: absolute; inset: 32px; width: calc(100% - 64px); height: calc(100% - 64px); object-fit: contain; }
   @keyframes wave-in { from { opacity: 0; } }
 
   @media (hover: hover) {
     .card:hover .go :global(svg) { transform: translateX(4px); }
     .card:hover .go { box-shadow: inset 0 0 0 1px var(--text); }
+    .ds:hover .art { opacity: 1; mix-blend-mode: normal; } /* the wave paints its own primary 400 ground on hover */
     .ds:hover { --text: var(--neutral-0); --text-2: rgb(255 255 255 / .8); --line: rgb(255 255 255 / .5); background: var(--primary-400); box-shadow: inset 0 0 0 1px var(--primary-400); }
     .agov:hover { --text: var(--neutral-950); --text-2: var(--neutral-500); --line: var(--neutral-200); background: var(--neutral-0); box-shadow: inset 0 0 0 1px var(--neutral-0); }
     .agov:hover .art { mix-blend-mode: difference; } /* on .art, not the img: .art is its own stacking context */
