@@ -52,28 +52,6 @@ page:
           /plugin marketplace add bogdanl-rgb/cr8-plugins
           /plugin install signal-loop
     source: "https://github.com/bogdanl-rgb/cr8-plugins"
-  output:
-    headline: "A few people saw it twenty times. Most saw nothing."
-    stats:
-      - value: "5"
-        label: "views per person a month, the target"
-      - value: "1 in 3"
-        label: "of the list not reached at all"
-        accent: true
-      - value: "20+"
-        label: "views for the top slice"
-    # Placeholder screenshots (Notion template gallery) until the real outputs arrive
-    items:
-      - title: "Dose readout"
-        caption: "Views per person for the month"
-        src: "/outputs/placeholder/notion-1.png"
-      - title: "Over the target"
-        caption: "Who is being burned"
-        src: "/outputs/placeholder/notion-2.png"
-      - title: "Untouched"
-        caption: "Who has seen nothing"
-        src: "/outputs/placeholder/notion-3.png"
-    note: "The readout shows **who carries the dose** and who hasn’t been reached yet."
   steps:
     - title: "Read reach and frequency"
       text: "Takes the month’s reach and impressions for every campaign on the list."

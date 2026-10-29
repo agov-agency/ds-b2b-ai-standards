@@ -52,28 +52,6 @@ page:
           /plugin marketplace add bogdanl-rgb/cr8-plugins
           /plugin install signal-loop
     source: "https://github.com/bogdanl-rgb/cr8-plugins"
-  output:
-    headline: "Half the clicks went to a company that doesn’t exist."
-    stats:
-      - value: "708"
-        label: "paid clicks on one ad set"
-      - value: "350"
-        label: "came from one placeholder employer"
-        accent: true
-      - value: "12"
-        label: "names to exclude, matched exactly"
-    # Placeholder screenshots (Notion template gallery) until the real outputs arrive
-    items:
-      - title: "Exclusion list"
-        caption: "The placeholder employers, by exact name"
-        src: "/outputs/placeholder/notion-1.png"
-      - title: "Share of clicks"
-        caption: "How much of each ad set went to them"
-        src: "/outputs/placeholder/notion-2.png"
-      - title: "Before and after"
-        caption: "Cost per click with and without them"
-        src: "/outputs/placeholder/notion-3.png"
-    note: "One ad set, 7 Aug to 5 Sep 2026: **49% of the clicks** came from people listing the same placeholder employer."
   steps:
     - title: "Read the employers"
       text: "Lists every employer behind a paid click, with its share of clicks and spend."

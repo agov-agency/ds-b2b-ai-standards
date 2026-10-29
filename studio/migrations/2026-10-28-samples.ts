@@ -56,11 +56,6 @@ const skill = {
     ...sk.page,
     steps: k([['Read the exports', 'One file per platform, same dates.'], ['Match currencies', 'Totals only where currencies match.'], ['Line up results', 'Each result with its own definition.'], ['Add pipeline', 'CRM pipeline next to paid spend.']].map(([title, text]) => ({ title, text }))),
     stepsNote: { _type: 'headline', headline: 'Then it stops.', context: 'It recommends, you decide.' },
-    output: {
-      headline: 'One honest view.', context: 'Numbers first, then the slides.',
-      stats: k([['49%', 'of spend on LinkedIn'], ['3', 'channels compared'], ['$1.2M', 'pipeline next to spend']].map(([value, label]) => ({ value, label, accent: false }))),
-      items: gallery('skill'), note: 'Sample note under the gallery, with **bold** text.',
-    },
     prompt: { ...sk.page.prompt, install: k([['Claude Code', 'claude skill add demandsense-labs/linkedin-ads-skills'], ['Codex', 'codex skills install demandsense-labs/linkedin-ads-skills']].map(([label, text]) => ({ label, text }))) },
     useWhen: k([['date', 'Month end', 'When the report is due and the numbers disagree.'], ['pair', 'Two platforms', 'When LinkedIn and Google both claim the same deal.'], ['case', 'Budget review', 'Before moving money between channels.']].map(([icon, title, text]) => ({ icon, title, text }))),
     partOf: 'Sample line in the Related section.',

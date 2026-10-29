@@ -6,7 +6,6 @@ import Base from '../../layouts/Base.astro';
 import DetailHero from '../../components/detail/DetailHero.astro';
 import DetailFrame from '../../components/detail/DetailFrame.astro';
 import PromptTabs from '../../components/detail/PromptTabs.astro';
-import OutputGallery from '../../components/detail/OutputGallery.astro';
 import StepFlow from '../../components/detail/StepFlow.astro';
 import UsingTiles from '../../components/detail/UsingTiles.astro';
 import Sec from '../../components/Sec.astro';
@@ -36,11 +35,10 @@ const scIds = scenarios.map((s) => s.id), ruIds = rules.map((r) => r.id);
 const relSc = (await getCollection('scenarios')).sort((a, b) => own(scIds, b.id) - own(scIds, a.id) || Number(b.data.status === 'ready') - Number(a.data.status === 'ready') || a.data.order - b.data.order);
 const relRu = (await getCollection('rules')).sort((a, b) => own(ruIds, b.id) - own(ruIds, a.id) || a.data.number - b.data.number);
 const cover = d.cover ?? area(d.area).cover;
-// What it does carries the step flow (no separate How it works), then the output, then the prompt (Pastel #15)
-const toc = [['h-does', 'What it does', p.does], ['h-back', 'What you get', p.output], ['h-prompt', 'The prompt', p.prompt], ['h-when', 'When to use it', p.useWhen.length], ['h-related', 'Related', relSc.length + relRu.length]]
+// What it does carries the step flow (no separate How it works), then the prompt (Pastel #15)
+const toc = [['h-does', 'What it does', p.does], ['h-prompt', 'The prompt', p.prompt], ['h-when', 'When to use it', p.useWhen.length], ['h-related', 'Related', relSc.length + relRu.length]]
   .filter(([, , on]) => on).map(([id, label]) => ({ label: label as string, href: `#${id}` }));
 const facts = [['Changes', d.changes], ['First run', d.firstRun]].filter(([, v]) => v) as [string, string][];
-const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 ---
 <Base type="skill" title={`${d.title} · ${T.skills} · The B2B AI Standard for LinkedIn Ads`} description={d.description}>
   <DetailHero cover={cover} crumbs={[{ label: 'Collection', href: '/collection' }, { label: T.skills, href: '/skills' }, { label: d.title }]}
@@ -66,17 +64,6 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
       </Sec>
     )}
 
-    {p.output && (
-      <OutputGallery label="What you get" title={p.output.headline} context={p.output.context} items={p.output.items}>
-        {p.output.stats.length > 0 && (
-          <ul class="stats" data-reveal>
-            {p.output.stats.map((s) => <li><p class="t-n2 sv">{s.value}</p><p class="t-p2 body">{s.label}</p></li>)}
-          </ul>
-        )}
-        {p.output.note && <p class="t-p1 body onote" set:html={bold(p.output.note)} />}
-      </OutputGallery>
-    )}
-
     {p.prompt && <PromptTabs headline={p.prompt.headline} context={p.prompt.context} tabs={p.prompt.tabs} install={p.prompt.install} />}
 
     {p.useWhen.length > 0 && <UsingTiles id="h-when" label="When to use it" headline={`${p.useWhen.length} moments it pays off.`} context="If one of these is this week, run it" items={p.useWhen} />}
@@ -100,16 +87,8 @@ const bold = (t: string) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').repla
 <style>
   .prose { display: grid; gap: 20px; max-width: 680px; margin-top: calc(var(--gap-body) - var(--header-gap)); } /* the body belongs to the headline (DESIGN §6.6 headline -> body) */
   .does-flow { margin-top: 64px; }
-  .onote { max-width: 680px; }
-  .onote :global(strong) { color: var(--text); font-weight: inherit; }
-
-  /* The output: three counts below the gallery */
-  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
-  .stats li { display: grid; gap: 8px; align-content: start; padding-top: 20px; border-top: 1px solid var(--line); }
-  .sv { color: var(--text); }
   .body { color: var(--text-body); }
 
   .stop-note { max-width: 680px; padding-top: 32px; border-top: 1px solid var(--line); }
 
-  @media (max-width: 699px) { .stats { grid-template-columns: 1fr; } }
 </style>

@@ -20,7 +20,7 @@ const QUERIES: Record<string, string> = {
   categories: `*[_type == "category"]`,
   authors: `*[_type == "author"]{..., ${IMG('photo')}, links[]{url, icon, "label": select(label == "custom" => customLabel, label), ${IMG('logo')}}}`,
   rules: `*[_type == "rule"]{..., ${AREA()}, ${SLUG('author')}, page{..., voices[]{..., ${SLUG('author')}}}}`,
-  skills: `*[_type == "skill"]{..., ${AREA()}, ${CONNECTORS}, ${SLUG('author')}, "rules": rules[]->slug.current, ${IMG('illustration')}, page{..., output{..., ${ITEMS}}}}`,
+  skills: `*[_type == "skill"]{..., ${AREA()}, ${CONNECTORS}, ${SLUG('author')}, "rules": rules[]->slug.current, ${IMG('illustration')}}`,
   scenarios: `*[_type == "scenario"]{..., ${AREA('category')}, "cadence": cadence->title, ${CONNECTORS}, ${SLUG('author')}, "skills": skills[]->slug.current, "rules": rules[]->slug.current, ${IMG('illustration')},
     page{..., comesBack{..., ${ITEMS}}, steps[]{..., ${SLUG('skill')}}}}`,
   connectors: `*[_type == "connector" && (defined(brand) || defined(logo))]{..., "slug": {"current": _id}, ${IMG('logo')}}`,

@@ -53,28 +53,6 @@ page:
           /plugin marketplace add bogdanl-rgb/cr8-plugins
           /plugin install signal-loop
     source: "https://github.com/bogdanl-rgb/cr8-plugins"
-  output:
-    headline: "A handful of accounts pulled ahead of their ads."
-    stats:
-      - value: "10"
-        label: "paid engagements in 30 days, the line"
-      - value: "4"
-        label: "accounts past it this week"
-        accent: true
-      - value: "1"
-        label: "already in a deal, sent to its owner"
-    # Placeholder screenshots (Notion template gallery) until the real outputs arrive
-    items:
-      - title: "Routed card"
-        caption: "One per account that crossed the line"
-        src: "/outputs/placeholder/notion-1.png"
-      - title: "Owner list"
-        caption: "Accounts that go to their AE"
-        src: "/outputs/placeholder/notion-2.png"
-      - title: "Queue list"
-        caption: "Accounts for the SDR queue"
-        src: "/outputs/placeholder/notion-3.png"
-    note: "Open deals go **to their owner, never the queue**."
   steps:
     - title: "Compare engagement to exposure"
       text: "Finds companies engaging well beyond their share of impressions."
