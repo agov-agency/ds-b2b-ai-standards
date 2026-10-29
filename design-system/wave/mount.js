@@ -128,5 +128,27 @@ export function mount(host, options = {}) {
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); }).observe(host);
   uniforms.uTime.value = p.timeOffset + time;
   resize();
-  return { canvas, render };
+  // tint: ease the ribbon to new gradient colours (and saturation/contrast/glow), e.g. on a card hover; `white` sets the ground.
+  // Renders its own frames so it also runs under reduced motion.
+  let tintRaf = 0;
+  const tint = (to, ms = 250) => {
+    const cols = uniforms.uGradientColors.value, from = cols.map(c => c.clone());
+    const target = [to.gradientColor1, to.gradientColor2, to.gradientColor3].map((c, i) => c ? new THREE.Color(c) : from[i]);
+    const nums = ['saturation', 'contrast', 'glow'].filter(k => to[k] != null).map(k => {
+      const u = uniforms['u' + k[0].toUpperCase() + k.slice(1)];
+      return [u, u.value, to[k]];
+    });
+    if (to.white) renderer.setClearColor(to.white); // ground switches at once: the host swaps its blend mode with it
+    const t0 = performance.now();
+    cancelAnimationFrame(tintRaf);
+    const step = now => {
+      const k = Math.min((now - t0) / ms, 1), e = 1 - (1 - k) ** 3;
+      cols.forEach((c, i) => c.copy(from[i]).lerp(target[i], e));
+      nums.forEach(([u, a, b]) => { u.value = a + (b - a) * e; });
+      render();
+      if (k < 1) tintRaf = requestAnimationFrame(step);
+    };
+    tintRaf = requestAnimationFrame(step);
+  };
+  return { canvas, render, tint };
 }
