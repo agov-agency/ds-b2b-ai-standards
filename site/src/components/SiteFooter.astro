@@ -1,13 +1,99 @@
+---
+// Footer on every page: the two maintainers as cards, then the legal lines. Home has no submit band, so this is its whole close;
+// elsewhere it follows SubmitBand. Hover fills: DemandSense primary 400, Agov white (its art flips with mix-blend difference).
+import { arrow } from '../arrows';
+const ds = await import('../../../design-system/logos/demandsense.svg?raw').then((m) => m.default.replace('<svg ', '<svg aria-hidden="true" class="ds-mark" '));
+---
 <footer class="foot surface-black ruled">
-  <div class="wrap row">
-    <img class="mark" src="/design-system/brand/logo-b2b.svg" alt="B2B AI Standard for LinkedIn Ads, maintained by DemandSense" width="358" height="40">
-    <p class="t-p2 legal">The B2B AI Standard for LinkedIn Ads is maintained by DemandSense. Skill text is published under the licence on each page, with its author named. LinkedIn is a registered trademark of LinkedIn Corporation or its affiliates. This resource is not sponsored or endorsed by LinkedIn</p>
+  <div class="wrap">
+    <p class="t-h5 headline">The B2B AI Standard for LinkedIn Ads <span class="tone-2">is maintained by</span></p>
+    <ul class="cards" role="list" data-reveal>
+      <li><a class="card ds" href="https://demandsense.com" target="_blank" rel="noopener">
+        <span class="copy">
+          <span class="logo"><Fragment set:html={ds} /><span>DemandSense</span></span>
+          <span class="t-p1 desc">The LinkedIn Ads platform for B2B teams, and the people who keep this Standard running</span>
+          <span class="go lbl">DemandSense.com <Fragment set:html={arrow('right')} /></span>
+        </span>
+        <span class="art card-wave" aria-hidden="true" data-wave='{"frame":{"x":0.1296,"y":-0.0219,"w":0.8705,"h":1.0219,"aspect":1.288,"k":1.507},"fiberScale":0.5}'></span>
+      </a></li>
+      <li><a class="card agov" href="https://agov.agency" target="_blank" rel="noopener">
+        <span class="copy">
+          <span class="logo"><span>Agov</span></span>
+          <span class="t-p1 desc">AI-driven design partner for B2B products and companies with ambitious marketing and business objectives</span>
+          <span class="go lbl">agov.agency <Fragment set:html={arrow('right')} /></span>
+        </span>
+        <span class="art" aria-hidden="true"><img src="/illustrations/partners/agov-placeholder.svg" alt="" width="240" height="240" loading="lazy"></span>
+      </a></li>
+    </ul>
+    <div class="legal t-p2">
+      <p>Skill text is published under the licence on each page, with its author named.</p>
+      <p>LinkedIn is a registered trademark of LinkedIn Corporation or its affiliates. This resource is not sponsored or endorsed by LinkedIn</p>
+    </div>
   </div>
 </footer>
 
+<script>
+  // The wave bundle (three.js, ~480 KB) loads only when the footer comes near the screen; it mounts every [data-wave] itself
+  const host = document.querySelector('.foot [data-wave]');
+  if (host) {
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      const s = document.createElement('script');
+      s.src = '/design-system/wave.js';
+      document.head.append(s);
+    }, { rootMargin: '400px 0px' });
+    io.observe(host);
+  }
+</script>
+
 <style>
-  .foot { background: var(--bg); color: var(--text); }
-  .row { display: grid; gap: 32px; padding-block: 0 64px; }
-  .mark { display: block; height: 40px; width: auto; max-width: 100%; }
-  .legal { max-width: 760px; color: var(--text-2); }
+  .foot { background: var(--bg); color: var(--text); padding-block: 64px; }
+  :global(.close) + .foot { padding-top: 0; } /* right under the submit band, which keeps its own bottom space */
+  .headline { margin-bottom: 24px; }
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter, 16px); margin: 0; padding: 0; list-style: none; }
+  .cards > li { display: grid; }
+  .card {
+    --t: var(--t-fast) ease;
+    position: relative; isolation: isolate; overflow: hidden; display: grid; min-height: 280px; padding: 40px;
+    border-radius: var(--radius-4); background: var(--bg-subtle); box-shadow: inset 0 0 0 1px var(--line-card); color: var(--text); text-decoration: none;
+    transition: background-color var(--t), color var(--t), box-shadow var(--t);
+  }
+  .copy { position: relative; z-index: 1; display: grid; grid-template-rows: auto 1fr auto; gap: 24px; max-width: 60%; }
+  .logo { display: flex; align-items: center; gap: 10px; font: 600 28px/1 var(--font-mono); text-transform: uppercase; letter-spacing: -.02em; }
+  .logo :global(.ds-mark) { width: 24px; height: auto; }
+  .desc { color: var(--text-2); max-width: 30em; transition: color var(--t); }
+  .go { display: inline-flex; align-items: center; gap: 6px; color: var(--text); }
+  .go :global(svg) { width: 16px; height: 16px; transition: transform var(--t); }
+  .art { position: absolute; z-index: 0; top: 0; right: 0; bottom: 0; width: 50%; pointer-events: none; }
+  /* Wave: the canvas ground is black, so screen blend drops it and leaves the ribbon over whatever fill the card has */
+  .ds .art { width: 100%; opacity: .6; mix-blend-mode: screen; -webkit-mask-image: linear-gradient(to right, transparent 30%, #000 70%); mask-image: linear-gradient(to right, transparent 30%, #000 70%); }
+  .ds .art :global(canvas) { animation: wave-in 1600ms var(--ease-out) both; }
+  .agov .art img { position: absolute; inset: 32px; width: calc(100% - 64px); height: calc(100% - 64px); object-fit: contain; }
+  @keyframes wave-in { from { opacity: 0; } }
+
+  @media (hover: hover) {
+    .card:hover .go :global(svg) { transform: translateX(4px); }
+    .ds:hover { --text: var(--neutral-0); --text-2: rgb(255 255 255 / .8); background: var(--primary-400); box-shadow: inset 0 0 0 1px var(--primary-400); }
+    .agov:hover { --text: var(--neutral-950); --text-2: var(--neutral-500); background: var(--neutral-0); box-shadow: inset 0 0 0 1px var(--neutral-0); }
+    .agov:hover .art { mix-blend-mode: difference; } /* on .art, not the img: .art is its own stacking context */
+  }
+  .card:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
+
+  .legal { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter, 16px); margin-top: 40px; color: var(--text-2); }
+  .legal p { margin: 0; max-width: 34em; }
+
+  @media (max-width: 999px) {
+    .cards, .legal { grid-template-columns: minmax(0, 1fr); }
+    .legal { gap: 8px; }
+  }
+  @media (max-width: 699px) {
+    .foot { padding-block: 48px; }
+    .card { min-height: 0; padding: 24px; }
+    .copy { max-width: none; gap: 20px; }
+    .logo { font-size: 22px; }
+    .art { position: relative; order: -1; width: auto; height: 160px; margin: -24px -24px 0; }
+    .ds .art { -webkit-mask-image: linear-gradient(transparent, #000 40%); mask-image: linear-gradient(transparent, #000 40%); }
+  }
+  @media (prefers-reduced-motion: reduce) { .ds .art :global(canvas) { animation: none; } .go :global(svg) { transition: none; } }
 </style>
