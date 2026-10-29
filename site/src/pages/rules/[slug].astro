@@ -38,10 +38,13 @@ const skIds = applies.map((s) => s.id), scIds = scenarios.map((s) => s.id);
 const ready = (s: { data: { status: string } }) => Number(s.data.status === 'ready');
 const relSk = (await getCollection('skills')).sort((a, b) => own(skIds, b.id) - own(skIds, a.id) || ready(b) - ready(a) || a.data.order - b.data.order);
 const relSc = (await getCollection('scenarios')).sort((a, b) => own(scIds, b.id) - own(scIds, a.id) || ready(b) - ready(a) || a.data.order - b.data.order);
-const toc = [['h-rule', 'The rule', hasRule], ['h-signs', 'If you see this', p.signs.length], ['h-voices', 'Who runs it this way', p.voices.length], ['h-run', 'Run it', true]]
+const toc = [['h-rule', 'The rule', hasRule], ['h-signs', 'Decision triggers', p.signs.length], ['h-voices', 'What experts say', p.voices.length], ['h-run', 'Run it', true]]
   .filter(([, , on]) => on).map(([href, label]) => ({ label: label as string, href: `#${href}` }));
 const ext = arrow('up', 'ext');
 const unquote = (q: string) => q.trim().replace(/^["“„«]+|["”»]+$/g, ''); // some quotes arrive already wrapped
+// Each voice with its author's photo, when the voice links an author page
+const voices = await Promise.all(p.voices.map(async (v) => ({ ...v, photo: v.author ? (await getEntry(v.author))?.data.photo : undefined })));
+const ini = (n: string) => n.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 const count = (n: number, one: string, many: string) => (n === 1 ? one : `${n} ${many}`);
 const cta = {
   headline: 'Run this rule differently?',
@@ -63,35 +66,30 @@ const cta = {
 
   <DetailFrame toc={toc}>
     {hasRule && (
-      <Sec id="h-rule" label="The rule" title="What the Standard adds." context="On top of what LinkedIn advises, and why it holds" small class="flush">
-        {(p.advises || p.adds) && (
-          <div class="pair" data-reveal>
-            {p.advises && (
-              <div class="box">
-                <p class="lbl-2 k">What LinkedIn advises</p>
-                <p class="t-p1">{p.advises.text}</p>
-                {p.advises.source && (p.advises.url ? <a class="src ul" href={p.advises.url} rel="noopener">{p.advises.source}</a> : <p class="src">{p.advises.source}</p>)}
-              </div>
-            )}
-            {p.adds && (
-              <div class="box adds">
-                <p class="lbl-2 k">What the Standard adds</p>
-                <p class="t-p1">{p.adds}</p>
-              </div>
-            )}
-          </div>
-        )}
-        {(p.reason || p.mattersLess) && (
-          <div class="pair" data-reveal>
-            {p.reason && <div class="box"><p class="lbl-2 k">Why it holds</p><p class="t-p1 body">{p.reason}</p></div>}
-            {p.mattersLess && <div class="box"><p class="lbl-2 k">When it matters less</p><p class="t-p1 body">{p.mattersLess}</p></div>}
-          </div>
-        )}
+      <Sec id="h-rule" label="The rule" title="What the Standard adds." context="On top of the default, and why it holds" small class="flush">
+        {/* Read in order: the default, why the Standard's take holds, when it matters less, then the Standard's addition, highlighted last */}
+        <div class="pair" data-reveal>
+          {p.advises && (
+            <div class="box">
+              <p class="lbl-2 k">The default</p>
+              <p class="t-p1">{p.advises.text}</p>
+              {p.advises.source && (p.advises.url ? <a class="src ul" href={p.advises.url} rel="noopener">{p.advises.source}</a> : <p class="src">{p.advises.source}</p>)}
+            </div>
+          )}
+          {p.reason && <div class="box"><p class="lbl-2 k">Why it holds</p><p class="t-p1 body">{p.reason}</p></div>}
+          {p.mattersLess && <div class="box"><p class="lbl-2 k">When it matters less</p><p class="t-p1 body">{p.mattersLess}</p></div>}
+          {p.adds && (
+            <div class="box adds">
+              <p class="lbl-2 k">What the Standard adds</p>
+              <p class="t-p1">{p.adds}</p>
+            </div>
+          )}
+        </div>
       </Sec>
     )}
 
     {p.signs.length > 0 && (
-      <Sec id="h-signs" label="If you see this" title={`${count(p.signs.length, 'One sign', 'signs')} in your account.`} context="What you see on the left, what to do about it on the right" small class="flush">
+      <Sec id="h-signs" label="Decision triggers" title={`${count(p.signs.length, 'One sign', 'signs')} in your account.`} context="What you see on the left, what to do about it on the right" small class="flush">
         <table class="signs" data-reveal>
           <thead><tr><th class="lbl-2" scope="col">You see</th><th class="lbl-2" scope="col">Do this</th></tr></thead>
           <tbody>
@@ -101,17 +99,30 @@ const cta = {
       </Sec>
     )}
 
-    {p.voices.length > 0 && (
-      <Sec id="h-voices" label="Who runs it this way" title={`${count(p.voices.length, 'One specialist', 'specialists')} who check this.`} context="In their own words, with where they said it" small>
-        <ul class="voices" data-reveal>
-          {p.voices.map((v) => (
+    {voices.length > 0 && (
+      <Sec id="h-voices" label="What experts say" title={`${count(voices.length, 'One specialist', 'specialists')} who check this.`} context="In their own words, with where they said it" small>
+        {/* Two or fewer fill the width; more run in a rail with the home page's scroll lock */}
+        <ul class:list={['voices', { 'rail scroll-snap-x': voices.length > 2 }]} data-voices={voices.length > 2 || undefined} data-reveal>
+          {voices.map((v) => (
             <li class="voice">
-              <p class="t-p2 who">
-                {v.author ? <a class="name ul" href={`/authors/${v.author.id}`}>{v.name}</a> : <span class="name">{v.name}</span>}{v.company && `, ${v.company}`}{v.context && <span class="tone-2"> · {v.context}</span>}
-              </p>
-              <blockquote class="t-p1 q">“{unquote(v.quote)}”</blockquote>
-              {v.source && (v.url ? <a class="src ul" href={v.url} rel="noopener">{v.source} <Fragment set:html={ext} /></a> : <p class="src">{v.source}</p>)}
-              {v.note && <p class="src">{v.note}</p>}
+              <svg class="qmark" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13L7 0h6L9 12h5v12zm18 0V13l7-13h6l-4 12h5v12z" /></svg>
+              <blockquote class="t-h6 q">{unquote(v.quote)}</blockquote>
+              <div class="foot">
+                <p class="by">
+                  {v.photo ? <img class="ini" src={v.photo} alt="" width="40" height="40" loading="lazy" /> : <span class="ini" aria-hidden="true">{ini(v.name)}</span>}
+                  <span>
+                    <span class="t-p2">{v.author ? <a class="name ul" href={`/authors/${v.author.id}`}>{v.name}</a> : v.name}</span>
+                    {(v.company || v.context) && <span class="t-p2 tone-2">{[v.company, v.context].filter(Boolean).join(' · ')}</span>}
+                  </span>
+                </p>
+                {(v.source || (v.note && v.note.length <= 32)) && (
+                  <p class="meta">
+                    {v.note && v.note.length <= 32 && <span class="chip note">{v.note}</span>}
+                    {v.source && (v.url ? <a class="src ul" href={v.url} rel="noopener">{v.source} <Fragment set:html={ext} /></a> : <span class="src">{v.source}</span>)}
+                  </p>
+                )}
+                {v.note && v.note.length > 32 && <p class="src">{v.note}</p>}
+              </div>
             </li>
           ))}
         </ul>
@@ -143,24 +154,29 @@ const cta = {
   <SiteFooter />
 </Base>
 
+<script>
+  import { wheelX } from '../../rail';
+  document.querySelectorAll<HTMLElement>('[data-voices]').forEach(wheelX);
+</script>
+
 <style>
   .k { color: var(--text-2); }
   .src { margin-top: auto; padding-top: 8px; font-size: 13px; line-height: 1.4; color: var(--text-2); }
   .ul { border-bottom: 1px solid transparent; transition: border-color var(--t-fast) var(--ease-out); }
 
-  /* The rule: LinkedIn's advice in an outlined card, the Standard's addition on the tint with a dark top rule (Figma 919:23330) */
-  /* The rule pair: grid cards between the content lines, split by a vertical line (like "Using it") */
-  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-inline: calc(-1 * var(--pad)); border-block: 1px solid var(--line); }
-  .pair + .pair { margin-top: calc(-1 * var(--header-gap)); border-top: 0; } /* second row of the same grid */
-  .pair:last-child { border-bottom: 0; } /* the section is flush: the grid ends on the next divider */
+  /* The rule: up to four cards in a 2-column grid between the content lines, hairlines between them;
+     the Standard's addition comes last, on black, so the eye ends on it */
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-inline: calc(-1 * var(--pad)); border-top: 1px solid var(--line); }
   .box { display: flex; flex-direction: column; gap: 12px; padding: 40px 32px; color: var(--text); }
-  .box:first-child { padding-left: var(--pad); }
-  .box:last-child { padding-right: var(--pad); }
-  .box + .box { box-shadow: inset 1px 0 var(--line); }
-  .adds { background: var(--bg-subtle); }
-  .box.adds { box-shadow: inset 1px 0 var(--line), inset 0 2px 0 var(--neutral-950); }
+  .box:nth-child(odd) { padding-left: var(--pad); }
+  .box:nth-child(even) { padding-right: var(--pad); box-shadow: inset 1px 0 var(--line); }
+  .box:nth-child(n + 3) { box-shadow: inset 0 1px var(--line); }
+  .box:nth-child(even):nth-child(n + 3) { box-shadow: inset 1px 0 var(--line), inset 0 1px var(--line); }
+  .box:last-child:nth-child(odd) { grid-column: 1 / -1; padding-right: var(--pad); }
+  .box.adds { background: var(--neutral-950); color: var(--neutral-0); box-shadow: none; }
+  .adds .k { color: var(--neutral-300); }
 
-  /* If you see this: two-column table, dark rule under the head, hairlines between rows */
+  /* Decision triggers: two-column table, dark rule under the head, hairlines between rows */
   .signs { width: 100%; border-collapse: collapse; text-align: left; }
   .signs thead th { padding-bottom: 12px; border-bottom: 2px solid var(--neutral-950); color: var(--text-2); font-weight: 600; }
   .signs th, .signs td { vertical-align: top; }
@@ -169,15 +185,24 @@ const cta = {
   /* the section is flush: the last row ends on the next section's divider, no second line */
   .signs tbody tr:last-child > *, .signs tbody tr:last-child { border-bottom: 0; }
 
-  /* Who runs it this way: quote cards on the tint, dark top rule, accent bar on the quote */
-  .voices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter); }
-  .voice { display: flex; flex-direction: column; gap: 16px; padding: 24px; background: var(--bg-subtle); box-shadow: inset 0 2px 0 var(--neutral-950); border-radius: 0 0 var(--radius-4) var(--radius-4); }
-  .voices > :only-child { grid-column: span 1; }
-  .who .name { color: var(--text); }
-  .q { margin: 0; padding-left: 16px; border-left: 2px solid var(--accent); color: var(--text); }
+  /* What experts say: the home page's quote card on the tint (quote mark, quote at h6, author under it).
+     Two or fewer share the width; more run in a rail, two and a bit in view so the next reads as "more to the right" */
+  .voices { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: var(--gutter); }
+  .voices.rail { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: calc((100% - 2 * var(--gutter)) / 2.2); margin-inline: calc(-1 * var(--pad)); padding-inline: var(--pad); scroll-padding-inline: var(--pad); }
+  .voice { display: grid; grid-template-rows: auto 1fr auto; gap: 32px; min-width: 0; padding: 32px; border-radius: var(--radius-4); background: var(--bg-subtle); box-shadow: inset 0 0 0 1px var(--line-card); }
+  .qmark { width: 28px; height: 21px; fill: var(--accent); }
+  .q { margin: 0; color: var(--text); line-height: 1.4; text-wrap: pretty; }
+  .foot { display: grid; gap: 16px; }
+  .by { display: flex; align-items: center; gap: 12px; }
+  .by > span:last-child { display: grid; }
+  .by .name { color: var(--text); }
+  .ini { object-fit: cover; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-muted); font: 600 12px/1 var(--font-mono); flex: none; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+  .meta .src { margin: 0; padding: 0; }
+  /* "Runs it differently": orange, the colour the site keeps for a specialist's own take */
+  .chip.note { background: var(--secondary-300); color: var(--neutral-950); }
   .src { display: inline-flex; align-items: center; gap: 4px; justify-self: start; align-self: flex-start; }
   .src :global(svg) { width: 14px; height: 14px; flex: none; }
-
 
   /* Previous / next: two card-buttons splitting the row between the content lines */
   .pn { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0 calc(-1 * var(--pad)) calc(-1 * var(--section-ruled-bottom)); border-top: 1px solid var(--line); } /* straight under the CTA, no gap, and last on the page: runs into the closing band */
@@ -197,11 +222,17 @@ const cta = {
     .pn a:hover { background: var(--bg-subtle); }
     .pn a:hover .pic :global(.pi > *) { transform: translateY(-2px); }
   }
-  @media (max-width: 999px) { .voices { grid-template-columns: 1fr; } }
+  @media (max-width: 999px) {
+    .voices:not(.rail) { grid-template-columns: 1fr; }
+    .voices.rail { grid-auto-columns: calc((100% - var(--gutter)) / 1.3); }
+  }
   @media (max-width: 699px) {
     .pair { grid-template-columns: 1fr; }
     .box { padding-inline: var(--pad); }
-    .box + .box, .box.adds { box-shadow: inset 0 1px 0 var(--line); }
+    .box:nth-child(n) { padding-inline: var(--pad); grid-column: auto; box-shadow: inset 0 1px 0 var(--line); }
+    .box:first-child, .box.adds { box-shadow: none; }
+    .voices.rail { grid-auto-columns: 88%; }
+    .voice { padding: 24px; gap: 24px; }
     .signs thead { display: none; }
     .signs tbody tr { display: grid; gap: 8px; padding-block: 20px; border-bottom: 1px solid var(--line); }
     .signs tbody th, .signs tbody td { width: auto; padding: 0; border: 0; }
