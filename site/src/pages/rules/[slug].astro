@@ -106,15 +106,8 @@ const cta = {
           {voices.map((v) => (
             <li class="voice">
               <svg class="qmark" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13L7 0h6L9 12h5v12zm18 0V13l7-13h6l-4 12h5v12z" /></svg>
-              <blockquote class="t-h6 q">{unquote(v.quote)}</blockquote>
-              <div class="foot">
-                <p class="by">
-                  {v.photo ? <img class="ini" src={v.photo} alt="" width="40" height="40" loading="lazy" /> : <span class="ini" aria-hidden="true">{ini(v.name)}</span>}
-                  <span>
-                    <span class="t-p2">{v.author ? <a class="name ul" href={`/authors/${v.author.id}`}>{v.name}</a> : v.name}</span>
-                    {(v.company || v.context) && <span class="t-p2 tone-2">{[v.company, v.context].filter(Boolean).join(' · ')}</span>}
-                  </span>
-                </p>
+              <div class="body">
+                <blockquote class="t-h6 q">{unquote(v.quote)}</blockquote>
                 {(v.source || (v.note && v.note.length <= 32)) && (
                   <p class="meta">
                     {v.note && v.note.length <= 32 && <span class="chip note">{v.note}</span>}
@@ -123,6 +116,13 @@ const cta = {
                 )}
                 {v.note && v.note.length > 32 && <p class="src">{v.note}</p>}
               </div>
+              <p class="by">
+                {v.photo ? <img class="ini" src={v.photo} alt="" width="40" height="40" loading="lazy" /> : <span class="ini" aria-hidden="true">{ini(v.name)}</span>}
+                <span>
+                  <span class="t-p2">{v.author ? <a class="name ul" href={`/authors/${v.author.id}`}>{v.name}</a> : v.name}</span>
+                  {(v.company || v.context) && <span class="t-p2 tone-2">{[v.company, v.context].filter(Boolean).join(' · ')}</span>}
+                </span>
+              </p>
             </li>
           ))}
         </ul>
@@ -192,7 +192,8 @@ const cta = {
   .voice { display: grid; grid-template-rows: auto 1fr auto; gap: 32px; min-width: 0; padding: 32px; border-radius: var(--radius-4); background: var(--bg-subtle); box-shadow: inset 0 0 0 1px var(--line-card); }
   .qmark { width: 28px; height: 21px; fill: var(--accent); }
   .q { margin: 0; color: var(--text); line-height: 1.4; text-wrap: pretty; }
-  .foot { display: grid; gap: 16px; }
+  /* Quote, then chip/source under it; the author is always the last row, so authors line up across cards */
+  .voice .body { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
   .by { display: flex; align-items: center; gap: 12px; }
   .by > span:last-child { display: grid; }
   .by .name { color: var(--text); }
