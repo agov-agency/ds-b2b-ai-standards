@@ -62,9 +62,11 @@ import { arrow } from '../arrows';
   .card {
     --t: var(--t-fast) ease;
     position: relative; isolation: isolate; overflow: hidden; display: grid; min-height: 280px; padding: 40px;
-    border-radius: var(--radius-4); background: var(--bg-subtle); box-shadow: inset 0 0 0 1px var(--line-card); color: var(--text); text-decoration: none;
-    transition: background-color var(--t), color var(--t), box-shadow var(--t);
+    border-radius: var(--radius-4); background: var(--neutral-950); color: var(--text); text-decoration: none;
+    transition: background-color var(--t), color var(--t);
   }
+  /* Outline above the art (the Agov render covers the card's own edge) */
+  .card::after { content: ''; position: absolute; z-index: 2; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line-card); pointer-events: none; transition: box-shadow var(--t); }
   .copy { position: relative; z-index: 1; display: grid; grid-template-rows: auto 1fr auto; gap: 16px; max-width: 60%; }
   .desc { color: var(--text-2); max-width: 30em; transition: color var(--t); }
   .go { justify-self: start; color: var(--text); transition: background-color var(--t), color var(--t), box-shadow var(--t); }
@@ -85,8 +87,8 @@ import { arrow } from '../arrows';
     .ds:hover .go { background: var(--neutral-0); color: var(--neutral-950); }
     .agov:hover .go { background: var(--neutral-950); color: var(--neutral-0); }
     .ds:hover .art { opacity: 1; mix-blend-mode: normal; } /* the wave paints its own primary 400 ground on hover */
-    .ds:hover { --text: var(--neutral-0); --text-2: var(--neutral-0); background: var(--primary-400); box-shadow: inset 0 0 0 1px var(--primary-400); }
-    .agov:hover { --text: var(--neutral-950); --text-2: var(--neutral-500); background: var(--neutral-0); box-shadow: inset 0 0 0 1px var(--neutral-0); }
+    .ds:hover { --text: var(--neutral-0); --text-2: var(--neutral-0); background: var(--primary-400); --line-card: var(--primary-400); }
+    .agov:hover { --text: var(--neutral-950); --text-2: var(--neutral-500); background: var(--neutral-0); --line-card: var(--neutral-0); }
     .agov:hover .art .on { opacity: 1; }
   }
   .card:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
