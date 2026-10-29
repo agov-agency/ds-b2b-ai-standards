@@ -9,7 +9,7 @@ const counts: Record<string, number> = {
   '/skills': (await getCollection('skills')).length,
   '/rules': (await getCollection('rules')).length,
 };
-const isCurrent = (href: string) => (href === '/directory' ? path === '/directory' || path === '/' : path.startsWith(href));
+const isCurrent = (href: string) => (href === '/collection' ? path === '/collection' || path === '/' : path.startsWith(href));
 ---
 <div class="tab-sentinel" aria-hidden="true"></div>
 <nav class="tabbar surface-black" aria-label="Library sections" data-tabbar>
