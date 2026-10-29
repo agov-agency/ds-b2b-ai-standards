@@ -115,7 +115,7 @@ const skills = defineCollection({
     icon: z.string().optional(),        // line icon from the skill set (ICON_POOLS.skill); empty = the category's
     cover: z.number().int().min(1).max(20).optional(),   // --pastel-N; empty = the category's
     order: z.number().default(99),
-    // Skill page (Figma 919:23317): hero facts, then what it does, the prompt, the output, how it works, use it when, related
+    // Skill page (Figma 919:23317): hero facts, then what it does, the prompt, how it works, use it when, related
     changes: z.string().optional(),     // "Reads your data, changes nothing"
     firstRun: z.string().optional(),
     connectors: z.array(z.string()).default([]),
@@ -128,13 +128,6 @@ const skills = defineCollection({
         tabs: z.array(z.object({ label: z.string(), text: z.string() })).min(1),
         install: z.array(z.object({ label: z.string(), text: z.string() })).default([]),
         source: z.string().url().optional(),
-      }).optional(),
-      output: z.object({
-        headline: z.string(),
-        context: z.string().optional(),
-        stats: z.array(z.object({ value: z.string(), label: z.string(), accent: z.boolean().default(false) })).default([]),
-        items: z.array(z.object({ title: z.string(), caption: z.string(), src: z.string().optional() })).default([]),
-        note: z.string().optional(),      // **bold** allowed
       }).optional(),
       steps: z.array(z.object({ title: z.string(), text: z.string() })).default([]),
       stepsNote: z.object({ headline: z.string(), context: z.string().optional() }).optional(),

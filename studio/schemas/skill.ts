@@ -1,5 +1,5 @@
 import { defineField, defineType } from 'sanity';
-import { str, txt, slugField, ref, refs, areaField, obj, list, order, gallery, connectorsField, unique, coverField, desc, part, section, pageObj } from './shared';
+import { str, txt, slugField, ref, refs, areaField, obj, list, order, connectorsField, unique, coverField, desc, part, section, pageObj } from './shared';
 import { IconInput } from './IconInput';
 
 const labelText = (name: string, title: string, label: string, text: string) => list(name, title, [desc(str('label', 'Label', true), label), desc(txt('text', 'Text', true), text)], 'label');
@@ -25,13 +25,6 @@ export const skill = defineType({
       ]), 'First section after the hero'),
       section(desc(list('steps', 'How it works', [desc(str('title', 'Title', true), 'Step title'), desc(txt('text', 'Text', true), 'Step text')]), 'Timeline inside “What it does”, under its paragraphs')),
       defineField({ name: 'stepsNote', title: 'Line after the steps', type: 'headline', description: 'Closing line at the end of the timeline' }),
-      desc(obj('output', 'What you get', [
-        desc(str('headline', 'Headline', true), 'Section headline, black'),
-        desc(txt('context'), 'Continues the headline in gray'),
-        desc(list('stats', 'Numbers', [desc(str('value', 'Value', true), 'The number, e.g. “49%”'), desc(str('label', 'Label', true), 'What it counts'), defineField({ name: 'accent', type: 'boolean', initialValue: false, description: 'Not used on the page yet' })], 'value'), 'Row of numbers above the gallery'),
-        gallery(),
-        desc(txt('note', 'Note'), 'Line under the gallery; **bold** works'),
-      ]), 'Gallery of what the skill hands back'),
       desc(obj('prompt', 'The prompt', [
         desc(str('headline', 'Headline', true), 'Section headline, black'),
         desc(txt('context'), 'Continues the headline in gray'),

@@ -54,48 +54,6 @@ page:
           /plugin marketplace add demandsense/the-ai-standard
           /plugin install account-signal-routine
     source: "https://github.com/demandsense/the-ai-standard/tree/main/skills/account-signal-sheet"
-  output:
-    headline: "One profile was seven of the best-looking accounts."
-    stats:
-      - value: "16"
-        label: "companies came in from the quarter"
-      - value: "10"
-        label: "removed or flagged before ranking"
-        accent: true
-      - value: "6"
-        label: "reached sales, each with a name"
-    # Placeholder screenshots (Notion template gallery) until the real outputs arrive
-    items:
-      - title: "Act now"
-        caption: "The Act now tab of ten, run on the sample client that ships with the skill. Nothing edited by hand"
-        src: "/outputs/placeholder/notion-1.png"
-      - title: "Accelerate"
-        caption: "Open deals with fresh engagement"
-        src: "/outputs/placeholder/notion-2.png"
-      - title: "Expand"
-        caption: "Customers engaging, for expansion"
-        src: "/outputs/placeholder/notion-3.png"
-      - title: "Watch"
-        caption: "Accounts warming up, not ready yet"
-        src: "/outputs/placeholder/notion-4.png"
-      - title: "Influenced deals"
-        caption: "Deals the ads touched before they opened"
-        src: "/outputs/placeholder/notion-5.png"
-      - title: "Peers"
-        caption: "Lookalikes of the accounts that converted"
-        src: "/outputs/placeholder/notion-1.png"
-      - title: "Exclusions"
-        caption: "Companies to strip from targeting"
-        src: "/outputs/placeholder/notion-2.png"
-      - title: "Cleaning report"
-        caption: "What was struck before ranking, and why"
-        src: "/outputs/placeholder/notion-3.png"
-      - title: "Sources"
-        caption: "Every export used, with its row counts"
-        src: "/outputs/placeholder/notion-4.png"
-      - title: "Score"
-        caption: "How each account was scored"
-        src: "/outputs/placeholder/notion-5.png"
   steps:
     - title: "Clean the signal"
       text: "Removes your own company, competitors, ISPs and bots. Flags profiles appearing as several companies at once. Checks that every export came back complete rather than truncated, and stops here if one didn’t."

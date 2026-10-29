@@ -50,28 +50,6 @@ page:
           /plugin marketplace add bogdanl-rgb/cr8-plugins
           /plugin install signal-loop
     source: "https://github.com/bogdanl-rgb/cr8-plugins"
-  output:
-    headline: "Most of the list had gone cold."
-    stats:
-      - value: "300"
-        label: "companies with a dated signal, the line"
-      - value: "212"
-        label: "still warm this month: no warm list yet"
-        accent: true
-      - value: "90 days"
-        label: "signal age past which it stops counting"
-    # Placeholder screenshots (Notion template gallery) until the real outputs arrive
-    items:
-      - title: "Signal count"
-        caption: "Companies with a dated signal"
-        src: "/outputs/placeholder/notion-1.png"
-      - title: "Signal age"
-        caption: "How old those signals are"
-        src: "/outputs/placeholder/notion-2.png"
-      - title: "Next step"
-        caption: "Add a list, or keep going"
-        src: "/outputs/placeholder/notion-3.png"
-    note: "Under 300, **the fix is more signals**, never a wider filter."
   steps:
     - title: "Read the signals"
       text: "Collects every dated signal per company on the list."
