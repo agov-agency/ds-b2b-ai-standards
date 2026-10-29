@@ -2,7 +2,6 @@
 // Footer on every page: the two maintainers as cards, then the legal lines. Home has no submit band, so this is its whole close;
 // elsewhere it follows SubmitBand. Hover fills: DemandSense primary 400, Agov white (its art flips with mix-blend difference).
 import { arrow } from '../arrows';
-const ds = await import('../../../design-system/logos/demandsense.svg?raw').then((m) => m.default.replace('<svg ', '<svg aria-hidden="true" class="ds-mark" '));
 ---
 <footer class="foot surface-black ruled">
   <div class="wrap">
@@ -10,17 +9,17 @@ const ds = await import('../../../design-system/logos/demandsense.svg?raw').then
     <ul class="cards" role="list" data-reveal>
       <li><a class="card ds" href="https://demandsense.com" target="_blank" rel="noopener">
         <span class="copy">
-          <span class="logo"><Fragment set:html={ds} /><span>DemandSense</span></span>
+          <span class="t-h2 name">DemandSense</span>
           <span class="t-p1 desc">The LinkedIn Ads platform for B2B teams, and the people who keep this Standard running</span>
-          <span class="go lbl">DemandSense.com <Fragment set:html={arrow('right')} /></span>
+          <span class="go btn outlined">DemandSense.com <Fragment set:html={arrow('right')} /></span>
         </span>
         <span class="art card-wave" aria-hidden="true" data-wave='{"frame":{"x":0.1296,"y":-0.0219,"w":0.8705,"h":1.0219,"aspect":1.288,"k":1.507},"fiberScale":0.5}'></span>
       </a></li>
       <li><a class="card agov" href="https://agov.agency" target="_blank" rel="noopener">
         <span class="copy">
-          <span class="logo"><span>Agov</span></span>
+          <span class="t-h2 name">Agov</span>
           <span class="t-p1 desc">AI-driven design partner for B2B products and companies with ambitious marketing and business objectives</span>
-          <span class="go lbl">agov.agency <Fragment set:html={arrow('right')} /></span>
+          <span class="go btn outlined">agov.agency <Fragment set:html={arrow('right')} /></span>
         </span>
         <span class="art" aria-hidden="true"><img src="/illustrations/partners/agov-placeholder.svg" alt="" width="240" height="240" loading="lazy"></span>
       </a></li>
@@ -60,11 +59,9 @@ const ds = await import('../../../design-system/logos/demandsense.svg?raw').then
     transition: background-color var(--t), color var(--t), box-shadow var(--t);
   }
   .copy { position: relative; z-index: 1; display: grid; grid-template-rows: auto 1fr auto; gap: 24px; max-width: 60%; }
-  .logo { display: flex; align-items: center; gap: 10px; font: 600 28px/1 var(--font-mono); text-transform: uppercase; letter-spacing: -.02em; }
-  .logo :global(.ds-mark) { width: 24px; height: auto; }
   .desc { color: var(--text-2); max-width: 30em; transition: color var(--t); }
-  .go { display: inline-flex; align-items: center; gap: 6px; color: var(--text); }
-  .go :global(svg) { width: 16px; height: 16px; transition: transform var(--t); }
+  .go { justify-self: start; color: var(--text); }
+  .go :global(svg) { transition: transform var(--t); }
   .art { position: absolute; z-index: 0; top: 0; right: 0; bottom: 0; width: 50%; pointer-events: none; }
   /* Wave: the canvas ground is black, so screen blend drops it and leaves the ribbon over whatever fill the card has */
   .ds .art { width: 100%; opacity: .6; mix-blend-mode: screen; -webkit-mask-image: linear-gradient(to right, transparent 30%, #000 70%); mask-image: linear-gradient(to right, transparent 30%, #000 70%); }
@@ -74,8 +71,9 @@ const ds = await import('../../../design-system/logos/demandsense.svg?raw').then
 
   @media (hover: hover) {
     .card:hover .go :global(svg) { transform: translateX(4px); }
-    .ds:hover { --text: var(--neutral-0); --text-2: rgb(255 255 255 / .8); background: var(--primary-400); box-shadow: inset 0 0 0 1px var(--primary-400); }
-    .agov:hover { --text: var(--neutral-950); --text-2: var(--neutral-500); background: var(--neutral-0); box-shadow: inset 0 0 0 1px var(--neutral-0); }
+    .card:hover .go { box-shadow: inset 0 0 0 1px var(--text); }
+    .ds:hover { --text: var(--neutral-0); --text-2: rgb(255 255 255 / .8); --line: rgb(255 255 255 / .5); background: var(--primary-400); box-shadow: inset 0 0 0 1px var(--primary-400); }
+    .agov:hover { --text: var(--neutral-950); --text-2: var(--neutral-500); --line: var(--neutral-200); background: var(--neutral-0); box-shadow: inset 0 0 0 1px var(--neutral-0); }
     .agov:hover .art { mix-blend-mode: difference; } /* on .art, not the img: .art is its own stacking context */
   }
   .card:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
@@ -91,7 +89,6 @@ const ds = await import('../../../design-system/logos/demandsense.svg?raw').then
     .foot { padding-block: 48px; }
     .card { min-height: 0; padding: 24px; }
     .copy { max-width: none; gap: 20px; }
-    .logo { font-size: 22px; }
     .art { position: relative; order: -1; width: auto; height: 160px; margin: -24px -24px 0; }
     .ds .art { -webkit-mask-image: linear-gradient(transparent, #000 40%); mask-image: linear-gradient(transparent, #000 40%); }
   }
