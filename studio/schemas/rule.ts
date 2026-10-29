@@ -17,16 +17,16 @@ export const rule = defineType({
     // A rule's colour is its category's (the site ignores this); kept hidden so older documents don't show an unknown field
     { ...coverField(), hidden: true },
     pageObj([
-      desc(obj('advises', 'The rule: what LinkedIn advises', [
+      desc(obj('advises', 'The rule: the default', [
         desc(txt('text', 'Text', true), 'LinkedIn’s own advice, in a sentence or two'),
         desc(str('source'), 'Where it says so, e.g. “LinkedIn Marketing Solutions help”'),
         desc(defineField({ name: 'url', type: 'url' }), 'Link for the source'),
-      ]), 'Left box of the first section'),
-      desc(txt('adds', 'The rule: what the Standard adds'), 'Right box of the first section'),
+      ]), 'First card of the first section'),
+      desc(txt('adds', 'The rule: what the Standard adds'), 'Last card of the first section, on black'),
       desc(txt('reason', 'The rule: why it holds'), 'Box under them'),
       desc(txt('mattersLess', 'The rule: when it matters less'), 'Box next to “Why it holds”'),
-      section(desc(list('signs', 'If you see this', [desc(txt('see', 'You see', true), 'Left column: what shows up in the account'), desc(txt('do', 'You do', true), 'Right column: what to do about it')], 'see'), 'Table of signs, one row each')),
-      section(desc(list('voices', 'Who runs it this way', [
+      section(desc(list('signs', 'Decision triggers', [desc(txt('see', 'You see', true), 'Left column: what shows up in the account'), desc(txt('do', 'You do', true), 'Right column: what to do about it')], 'see'), 'Table of signs, one row each')),
+      section(desc(list('voices', 'What experts say', [
         desc(str('name', 'Name', true), 'Specialist’s name'),
         desc(ref('author', 'author', 'Author page'), 'Optional: links the name to their author page'),
         desc(str('company'), 'Their company'),
@@ -34,7 +34,7 @@ export const rule = defineType({
         desc(txt('quote', 'Quote', true), 'In their own words'),
         desc(str('source'), 'Where they said it, e.g. “LinkedIn post, Sep 2026”'),
         desc(defineField({ name: 'url', type: 'url' }), 'Link for the source'),
-        desc(str('note'), 'Small line under the quote'),
+        desc(str('note'), 'Short note (e.g. “Runs it differently”) shows as an orange chip; a longer one as a small line'),
       ], 'name'), 'Quote cards from specialists')),
       section(defineField({ name: 'cta', type: 'cta', description: 'The coloured card at the end of the page, after “Run it” (filled in automatically from the skills and scenarios that use the rule). Any field left empty keeps the site’s default text' })),
     ]),
