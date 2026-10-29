@@ -19,7 +19,7 @@ const quotes = [
   { name: 'AJ Wilcox', company: 'B2Linked', photo: '/authors/aj-wilcox.jpg', text: 'AI in LinkedIn Ads needs rules because it was trained on recommendations from the platform itself, and advanced practitioners all agree that taking LinkedIn’s recommendations for setting up your ads is a first-class ticket to negative ROI.' },
   { name: 'Justin Rowe', company: 'Impactable', photo: '/authors/justin-rowe.jpg', text: 'Pretty soon, everyone can “talk with your data”, but raw data needs to be interpreted with actual frameworks, doctrines, and a real point of view. That’s exactly what the Standard delivers.' },
 ];
-// How the Standard is built: one card per library list, in build order, in a rail (two in view, the third off to the right)
+// How the Standard is built: one card per library list, in build order. Rules and Skills side by side, Scenarios full width below (text left, art right)
 const hubs = [
   { type: 'rule', art: 'rules', label: T.rules, href: '/rules', count: nRules, title: 'Start with the judgement AI is missing.', context: `When frequency is too high for an audience, when a CTR drop means fatigue, when an audience is big enough to count as warm. ${nRules} rules to start` },
   { type: 'skill', art: 'skills', label: T.skills, href: '/skills', count: (await getCollection('skills')).length, title: 'Let AI apply the rules to your data.', context: 'A skill pulls your numbers, reads them the way the rules say, and tells you what to change' },
@@ -75,9 +75,9 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
           <p class="marker">Collection</p>
           <h2 id="h-dir" class="headline t-h3">How the Standard is built. <span class="tone-2">Each part builds on the one before it, and it all starts with the rules</span></h2>
         </div>
-        <ul class="picks scroll-snap-x to-edges" data-picks data-reveal>
+        <ul class="picks" data-reveal>
           {hubs.map((h) => (
-            <li><a class="pick" data-type={h.type} href={h.href}>
+            <li class:list={{ wide: h.type === 'scenario' }}><a class="pick" data-type={h.type} href={h.href}>
               <span class="cover" aria-hidden="true"><IsoArt name={h.art} accent={h.type} mono zoom={1.3} /></span>
               <span class="txt">
                 <span class="marker">{h.label}<span class="cnt">{String(h.count).padStart(2, '0')}</span></span>
@@ -99,8 +99,8 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
 
 <script>
   import { wheelX } from '../rail';
-  // Quotes and collection cards: same scroll lock as the Collection's scenario rail: the wheel runs the cards sideways, then the page carries on
-  document.querySelectorAll<HTMLElement>('[data-picks], [data-quotes]').forEach(wheelX);
+  // Quotes: same scroll lock as the Collection's scenario rail: the wheel runs the cards sideways, then the page carries on
+  document.querySelectorAll<HTMLElement>('[data-quotes]').forEach(wheelX);
 </script>
 
 <style>
@@ -138,9 +138,15 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
   .dir-head { display: grid; gap: var(--gap-overline); justify-items: center; text-align: center; margin-bottom: var(--header-gap); }
   .dir-head .headline { max-width: 22em; }
   /* Big cards, one per library list: its hub art on top, marker + count, two-tone title, link label.
-     Each keeps the half-width size; the rail holds two in view and the third waits off to the right, cropped at the edge lines */
-  .picks { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - var(--gutter)) / 2); gap: var(--gutter); }
+     Rules and Skills share a row; Scenarios spans it below as a horizontal card, its art on the same column as the Skills art (subgrid) */
+  .picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter); }
   .picks > li { min-width: 0; }
+  .picks > .wide { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
+  .wide .pick { grid-column: 1 / -1; grid-template-columns: subgrid; grid-template-rows: none; }
+  /* The panel grows with the text; the art keeps its 16:9 frame in flow, centred */
+  .wide .cover { grid-area: 1 / 2; aspect-ratio: auto; display: grid; align-content: center; }
+  .wide .txt { grid-area: 1 / 1; }
+  .wide .cover > :global(.iso-panel) { position: relative; inset: auto; aspect-ratio: 16 / 9; }
   .pick { position: relative; display: grid; grid-template-rows: auto 1fr; height: 100%; border-radius: var(--radius-4); overflow: hidden; transition: background-color var(--t-fast) var(--ease-out); }
   .pick::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line-card); pointer-events: none; }
   .cover { position: relative; display: block; aspect-ratio: 16 / 9; background: var(--bg-subtle); }
@@ -179,7 +185,9 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
     .ctas > .btn { flex: 1 1 100%; }
     .quotes { grid-auto-columns: 88%; }
     .quote { min-height: 380px; padding: 24px; gap: 24px; }
-    .picks { grid-auto-columns: 88%; }
+    .picks, .wide .pick { grid-template-columns: minmax(0, 1fr); }
+    .wide .pick { grid-template-rows: auto 1fr; }
+    .wide .cover, .wide .txt { grid-area: auto; }
     .txt { padding: 24px; }
     .below > .btn { flex: 1; }
   }
