@@ -295,21 +295,23 @@ function templates(): Tpl[] {
   T.push({ group: N, name: 'Block · From the Standard', s: B({ format: 'block', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard:', context: 'one rule, skill or scenario for LinkedIn Ads with AI', hmax: 152, logoH: 110, lines: false, vpos: 'end', art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.6, time: 10 } as never }) });
   T.push({ group: N, name: 'Block · light', s: B({ format: 'block', bg: 'white', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard:', context: 'one rule, skill or scenario for LinkedIn Ads with AI', hmax: 152, logoH: 110, lines: false, vpos: 'end', art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
 
+  // Two-tone headlines read as two sentences: the black claim ends in a full stop before the grey context
+  const claim = (t: string) => (/[.!?:]$/.test(t.trim()) ? t : `${t.trim()}.`);
   const scenario = (x: Data['scenarios'][number]): Tpl => ({ group: 'Scenario cards', name: x.title, note: x.status === 'soon' ? 'Coming soon' : 'Animated: MP4', s: B({
     about: `scenario:${x.id}`, format: 'portrait', layout: 'b', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Scenario · ${x.cadence}`, headline: x.title, context: '', body: !!x.description, bodyText: x.description, steps: x.steps.length > 0, stepsText: x.steps.slice(0, 7).join('\n'), tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '),
     author: x.author ?? '', hmax: 67, art: { id: x.art?.piece ?? 'sorter', zoom: 1, frame: 'bleed' } as never }) });
   const skill = (x: Data['skills'][number]): Tpl => ({ group: 'Skill cards', name: x.title, s: B({
-    about: `skill:${x.id}`, format: 'square', layout: 'b', bg: 'white', cover: x.cover, labelText: 'Skill', chips: true, chipsText: x.category, headline: x.title, context: x.description, hmax: 58,
+    about: `skill:${x.id}`, format: 'square', layout: 'b', bg: 'white', cover: x.cover, labelText: 'Skill', chips: true, chipsText: x.category, headline: claim(x.title), context: x.description, hmax: 58,
     tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '), github: true,
     author: x.author ?? 'demandsense', art: { id: x.icon, zoom: 1, frame: 'panel' } as never }) });
   const rule = (x: Data['rules'][number]): Tpl => {
     const pairs = rulePairs(x);
     return { group: 'Rule cards', name: `${String(x.number).padStart(2, '0')} · ${x.title}`, s: B({
-      about: `rule:${x.id}`, format: 'portrait', layout: 'a', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Rule ${String(x.number).padStart(2, '0')}`, headline: x.title, context: x.why, hmax: 67,
+      about: `rule:${x.id}`, format: 'portrait', layout: 'a', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Rule ${String(x.number).padStart(2, '0')}`, headline: claim(x.title), context: x.why, hmax: 67,
       pairs: !!pairs, pairsText: pairs, author: x.author && x.author !== 'demandsense' ? x.author : '', art: { id: x.icon, zoom: 1, frame: 'bleed' } as never }) };
   };
   const quote = (text: string, name: string, role: string, photo: string, about: string, author?: string): Tpl => ({ group: 'Quote cards', name: `${name}: ${about}`, s: B({
-    format: 'portrait', layout: 'none', vpos: 'center', qmark: true, labelText: about, headline: text, hmax: 58, rule: false,
+    format: 'portrait', layout: 'none', vpos: 'center', qmark: true, labelText: about, headline: text, hmax: 76, rule: false,
     ...(author ? { author } : { aCustom: true, aName: name, aRole: role, aPhoto: photo }) }) });
 
   D.scenarios.forEach((x) => T.push(scenario(x)));
@@ -318,7 +320,7 @@ function templates(): Tpl[] {
   D.quotes.forEach((q) => T.push(quote(q.text, q.name, q.company, q.photo, 'Why the Standard exists')));
   D.rules.forEach((r) => r.voices.forEach((v) => {
     const a = authorById(v.author);
-    T.push(quote(v.quote, v.name, v.company, a?.photo ?? '', `On rule ${String(r.number).padStart(2, '0')}`, a ? a.id : undefined));
+    T.push(quote(v.quote, v.name, v.company, a?.photo || D.quotes.find((q) => q.name === v.name)?.photo || '', `On rule ${String(r.number).padStart(2, '0')}`, a ? a.id : undefined));
   }));
 
   // Authors: what each one added, most first; one card per contributor
