@@ -9,7 +9,7 @@ const client = getCliClient({ apiVersion: '2025-02-19' });
 const r = (_ref: string) => ({ _type: 'reference', _ref });
 const k = <T extends object>(p: string, xs: T[]) => xs.map((x, i) => ({ _key: `${p}${i}`, ...x }));
 
-const order = (await client.fetch<number | null>('max(*[_type == "scenario" && _id != "scenario-sample" && !(_id in path("drafts.**"))].order)')) ?? 0;
+const order = (await client.fetch<number | null>('*[_type == "scenario" && _id != "scenario-sample" && !(_id in path("drafts.**"))] | order(order desc)[0].order')) ?? 0;
 const existing = await client.fetch<{ order?: number } | null>('*[_id == "scenario-competitor-watch"][0]{order}');
 
 await client.createOrReplace({
