@@ -43,9 +43,10 @@ const toc = [['h-rule', 'The rule', hasRule], ['h-signs', 'Decision triggers', p
 const ext = arrow('up', 'ext');
 const unquote = (q: string) => q.trim().replace(/^["“„«]+|["”»]+$/g, ''); // some quotes arrive already wrapped
 // Each voice with its author's photo, when the voice links an author page
-const voices = await Promise.all(p.voices.map(async (v) => ({ ...v, photo: v.author ? (await getEntry(v.author))?.data.photo : undefined })));
+// A quote that runs it differently disagrees with the rule: it goes last
+const differs = (v: { note?: string }) => Number(/runs it differently/i.test(v.note ?? ''));
+const voices = await Promise.all([...p.voices].sort((a, b) => differs(a) - differs(b)).map(async (v) => ({ ...v, photo: v.author ? (await getEntry(v.author))?.data.photo : undefined })));
 const ini = (n: string) => n.split(/\s+/).map((w) => w[0]).slice(0, 2).join('').toUpperCase();
-const count = (n: number, one: string, many: string) => (n === 1 ? one : `${n} ${many}`);
 const cta = {
   headline: 'Run this rule differently?',
   context: 'Tell us where it breaks',
@@ -66,8 +67,8 @@ const cta = {
 
   <DetailFrame toc={toc}>
     {hasRule && (
-      <Sec id="h-rule" label="The rule" title="What the Standard adds." context="On top of the default, and why it holds" small class="flush">
-        {/* Read in order: the default, why the Standard's take holds, when it matters less, then the Standard's addition, highlighted last */}
+      <Sec id="h-rule" label="The rule" title="Where to move past the default." small class="flush">
+        {/* Read in order: the default, the Standard's addition (highlighted), why it holds, when it matters less */}
         <div class="pair" data-reveal>
           {p.advises && (
             <div class="box">
@@ -76,20 +77,20 @@ const cta = {
               {p.advises.source && (p.advises.url ? <a class="src ul" href={p.advises.url} rel="noopener">{p.advises.source}</a> : <p class="src">{p.advises.source}</p>)}
             </div>
           )}
-          {p.reason && <div class="box"><p class="lbl-2 k">Why it holds</p><p class="t-p1 body">{p.reason}</p></div>}
-          {p.mattersLess && <div class="box"><p class="lbl-2 k">When it matters less</p><p class="t-p1 body">{p.mattersLess}</p></div>}
           {p.adds && (
             <div class="box adds">
               <p class="lbl-2 k">What the Standard adds</p>
               <p class="t-p1">{p.adds}</p>
             </div>
           )}
+          {p.reason && <div class="box"><p class="lbl-2 k">Why it holds</p><p class="t-p1 body">{p.reason}</p></div>}
+          {p.mattersLess && <div class="box"><p class="lbl-2 k">When it matters less</p><p class="t-p1 body">{p.mattersLess}</p></div>}
         </div>
       </Sec>
     )}
 
     {p.signs.length > 0 && (
-      <Sec id="h-signs" label="Decision triggers" title={`${count(p.signs.length, 'One sign', 'signs')} in your account.`} context="What you see on the left, what to do about it on the right" small class="flush">
+      <Sec id="h-signs" label="Decision triggers" title="Spot it, then act on it." small class="flush">
         <table class="signs" data-reveal>
           <thead><tr><th class="lbl-2" scope="col">You see</th><th class="lbl-2" scope="col">Do this</th></tr></thead>
           <tbody>
@@ -100,7 +101,7 @@ const cta = {
     )}
 
     {voices.length > 0 && (
-      <Sec id="h-voices" label="What experts say" title={`${count(voices.length, 'One specialist', 'specialists')} who check this.`} context="In their own words, with where they said it" small>
+      <Sec id="h-voices" label="What experts say" title="Where people in the field stand on it." small>
         {/* Two or fewer fill the width; more run in a rail with the home page's scroll lock */}
         <ul class:list={['voices', { 'rail scroll-snap-x': voices.length > 2 }]} data-voices={voices.length > 2 || undefined} data-reveal>
           {voices.map((v) => (
@@ -129,7 +130,7 @@ const cta = {
       </Sec>
     )}
 
-    <Sec id="h-run" label="Run it" title={skills.length || scenarios.length ? 'Where it runs.' : 'Not in a skill yet.'} context={skills.length || scenarios.length ? 'The skills that apply it today and the scenarios built on it' : 'Apply it by hand for now, or send us the way you check it'} small>
+    <Sec id="h-run" label="Run it" title={skills.length || scenarios.length ? 'Run the check in one go.' : 'Not in a skill yet.'} context={skills.length || scenarios.length ? undefined : 'Apply it by hand for now, or send us the way you check it'} small>
       <RelatedTabs scenarios={relSc} skills={relSk} />
     </Sec>
 
@@ -165,7 +166,7 @@ const cta = {
   .ul { border-bottom: 1px solid transparent; transition: border-color var(--t-fast) var(--ease-out); }
 
   /* The rule: up to four cards in a 2-column grid between the content lines, hairlines between them;
-     the Standard's addition comes last, on black, so the eye ends on it */
+     the Standard's addition sits next to the default, on black */
   .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-inline: calc(-1 * var(--pad)); border-top: 1px solid var(--line); }
   .box { display: flex; flex-direction: column; gap: 12px; padding: 40px 32px; color: var(--text); }
   .box:nth-child(odd) { padding-left: var(--pad); }
