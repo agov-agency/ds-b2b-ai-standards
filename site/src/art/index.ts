@@ -15,4 +15,4 @@ export const pieces: Record<string, Piece> = { ...figures, 'i-turnstile': turnst
 
 // What the CMS can pick: only scenarios use figures (skills and rules use the `i-<name>` icons, pools in src/icons.ts); hub heroes are not in it.
 // A new figure goes into `pieces`, then its name here.
-export const ART_POOLS: Record<'scenario', string[]> = { scenario: ['sorter', 'orrery', 'galton', 'lineshaft', 'baggage', 'analyzer', 'pumpjack', 'burnin'] };
+export const ART_POOLS: Record<'scenario', string[]> = { scenario: ['sorter', 'orrery', 'galton', 'lineshaft', 'baggage', 'analyzer', 'pumpjack', 'burnin', 'seismo'] };
