@@ -22,7 +22,7 @@ const DEFAULTS = {
   about: '', lines: true, pattern: false, fade: true,
   logo: true, logoKind: 'mark', logoPos: 'left', logoH: 48, label: true, labelText: '',
   avatar: false, chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, tsize: 26, rule: false,
-  body: false, bodyText: '', pairs: false, pairsCms: true, pairsText: '', steps: false, stepsText: '', tools: false, toolsText: '', toolsCustom: false, toolsOwn: [{ name: '', logo: 'list' }], github: false,
+  body: false, bodyText: '', pairs: false, pairsCms: true, pairsText: '', steps: false, stepsLabel: 'Process', stepsText: '', tools: false, toolsLabel: 'Runs with', toolsText: '', toolsCustom: false, toolsOwn: [{ name: '', logo: 'list' }], github: false,
   list: false, listText: '', button: false, buttonText: '',
   author: '', authorStyle: 'byline', aCustom: false, aName: '', aRole: '', aPhoto: '',
   art: { id: 'none', zoom: 1, x: 0, y: 0, t: 0, mono: false, animate: true, frame: 'bleed', photo: '' },
@@ -85,9 +85,11 @@ function avatar(s: State) {
 function authorBlock(s: State) {
   let name = '', role = '', photo = '';
   if (s.aCustom) ({ aName: name, aRole: role, aPhoto: photo } = s);
-  else { const a = authorById(s.author); if (!a) return ''; name = a.name; role = [a.role, a.company].filter(Boolean).join(', '); photo = a.photo; }
+  else { const a = authorById(s.author); if (!a) return ''; name = a.name; role = [a.company, a.role].filter(Boolean).join(', '); photo = a.photo; }
   if (!name) return '';
-  return `<div class="p-author"><span class="p-av">${photo ? `<img src="${esc(img(photo, 256))}" alt="" crossorigin="anonymous">` : esc(initials(name))}</span><span><span>${esc(name)}</span>${role ? `<span class="tone-2">${esc(role)}</span>` : ''}</span></div>`;
+  // As on the site's author card: name, then company and role as chips
+  const chips = role.split(',').map((c) => c.trim()).filter(Boolean).map((c) => `<span class="chip">${esc(c)}</span>`).join('');
+  return `<div class="p-author"><span class="p-av">${photo ? `<img src="${esc(img(photo, 256))}" alt="" crossorigin="anonymous">` : esc(initials(name))}</span><span><span>${esc(name)}</span>${chips ? `<span class="p-chips">${chips}</span>` : ''}</span></div>`;
 }
 
 // Boxes straight from the item: a rule's LinkedIn default against the Standard (a skill's tools go in the tool chips)
@@ -120,8 +122,8 @@ export function postHTML(s: State) {
     s.rule ? '<div class="p-rule"></div>' : '',
     s.body && s.bodyText ? `<p class="p-body">${br(s.bodyText)}</p>` : '',
     s.pairs && pairs.length ? `<div class="p-pairs">${pairs.join('')}</div>` : '',
-    s.steps && steps.length ? `<ol class="p-steps" style="--n:${steps.length}">${steps.map((t, i) => `<li${i ? '' : ' class="on"'}><span class="p-tick"><i><b>${i + 1}</b></i></span>${esc(t)}</li>`).join('')}</ol>` : '',
-    s.tools && tools.length ? `<p class="p-tools">${tools.map((t) => `<span class="p-tool">${t.svg}${esc(t.name)}</span>`).join('')}</p>` : '',
+    s.steps && steps.length ? `<div class="p-sec">${s.stepsLabel ? `<p class="p-k">${esc(s.stepsLabel)}</p>` : ''}<ol class="p-steps" style="--n:${steps.length}">${steps.map((t, i) => `<li${i ? '' : ' class="on"'}><span class="p-tick"><i><b>${i + 1}</b></i></span>${esc(t)}</li>`).join('')}</ol></div>` : '',
+    s.tools && tools.length ? `<div class="p-sec">${s.toolsLabel ? `<p class="p-k">${esc(s.toolsLabel)}</p>` : ''}<p class="p-tools">${tools.map((t) => `<span class="p-tool">${t.svg}${esc(t.name)}</span>`).join('')}</p></div>` : '',
     s.list && list.length ? `<ul class="p-list">${list.map((l) => { const [k, ...v] = l.split('|'); return v.length ? `<li><b>${esc(k.trim())}</b><span>${esc(v.join('|').trim())}</span></li>` : `<li><b></b><span>${esc(k)}</span></li>`; }).join('')}</ul>` : '',
     s.button && s.buttonText ? `<span class="p-btn">${esc(s.buttonText)}</span>` : '',
   ].join('');
@@ -283,7 +285,7 @@ function templates(): Tpl[] {
   T.push({ group: N, name: 'Block · light', s: B({ format: 'block', bg: 'white', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard:', context: 'one rule, skill or scenario for LinkedIn Ads with AI', hmax: 152, logoH: 110, lines: false, vpos: 'end', art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
 
   const scenario = (x: Data['scenarios'][number]): Tpl => ({ group: 'Scenario cards', name: x.title, note: x.status === 'soon' ? 'Coming soon' : 'Animated: MP4', s: B({
-    about: `scenario:${x.id}`, format: 'portrait', layout: 'b', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Scenario · ${x.cadence}`, headline: x.title, context: '', body: false, bodyText: x.description, steps: x.steps.length > 0, stepsText: x.steps.slice(0, 7).join('\n'), tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '),
+    about: `scenario:${x.id}`, format: 'portrait', layout: 'b', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Scenario · ${x.cadence}`, headline: x.title, context: '', body: !!x.description, bodyText: x.description, steps: x.steps.length > 0, stepsText: x.steps.slice(0, 7).join('\n'), tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '),
     author: x.author ?? '', hmax: 67, art: { id: x.art?.piece ?? 'sorter', zoom: 1, frame: 'bleed' } as never }) });
   const skill = (x: Data['skills'][number]): Tpl => ({ group: 'Skill cards', name: x.title, s: B({
     about: `skill:${x.id}`, format: 'square', layout: 'b', bg: 'white', cover: x.cover, labelText: 'Skill', chips: true, chipsText: x.category, headline: x.title, context: x.description, hmax: 58,
@@ -546,7 +548,7 @@ export function boot() {
     const art = itemArt();
     if (art && !(art === 'photo' && S.avatar)) { S.art.id = art; if (art === 'photo') { S.art.photo = ''; S.author = id; } if (S.layout === 'none') S.layout = 'a'; }
   };
-  const CONTENT = ['label', 'labelText', 'headline', 'context', 'qmark', 'avatar', 'chips', 'chipsText', 'rule', 'body', 'bodyText', 'pairs', 'pairsCms', 'pairsText', 'steps', 'stepsText', 'tools', 'toolsText', 'toolsCustom', 'toolsOwn', 'github', 'list', 'listText', 'author', 'aCustom', 'aName', 'aRole', 'aPhoto'] as const;
+  const CONTENT = ['label', 'labelText', 'headline', 'context', 'qmark', 'avatar', 'chips', 'chipsText', 'rule', 'body', 'bodyText', 'pairs', 'pairsCms', 'pairsText', 'steps', 'stepsLabel', 'stepsText', 'tools', 'toolsLabel', 'toolsText', 'toolsCustom', 'toolsOwn', 'github', 'list', 'listText', 'author', 'aCustom', 'aName', 'aRole', 'aPhoto'] as const;
 
   const tick = (now: number) => {
     raf = 0;
