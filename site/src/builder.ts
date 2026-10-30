@@ -21,7 +21,7 @@ const DEFAULTS = {
   bg: 'black', bgCustom: '#0b0c0d', hue: 'auto', hueCustom: '#3875f6', cover: 0,
   about: '', lines: true, pattern: false,
   logo: true, logoKind: 'mark', logoPos: 'left', logoH: 48, label: true, labelText: '',
-  chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, rule: false,
+  avatar: false, chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, rule: false,
   body: false, bodyText: '', pairs: false, pairsCms: true, pairsText: '', steps: false, stepsText: '', tools: false, toolsText: '', toolsCustom: false, toolsOwn: [{ name: '', logo: 'list' }], github: false,
   list: false, listText: '', button: false, buttonText: '',
   author: '', authorStyle: 'byline', aCustom: false, aName: '', aRole: '', aPhoto: '',
@@ -76,6 +76,12 @@ function logoPick(name: string) {
 }
 
 const img = (src: string, w: number) => (/cdn\.sanity\.io/.test(src) ? `${src}?w=${w}&h=${w}&fit=crop&auto=format` : src);
+// Round photo above the headline (author posts, as on the site's author card): the item's author, else the one picked
+function avatar(s: State) {
+  const id = s.about.startsWith('author:') ? s.about.slice(7) : s.author, a = s.aCustom ? { name: s.aName, photo: s.aPhoto } : authorById(id);
+  if (!a?.name) return '';
+  return `<span class="p-av p-avatar">${a.photo ? `<img src="${esc(img(a.photo, 400))}" alt="" crossorigin="anonymous">` : esc(initials(a.name))}</span>`;
+}
 function authorBlock(s: State) {
   let name = '', role = '', photo = '';
   if (s.aCustom) ({ aName: name, aRole: role, aPhoto: photo } = s);
@@ -108,6 +114,7 @@ export function postHTML(s: State) {
     ...(s.toolsCustom ? s.toolsOwn.filter((t) => t.name.trim()).map((t) => ({ name: t.name.trim(), svg: D.logos[t.logo] ?? '' })) : [])];
   const main = [
     s.qmark ? '<svg class="p-q" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13L7 0h6L9 12h5v12zm18 0V13l7-13h6l-4 12h5v12z"/></svg>' : '',
+    s.avatar ? avatar(s) : '',
     s.chips && s.chipsText ? `<p class="p-chips">${s.chipsText.split(',').map((c) => c.trim()).filter(Boolean).map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</p>` : '',
     head,
     s.rule ? '<div class="p-rule"></div>' : '',
@@ -309,8 +316,8 @@ function templates(): Tpl[] {
   [...adds].sort((a, b) => b[1].length - a[1].length).forEach(([id, items]) => {
     const a = authorById(id)!;
     T.push({ group: 'Author cards', name: a.name, note: `${items.length} in the Standard`, s: B({
-      about: `author:${id}`, format: 'portrait', layout: 'b', bg: 'white', labelText: 'Author', headline: a.name, context: [a.role, a.company].filter(Boolean).join(', '), hmax: 67,
-      list: true, listText: [...new Set(items)].slice(0, 4).join('\n'), art: { id: 'photo', zoom: 1, frame: 'panel' } as never, author: id }) });
+      about: `author:${id}`, format: 'portrait', layout: 'none', vpos: 'end', bg: 'white', labelText: 'Author', avatar: true, chips: !!(a.role || a.company), chipsText: [a.company, a.role].filter(Boolean).join(', '),
+      headline: a.name, hmax: 120, list: true, listText: [...new Set(items)].slice(0, 4).join('\n'), author: id }) });
   });
   // An author card shows the person as the art; the byline would repeat them
   T.filter((t) => t.group === 'Author cards').forEach((t) => (t.s.author = '', t.s.art.photo = authorById(D.authors.find((a) => a.name === t.name)?.id)?.photo ?? ''));
@@ -534,9 +541,9 @@ export function boot() {
     const x = kind === 'scenario' ? D.scenarios.find((y) => y.id === id) : kind === 'skill' ? D.skills.find((y) => y.id === id) : kind === 'rule' ? D.rules.find((y) => y.id === id) : undefined;
     if (x) { S.cover = x.cover; if (S.bg.startsWith('pastel-')) S.bg = `pastel-${x.cover}`; }
     const art = itemArt();
-    if (art) { S.art.id = art; if (art === 'photo') { S.art.photo = ''; S.author = id; } if (S.layout === 'none') S.layout = 'a'; }
+    if (art && !(art === 'photo' && S.avatar)) { S.art.id = art; if (art === 'photo') { S.art.photo = ''; S.author = id; } if (S.layout === 'none') S.layout = 'a'; }
   };
-  const CONTENT = ['label', 'labelText', 'headline', 'context', 'qmark', 'chips', 'chipsText', 'rule', 'body', 'bodyText', 'pairs', 'pairsCms', 'pairsText', 'steps', 'stepsText', 'tools', 'toolsText', 'toolsCustom', 'toolsOwn', 'github', 'list', 'listText', 'author', 'aCustom', 'aName', 'aRole', 'aPhoto'] as const;
+  const CONTENT = ['label', 'labelText', 'headline', 'context', 'qmark', 'avatar', 'chips', 'chipsText', 'rule', 'body', 'bodyText', 'pairs', 'pairsCms', 'pairsText', 'steps', 'stepsText', 'tools', 'toolsText', 'toolsCustom', 'toolsOwn', 'github', 'list', 'listText', 'author', 'aCustom', 'aName', 'aRole', 'aPhoto'] as const;
 
   const tick = (now: number) => {
     raf = 0;

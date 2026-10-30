@@ -119,6 +119,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
           <fieldset>
             <legend class="marker">More text</legend>
             <label class="tg"><span>Quote mark</span><input type="checkbox" role="switch" data-k="qmark" /></label>
+            <label class="tg"><span>Round photo (the author's)</span><input type="checkbox" role="switch" data-k="avatar" /></label>
             <label class="tg"><span>Chips</span><input type="checkbox" role="switch" data-k="chips" /></label>
             <label class="fld" data-if="chips=true"><input type="text" data-k="chipsText" placeholder="Comma, separated" /></label>
             <label class="tg"><span>Divider under the headline</span><input type="checkbox" role="switch" data-k="rule" /></label>
@@ -467,6 +468,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-av img { width: 100%; height: 100%; object-fit: cover; }
   .post .p-author > span:last-child { display: grid; font-size: calc(24px * var(--s)); line-height: 1.25; }
   .post .p-author .tone-2 { color: var(--text-2); }
+  .post .p-main .p-avatar { width: calc(200px * var(--s)); height: calc(200px * var(--s)); font-size: calc(48px * var(--s)); }
   .post .p-main .p-author .p-av { width: calc(112px * var(--s)); height: calc(112px * var(--s)); }
   .post .p-main .p-author > span:last-child { font-size: calc(30px * var(--s)); }
   .post .p-foot { grid-area: foot; position: relative; display: flex; align-items: center; justify-content: space-between; gap: calc(24px * var(--s)); min-width: 0; padding-block: var(--e); }
