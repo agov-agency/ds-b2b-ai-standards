@@ -22,7 +22,7 @@ const DEFAULTS = {
   about: '', lines: true, pattern: false,
   logo: true, logoKind: 'mark', logoPos: 'left', logoH: 48, label: true, labelText: '',
   chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, rule: false,
-  body: false, bodyText: '', pairs: false, pairsCms: true, pairsText: '', steps: false, stepsText: '', tools: false, toolsText: '', toolsCustom: false, toolsExtra: '', github: false,
+  body: false, bodyText: '', pairs: false, pairsCms: true, pairsText: '', steps: false, stepsText: '', tools: false, toolsText: '', toolsCustom: false, toolsOwn: [{ name: '', logo: 'list' }], github: false,
   list: false, listText: '', button: false, buttonText: '',
   author: '', authorStyle: 'byline', aCustom: false, aName: '', aRole: '', aPhoto: '',
   art: { id: 'none', zoom: 1, x: 0, y: 0, t: 0, mono: false, animate: true, frame: 'bleed', photo: '' },
@@ -74,12 +74,13 @@ function logoPick(name: string) {
   return D.logos[key] ?? '';
 }
 
+const img = (src: string, w: number) => (/cdn\.sanity\.io/.test(src) ? `${src}?w=${w}&h=${w}&fit=crop&auto=format` : src);
 function authorBlock(s: State) {
   let name = '', role = '', photo = '';
   if (s.aCustom) ({ aName: name, aRole: role, aPhoto: photo } = s);
   else { const a = authorById(s.author); if (!a) return ''; name = a.name; role = [a.role, a.company].filter(Boolean).join(', '); photo = a.photo; }
   if (!name) return '';
-  return `<div class="p-author"><span class="p-av">${photo ? `<img src="${esc(photo)}" alt="" crossorigin="anonymous">` : esc(initials(name))}</span><span><span>${esc(name)}</span>${role ? `<span class="tone-2">${esc(role)}</span>` : ''}</span></div>`;
+  return `<div class="p-author"><span class="p-av">${photo ? `<img src="${esc(img(photo, 256))}" alt="" crossorigin="anonymous">` : esc(initials(name))}</span><span><span>${esc(name)}</span>${role ? `<span class="tone-2">${esc(role)}</span>` : ''}</span></div>`;
 }
 
 // Boxes straight from the item: a rule's LinkedIn default against the Standard, a skill's tools
@@ -94,15 +95,16 @@ const GITHUB = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentC
 
 export function postHTML(s: State) {
   const [W, H] = FORMATS[s.format], wide = W > H * 1.2, dark = isDark(s);
-  const sc = Math.min(W / 1080, H / (wide ? 600 : 1080));
+  const sc = Math.min(W / 1080, H / (wide ? 760 : 1080));
   const cls = ['post', dark ? 'surface-black' : s.bg.startsWith('pastel-') ? 'on-pastel' : '', wide ? 'wide' : '', s.lines ? 'lines' : '', `frame-${s.art.frame}`,
     `al-${s.align}`, `logo-${s.logoPos}`].filter(Boolean).join(' ');
-  const style = `--w:${W}px; --h:${H}px; --s:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --ax:${s.art.x}%; --ay:${s.art.y}%`;
+  const style = `--w:${W}px; --h:${H}px; --s0:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --ax:${s.art.x}%; --ay:${s.art.y}%`;
   const logo = s.logo ? `<img class="p-logo" src="/design-system/brand/${s.logoKind === 'mark' ? 'mark' : dark ? 'logo-b2b' : 'logo-b2b-light'}.svg" alt="">` : '';
   const label = s.label && s.labelText ? `<p class="p-label">${esc(s.labelText)}</p>` : '';
   const head = s.headline || s.context ? `<h1 class="p-head">${esc(s.headline)}${s.context ? ` <span class="tone-2">${esc(s.context)}</span>` : ''}</h1>` : '';
   const pairs = lines((s.pairsCms && cmsPairs(s)) || s.pairsText).map((l) => { const hl = l.startsWith('*'), [k, ...v] = l.replace(/^\*\s*/, '').split('|'); return `<div class="${hl ? 'hl' : ''}"><p class="p-k">${esc(k.trim())}</p><p>${esc(v.join('|').trim())}</p></div>`; });
-  const steps = lines(s.stepsText), list = lines(s.listText), tools = [s.toolsText, s.toolsCustom ? s.toolsExtra : ''].join(',').split(',').map((t) => t.trim()).filter(Boolean);
+  const steps = lines(s.stepsText), list = lines(s.listText), tools = [...s.toolsText.split(',').map((t) => t.trim()).filter(Boolean).map((t) => ({ name: t, svg: logoPick(t) })),
+    ...(s.toolsCustom ? s.toolsOwn.filter((t) => t.name.trim()).map((t) => ({ name: t.name.trim(), svg: D.logos[t.logo] ?? '' })) : [])];
   const main = [
     s.qmark ? '<svg class="p-q" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13L7 0h6L9 12h5v12zm18 0V13l7-13h6l-4 12h5v12z"/></svg>' : '',
     s.chips && s.chipsText ? `<p class="p-chips">${s.chipsText.split(',').map((c) => c.trim()).filter(Boolean).map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</p>` : '',
@@ -111,12 +113,11 @@ export function postHTML(s: State) {
     s.body && s.bodyText ? `<p class="p-body">${esc(s.bodyText)}</p>` : '',
     s.pairs && pairs.length ? `<div class="p-pairs">${pairs.join('')}</div>` : '',
     s.steps && steps.length ? `<ol class="p-steps" style="--n:${Math.min(steps.length, wide ? 4 : steps.length > 4 ? Math.ceil(steps.length / 2) : steps.length)}">${steps.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>` : '',
-    s.tools && tools.length ? `<div class="p-tools"><p class="p-k">Tools</p><p>${tools.map((t) => `<span class="p-tool">${logoPick(t)}${esc(t)}</span>`).join('')}</p></div>` : '',
+    s.tools && tools.length ? `<div class="p-tools"><p class="p-k">Tools</p><p>${tools.map((t) => `<span class="p-tool">${t.svg}${esc(t.name)}</span>`).join('')}</p></div>` : '',
     s.list && list.length ? `<ul class="p-list">${list.map((l) => { const [k, ...v] = l.split('|'); return v.length ? `<li><b>${esc(k.trim())}</b><span>${esc(v.join('|').trim())}</span></li>` : `<li><b></b><span>${esc(k)}</span></li>`; }).join('')}</ul>` : '',
-    s.authorStyle === 'card' ? authorBlock(s) : '',
     s.button && s.buttonText ? `<span class="p-btn">${esc(s.buttonText)}</span>` : '',
   ].join('');
-  const foot = (s.authorStyle === 'byline' ? authorBlock(s) : '') + (s.github ? `<p class="p-gh">${GITHUB}<span>Open on GitHub</span></p>` : '');
+  const foot = authorBlock(s) + (s.github ? `<p class="p-gh">${GITHUB}<span>Open on GitHub</span></p>` : '');
   return `<div class="${cls}" style="${style}">
     <div class="p-bg${s.pattern ? ` pattern pattern-fade` : ''}"></div>
     <div class="p-grid lay-${s.art.id === 'none' ? 'none' : s.layout}">
@@ -205,7 +206,7 @@ function fillArt(post: HTMLElement, s: State, live: boolean) {
   }
   if (s.art.id === 'photo') {
     const src = s.art.photo || (s.aCustom ? s.aPhoto : authorById(s.author)?.photo) || '';
-    if (src) box.innerHTML = `<img class="p-photo" src="${esc(src)}" alt="" crossorigin="anonymous" style="transform: scale(${s.art.zoom})">`;
+    if (src) box.innerHTML = `<img class="p-photo" src="${esc(img(src, 1400))}" alt=""" crossorigin="anonymous" style="transform: scale(${s.art.zoom})">`;
     return undefined;
   }
   const piece = pieceOf(s.art.id);
@@ -218,17 +219,22 @@ function fillArt(post: HTMLElement, s: State, live: boolean) {
 function fit(post: HTMLElement, s: State) {
   const head = post.querySelector<HTMLElement>('.p-head'), grid = post.querySelector<HTMLElement>('.p-grid')!;
   if (!head) return;
-  const sc = +post.style.getPropertyValue('--s');
+  const sc = +post.style.getPropertyValue('--s0');
   if (s.hsize === 'fixed') { post.style.setProperty('--hs', String(s.hpx * sc)); return; }
   const main = post.querySelector<HTMLElement>('.p-main')!;
   // Height the main column's content takes, in post pixels (the preview is scaled; the quote mark is an SVG without offsetTop)
   const used = () => { const k = [...main.children], r = post.getBoundingClientRect().width / post.offsetWidth; return (k[k.length - 1].getBoundingClientRect().bottom - k[0].getBoundingClientRect().top) / r; };
   const ok = () => grid.scrollHeight <= grid.clientHeight + 1 && used() <= main.clientHeight + 1 && head.scrollWidth <= head.clientWidth + 1;
-  let lo = 16 * sc, hi = s.hmax * sc;
-  post.style.setProperty('--hs', String(hi));
-  if (ok()) return;
-  for (let i = 0; i < 10; i++) { const mid = (lo + hi) / 2; post.style.setProperty('--hs', String(mid)); if (ok()) lo = mid; else hi = mid; }
-  post.style.setProperty('--hs', String(Math.floor(lo)));
+  // Headline first: when it would drop below 60% of its size, the text around it shrinks a step instead
+  for (const k of post.classList.contains('wide') ? [1, .9, .8, .7] : [1]) {
+    post.style.setProperty('--k', String(k));
+    let lo = 16 * sc, hi = s.hmax * sc;
+    post.style.setProperty('--hs', String(hi));
+    if (ok()) return;
+    for (let i = 0; i < 10; i++) { const mid = (lo + hi) / 2; post.style.setProperty('--hs', String(mid)); if (ok()) lo = mid; else hi = mid; }
+    post.style.setProperty('--hs', String(Math.floor(lo)));
+    if (lo >= s.hmax * sc * .6) return;
+  }
 }
 
 export function renderInto(host: HTMLElement, s: State, live = false) {
@@ -236,7 +242,10 @@ export function renderInto(host: HTMLElement, s: State, live = false) {
   const post = host.firstElementChild as HTMLElement;
   const piece = fillArt(post, s, live);
   fit(post, s);
-  post.querySelectorAll('img').forEach((im) => im.complete || im.addEventListener('load', () => fit(post, s), { once: true }));
+  post.querySelectorAll('img').forEach((im) => {
+    if (!im.complete) im.addEventListener('load', () => fit(post, s), { once: true });
+    im.addEventListener('error', () => { if (im.crossOrigin) { im.removeAttribute('crossorigin'); im.src = im.src; } }, { once: true });
+  });
   return { post, piece };
 }
 
@@ -266,7 +275,7 @@ function templates(): Tpl[] {
 
   const scenario = (x: Data['scenarios'][number]): Tpl => ({ group: 'Scenario cards', name: x.title, note: x.status === 'soon' ? 'Coming soon' : 'Animated: MP4', s: B({
     about: `scenario:${x.id}`, format: 'portrait', layout: 'b', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Scenario · ${x.cadence}`, headline: x.title, context: '', body: false, bodyText: x.description, steps: x.steps.length > 0, stepsText: x.steps.slice(0, 7).join('\n'), tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '),
-    author: x.author ?? '', hmax: 67, art: { id: x.art?.piece ?? 'sorter', zoom: x.art?.zoom ?? 1, frame: 'bleed' } as never }) });
+    author: x.author ?? '', hmax: 67, art: { id: x.art?.piece ?? 'sorter', zoom: 1, frame: 'bleed' } as never }) });
   const skill = (x: Data['skills'][number]): Tpl => ({ group: 'Skill cards', name: x.title, s: B({
     about: `skill:${x.id}`, format: 'square', layout: 'b', bg: 'white', cover: x.cover, labelText: 'Skill', chips: true, chipsText: x.category, headline: x.title, context: x.description, hmax: 58,
     pairs: x.connectors.length > 0, pairsText: skillPairs(x), github: true,
@@ -300,7 +309,7 @@ function templates(): Tpl[] {
     const a = authorById(id)!;
     T.push({ group: 'Author cards', name: a.name, note: `${items.length} in the Standard`, s: B({
       about: `author:${id}`, format: 'portrait', layout: 'b', bg: 'white', labelText: 'Author', headline: a.name, context: [a.role, a.company].filter(Boolean).join(', '), hmax: 67,
-      list: true, listText: [...new Set(items)].slice(0, 4).join('\n'), art: { id: 'photo', zoom: 1, frame: 'panel' } as never, author: id, authorStyle: 'card' }) });
+      list: true, listText: [...new Set(items)].slice(0, 4).join('\n'), art: { id: 'photo', zoom: 1, frame: 'panel' } as never, author: id }) });
   });
   // An author card shows the person as the art; the byline would repeat them
   T.filter((t) => t.group === 'Author cards').forEach((t) => (t.s.author = '', t.s.art.photo = authorById(D.authors.find((a) => a.name === t.name)?.id)?.photo ?? ''));
@@ -460,9 +469,20 @@ export function boot() {
     panel.querySelectorAll<HTMLInputElement>('[data-tool]').forEach((el) => (el.checked = tools.includes(el.dataset.tool!.toLowerCase())));
     $('[data-ms-sum]').textContent = S.toolsText.trim() || 'Pick tools';
     itemGrid();
+    ownRows();
     panel.querySelectorAll<HTMLElement>('[data-art]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.art === S.art.id)));
   };
 
+  // Own tools: a name and a logo per row; rows are rebuilt only when their count changes so typing keeps focus
+  const own = $('[data-own]'), logoOpts = Object.keys(D.logos).map((k) => `<option value="${k}">${k}</option>`).join('');
+  const ownRows = () => {
+    if (own.children.length !== S.toolsOwn.length) own.innerHTML = S.toolsOwn.map((_, i) => `<div class="own"><input type="text" data-own-name="${i}" placeholder="Clay"><select data-own-logo="${i}" aria-label="Logo">${logoOpts}</select><button type="button" class="x" data-own-del="${i}" aria-label="Remove">×</button></div>`).join('');
+    S.toolsOwn.forEach((t, i) => {
+      const n = own.querySelector<HTMLInputElement>(`[data-own-name="${i}"]`)!, l = own.querySelector<HTMLSelectElement>(`[data-own-logo="${i}"]`)!;
+      if (n.value !== t.name) n.value = t.name;
+      l.value = t.logo;
+    });
+  };
   // Settings tabs
   const ptab = (id: string) => {
     panel.querySelectorAll<HTMLElement>('[data-ptab-btn]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.ptabBtn === id)));
@@ -506,7 +526,7 @@ export function boot() {
     const art = itemArt();
     if (art) { S.art.id = art; if (art === 'photo') { S.art.photo = ''; S.author = id; } if (S.layout === 'none') S.layout = 'a'; }
   };
-  const CONTENT = ['label', 'labelText', 'headline', 'context', 'qmark', 'chips', 'chipsText', 'rule', 'body', 'bodyText', 'pairs', 'pairsCms', 'pairsText', 'steps', 'stepsText', 'tools', 'toolsText', 'github', 'list', 'listText', 'author', 'authorStyle', 'aCustom', 'aName', 'aRole', 'aPhoto'] as const;
+  const CONTENT = ['label', 'labelText', 'headline', 'context', 'qmark', 'chips', 'chipsText', 'rule', 'body', 'bodyText', 'pairs', 'pairsCms', 'pairsText', 'steps', 'stepsText', 'tools', 'toolsText', 'toolsCustom', 'toolsOwn', 'github', 'list', 'listText', 'author', 'aCustom', 'aName', 'aRole', 'aPhoto'] as const;
 
   const tick = (now: number) => {
     raf = 0;
@@ -540,6 +560,8 @@ export function boot() {
   const change = () => { sync(); draw(); };
   panel.addEventListener('input', (e) => {
     const el = e.target as HTMLInputElement;
+    if (el.dataset.ownName) { S.toolsOwn[+el.dataset.ownName].name = el.value; return change(); }
+    if (el.dataset.ownLogo) { S.toolsOwn[+el.dataset.ownLogo].logo = el.value; return change(); }
     if (el.dataset.tool) { S.toolsText = [...panel.querySelectorAll<HTMLInputElement>('[data-tool]:checked')].map((t) => t.dataset.tool).join(', '); return change(); }
     if (!el.dataset.k) return;
     set(S, el.dataset.k, el.type === 'checkbox' ? el.checked : el.type === 'range' ? +el.value : el.value);
@@ -549,8 +571,10 @@ export function boot() {
     change();
   });
   panel.addEventListener('click', (e) => {
-    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-v], [data-act], [data-wave-preset], [data-art], [data-artcat], [data-ptab-btn]');
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-v], [data-act], [data-wave-preset], [data-art], [data-artcat], [data-ptab-btn], [data-own-del]');
     if (!b) return;
+    if (b.dataset.ownDel) { S.toolsOwn.splice(+b.dataset.ownDel, 1); if (!S.toolsOwn.length) S.toolsOwn.push({ name: '', logo: 'list' }); return change(); }
+    if (b.dataset.act === 'own-add') { S.toolsOwn.push({ name: '', logo: 'list' }); return change(); }
     if (b.dataset.ptabBtn) return ptab(b.dataset.ptabBtn);
     if (b.dataset.artcat) return artcat(b.dataset.artcat);
     const g = b.closest<HTMLElement>('[data-seg], [data-swatch]');

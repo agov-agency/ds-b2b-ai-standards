@@ -138,7 +138,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
             </details>
             <div data-if="tools=true">
               <label class="tg"><span>Add your own</span><input type="checkbox" role="switch" data-k="toolsCustom" /></label>
-              <label class="fld" data-if="toolsCustom=true">Names, comma separated <input type="text" data-k="toolsExtra" placeholder="Clay, Apollo" /></label>
+              <div data-if="toolsCustom=true"><div class="owns" data-own></div><button type="button" class="btn ghost xs" data-act="own-add">+ Add a tool</button></div>
             </div>
             <label class="tg"><span>List</span><input type="checkbox" role="switch" data-k="list" /></label>
             <label class="fld" data-if="list=true">One per line: <code>Label | text</code> <textarea rows="4" data-k="listText"></textarea></label>
@@ -150,7 +150,6 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
             <legend class="marker">Author</legend>
             <label class="tg"><span>Custom (not in the CMS)</span><input type="checkbox" role="switch" data-k="aCustom" /></label>
             <label class="fld" data-if="aCustom=false"><select data-k="author"><option value="">None</option>{data.authors.map((a) => <option value={a.id}>{a.name}</option>)}</select></label>
-            <div class="seg" data-seg="authorStyle"><button type="button" data-v="byline">At the bottom</button><button type="button" data-v="card">In the text</button></div>
             <div data-if="aCustom=true">
               <label class="fld">Name <input type="text" data-k="aName" /></label>
               <label class="fld">Role, company <input type="text" data-k="aRole" /></label>
@@ -371,6 +370,11 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .art-grid > button > figure.iso-panel[class] { position: absolute; inset: 6px; margin: 0; background: none; }
   @media (hover: hover) and (pointer: fine) { .art-grid > button:not([aria-pressed=true]):hover { box-shadow: inset 0 0 0 1px var(--text-2); } }
   /* Tools: a dropdown with a checkbox per connector */
+  .owns { display: grid; gap: 6px; margin-bottom: 6px; }
+  .own { display: grid; grid-template-columns: minmax(0, 1fr) 120px 32px; gap: 8px; align-items: end; }
+  .own input, .own select { min-width: 0; padding: 6px 0 8px; border: 0; border-bottom: 1px solid var(--line-field); background: none; font: 500 14px/1.4 var(--font-sans); letter-spacing: -.03em; color: var(--text); }
+  .own .x { height: 32px; border: 0; border-radius: var(--radius-pill); background: none; color: var(--text-2); font-size: 18px; cursor: pointer; transition: background-color var(--t-fast) ease; }
+  @media (hover: hover) and (pointer: fine) { .own .x:hover { background: var(--bg-muted); color: var(--text); } }
   .ms { position: relative; }
   .ms > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0 8px; border-bottom: 1px solid var(--line-field); list-style: none; cursor: pointer; font: 500 14px/1.4 var(--font-sans); letter-spacing: -.03em; transition: border-color var(--t-fast) ease; }
   .ms > summary::-webkit-details-marker { display: none; }
@@ -407,7 +411,9 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   @media (prefers-reduced-motion: reduce) { .pb-view { animation: none; } }
 
   /* ---------- Post: drawn at its export size; --s scales spacing and small type with the format ---------- */
-  .post { --pad: calc(72px * var(--s)); --e: calc(40px * var(--s)); --gap: calc(48px * var(--s)); --hue: var(--primary-450); position: relative; width: var(--w); height: var(--h); overflow: hidden; background: var(--pbg); color: var(--text); font: 500 calc(28px * var(--s))/1.35 var(--font-sans); letter-spacing: -.04em; text-align: left; -webkit-font-smoothing: antialiased; }
+  /* --k shrinks the text around the headline when auto-fit runs out of room in wide formats */
+  .post .p-foot, .post .p-main > :not(.p-head) { --s: calc(var(--s0) * var(--k, 1)); }
+  .post { --s: var(--s0); --pad: calc(72px * var(--s)); --e: calc(40px * var(--s)); --gap: calc(48px * var(--s)); --hue: var(--primary-450); position: relative; width: var(--w); height: var(--h); overflow: hidden; background: var(--pbg); color: var(--text); font: 500 calc(28px * var(--s))/1.35 var(--font-sans); letter-spacing: -.04em; text-align: left; -webkit-font-smoothing: antialiased; }
   .post.on-pastel { --line: color-mix(in srgb, var(--neutral-950) 14%, transparent); --line-card: color-mix(in srgb, var(--neutral-950) 10%, transparent); --bg-muted: color-mix(in srgb, var(--neutral-0) 70%, transparent); --text-2: var(--neutral-500); }
   .post .p-bg, .post .p-lines { position: absolute; inset: 0; pointer-events: none; }
   .post .p-bg.pattern { --pitch: calc(12px * var(--s)); --dot: #0b0c0d24; }
@@ -421,8 +427,8 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post.logo-right .p-top { flex-direction: row-reverse; }
   .post .p-logo { display: block; height: calc(var(--logo) * var(--s) * 1px); width: auto; max-width: 62%; object-fit: contain; object-position: left center; flex: none; }
   .post.logo-right .p-logo { object-position: right center; }
-  .post .p-label { display: flex; white-space: nowrap; overflow: hidden; align-items: center; gap: calc(12px * var(--s)); font: 600 calc(22px * var(--s))/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: 0; }
-  .post .p-label::before { content: ''; width: calc(14px * var(--s)); height: calc(14px * var(--s)); background: var(--secondary-300); flex: none; }
+  .post .p-label { display: flex; white-space: nowrap; overflow: hidden; align-items: center; gap: calc(12px * var(--s)); font: 600 calc(17px * var(--s))/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: 0; }
+  .post .p-label::before { content: ''; width: calc(11px * var(--s)); height: calc(11px * var(--s)); background: var(--secondary-300); flex: none; }
   .post .p-main { grid-area: main; position: relative; display: grid; align-content: start; gap: calc(28px * var(--s)); min-width: 0; }
   .post .p-head { font-weight: 500; font-size: calc(var(--hs) * 1px); line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; overflow-wrap: break-word; }
   .post .p-head .tone-2 { color: var(--text-2); }
@@ -463,6 +469,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post.al-center .p-btn { justify-self: center; }
   /* Edge lines: the site's 1px structure, half the padding in from the edge, rules under the top and over the foot */
   .post.lines .p-lines { background: linear-gradient(var(--line), var(--line)) calc(var(--pad) / 2) 0 / 1px 100% no-repeat, linear-gradient(var(--line), var(--line)) calc(100% - var(--pad) / 2) 0 / 1px 100% no-repeat; }
+  .post.lines .p-top::after, .post.lines .p-foot::before { content: ''; position: absolute; left: calc(-1 * var(--pad)); right: calc(-1 * var(--pad)); height: 1px; background: var(--line); }
   .post.lines .p-top::after { bottom: 0; }
   .post.lines .p-foot::before { top: 0; }
 
