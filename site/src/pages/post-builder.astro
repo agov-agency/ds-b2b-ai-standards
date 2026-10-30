@@ -215,7 +215,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
           </fieldset>
           <fieldset data-if="art.id!=none">
             <legend class="marker">Placement</legend>
-            <div class="seg" data-seg="art.frame"><button type="button" data-v="bleed">To the edge</button><button type="button" data-v="panel">On a panel</button><button type="button" data-v="free">Free</button></div>
+            <div class="seg" data-seg="art.frame"><button type="button" data-v="bleed">To the edge</button><button type="button" data-v="panel">On a panel</button></div>
             <label class="fld">Zoom <input type="range" min=".5" max="3" step=".02" data-k="art.zoom" /></label>
             <label class="fld">Move ↔ <input type="range" min="-60" max="60" step="1" data-k="art.x" /></label>
             <label class="fld">Move ↕ <input type="range" min="-60" max="60" step="1" data-k="art.y" /></label>
