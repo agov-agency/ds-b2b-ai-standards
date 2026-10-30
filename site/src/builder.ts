@@ -273,6 +273,13 @@ export function renderInto(host: HTMLElement, s: State, live = false) {
 
 // ---------- Templates ----------
 type Tpl = { group: string; name: string; note?: string; s: State };
+// An author card: the person as the art (round photo), company and role as chips, what they added as a list; no byline, it would repeat them
+function authorCard(id: string, items: string[] = []): Tpl {
+  const a = authorById(id)!;
+  return { group: 'Author cards', name: a.name, note: `${items.length} in the Standard`, s: merge(clone(DEFAULTS), {
+    about: `author:${id}`, format: 'portrait', layout: 'none', vpos: 'end', bg: 'white', labelText: 'Author', avatar: true, chips: !!(a.role || a.company), chipsText: [a.company, a.role].filter(Boolean).join(', '),
+    headline: a.name, context: '', hmax: 120, list: items.length > 0, listText: [...new Set(items)].slice(0, 4).join('\n'), author: '', aCustom: false, art: { ...DEFAULTS.art, photo: a.photo ?? '' } }) };
+}
 function templates(): Tpl[] {
   const T: Tpl[] = [], B = (o: Parameters<typeof merge>[1]) => merge(clone(DEFAULTS), o);
   const nR = D.rules.length, nA = D.authors.filter((a) => a.id !== 'demandsense').length;
@@ -329,14 +336,7 @@ function templates(): Tpl[] {
   D.scenarios.forEach((x) => add(x.author, `Scenario | ${x.title}`));
   D.skills.forEach((x) => add(x.author, `Skill | ${x.title}`));
   D.rules.forEach((x) => { add(x.author, `Rule ${String(x.number).padStart(2, '0')} | ${x.title}`); x.voices.forEach((v) => add(v.author, `On rule ${String(x.number).padStart(2, '0')} | ${x.title}`)); });
-  [...adds].sort((a, b) => b[1].length - a[1].length).forEach(([id, items]) => {
-    const a = authorById(id)!;
-    T.push({ group: 'Author cards', name: a.name, note: `${items.length} in the Standard`, s: B({
-      about: `author:${id}`, format: 'portrait', layout: 'none', vpos: 'end', bg: 'white', labelText: 'Author', avatar: true, chips: !!(a.role || a.company), chipsText: [a.company, a.role].filter(Boolean).join(', '),
-      headline: a.name, hmax: 120, list: true, listText: [...new Set(items)].slice(0, 4).join('\n'), author: id }) });
-  });
-  // An author card shows the person as the art; the byline would repeat them
-  T.filter((t) => t.group === 'Author cards').forEach((t) => (t.s.author = '', t.s.art.photo = authorById(D.authors.find((a) => a.name === t.name)?.id)?.photo ?? ''));
+  [...adds].sort((a, b) => b[1].length - a[1].length).forEach(([id, items]) => T.push(authorCard(id, items)));
   // Email: each card type at 1200 wide, text left and art right; pick another item under Content → About
   const E = 'Email (1200 wide)', first = (g: string) => T.find((t) => t.group === g);
   ['Scenario cards', 'Skill cards', 'Rule cards', 'Quote cards', 'Author cards'].forEach((g) => {
@@ -625,7 +625,7 @@ export function boot() {
     if (g && b.dataset.v) set(S, g.dataset.seg ?? g.dataset.swatch!, b.dataset.v);
     if (b.dataset.art) S.art.id = b.dataset.art;
     if ((b.dataset.art || g?.dataset.seg === 'art.id') && S.art.id !== 'none' && S.layout === 'none') S.layout = S.art.id === 'wave' ? 'over' : 'a';
-    if (b.dataset.act === 'fill') { const tp = TPL.find((x) => x.s.about === S.about); if (tp) CONTENT.forEach((k) => ((S as any)[k] = clone(tp.s[k]))); }
+    if (b.dataset.act === 'fill') { const tp = TPL.find((x) => x.s.about === S.about) ?? (S.about.startsWith('author:') && authorById(S.about.slice(7)) ? authorCard(S.about.slice(7)) : undefined); if (tp) CONTENT.forEach((k) => ((S as any)[k] = clone(tp.s[k]))); }
     if (b.dataset.wavePreset) Object.assign(S.wave, WAVES[b.dataset.wavePreset as keyof typeof WAVES]);
     if (b.dataset.act === 'templates') return view('templates');
     if (b.dataset.act === 'reset') S = clone(base); // back to the template as it opened
