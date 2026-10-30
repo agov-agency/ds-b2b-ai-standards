@@ -1,27 +1,4 @@
 ---
-// Temporary page: the three figure options for the "Competitor watch" scenario, on its cover hue. Not linked, not in the CMS.
-import Base from '../layouts/Base.astro';
-import IsoArt from '../components/IsoArt.astro';
-const OPTIONS = [
-  ['blink', '1 · Blink comparator', 'This week’s plate next to last week’s; the shutter flips between them and the new mark lights. A new plate rises in each week, the oldest drops away.'],
-  ['seismo', '2 · Strip-chart recorder', 'One pen per competitor, the main rival on the heaviest. Paper unrolls week by week; a change makes the pen kick, and the kick rides the paper away.'],
-  ['trivision', '3 · Billboards and a spotting scope', 'Tri-vision billboards sized by priority. The scope pans the row each week and settles on the main rival as its louvres turn to a new message.'],
-];
+// The Competitor watch options moved to /art-review, the one page with every illustration.
+return Astro.redirect('/art-review');
 ---
-<Base title="Competitor watch: figure options">
-  <main class="opts" style="--cover: var(--pastel-9); --cover-450: var(--pastel-9-450)">
-    {OPTIONS.map(([n, h, p]) => (
-      <section>
-        <IsoArt name={n} field="var(--cover)" />
-        <h2>{h}</h2><p>{p}</p>
-      </section>
-    ))}
-  </main>
-</Base>
-<style>
-  .opts { max-width: 1600px; margin: 0 auto; padding: 48px 24px 120px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-  h2 { font: 500 24px/1.2 Inter, sans-serif; margin: 16px 0 8px; }
-  p { margin: 0; font: 400 15px/1.5 Inter, sans-serif; color: var(--neutral-600, #666); }
-  .opts :global(figure.iso-panel) { --art-a: var(--cover-450); --lit: var(--cover-450); aspect-ratio: 1; width: 100%; }
-  @media (max-width: 900px) { .opts { grid-template-columns: 1fr; } }
-</style>

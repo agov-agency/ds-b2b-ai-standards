@@ -1,7 +1,11 @@
 ---
-// Temporary review page: every item with its figure or icon, before they are assigned in the CMS. Delete after review.
+// Temporary review page: every illustration in one place. Each item with its current figure or icon, then every
+// alternative drawn for it (`x-<name>` from this page's batch, the /art-alts batch, the Competitor watch options), then the
+// hub heroes. Alternatives are not in the CMS pools until picked. Not linked; delete after review.
+// ?t=<seconds> holds every animated figure at that time instead of playing.
 import Base from '../layouts/Base.astro';
 import IsoArt from '../components/IsoArt.astro';
+import { alts } from '../art/alt';
 
 const SCENARIOS = [
   ['Warm-lead handoff', 'Поштова сортувальна', 'sorter'],
@@ -12,7 +16,10 @@ const SCENARIOS = [
   ['Signal loop', 'Лабораторний аналізатор', 'analyzer'],
   ['Turn social signals into pipeline', 'Промисел із трубопроводом', 'pumpjack'],
   ['Weekly check for conversion campaigns', 'Стенд прогону ламп', 'burnin'],
+  ['Competitor watch', 'Самописець', 'seismo'],
 ];
+const EXTRA: Record<string, [string, string][]> = { seismo: [['blink', 'Компаратор пластин'], ['trivision', 'Білборди з підзорною трубою']] };
+const HEROES = [['Directory', 'directory'], ['Scenarios hub', 'scenarios'], ['Skills hub', 'skills'], ['Rules hub', 'rules'], ['Footer CTA', 'cta'], ['Contribute', 'typewriter']];
 const SKILLS = [
   ['Landing-page CPC report', 'Турнікет із монетоприймачем', 'turnstile'],
   ['Lowest bid that still spends the budget', 'Регулятор подачі з зарубками', 'regulator'],
@@ -116,47 +123,54 @@ const ALT_SKILLS: [string, [string, string][]][] = [
 ];
 const HUES = [5, 13, 9, 16, 1, 11, 6, 14];
 const cover = (i: number) => { const n = HUES[i % HUES.length]; return `--cover: var(--pastel-${n}); --cover-200: var(--pastel-${n}-200); --cover-450: var(--pastel-${n}-450)`; };
+// Every option for an item: this page's alternatives, the /art-alts batch, extras
+const reviewAlts = (n: string) => [...ALT_RULES, ...ALT_SKILLS].find(([c]) => c === n)?.[1].map(([a, m]) => [`x-${a}`, m] as [string, string]) ?? [];
+const options = (n: string) => [...(EXTRA[n] ?? []), ...reviewAlts(n), ...Object.entries(alts).filter(([, a]) => a.of === n || a.of === `i-${n}`).map(([a, x]) => [a, x.idea] as [string, string])];
+const GROUPS: [string, string[][]][] = [['Сценарії', SCENARIOS], ['Скіли', SKILLS], ['Правила', RULES]];
+const pieceOf = (h: string, n: string) => (h === 'Сценарії' ? n : `i-${n}`);
 ---
 <Base title="Art review">
   <main class="rev">
-    <h2>Сценарії</h2>
-    <table>
-      {SCENARIOS.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic big"><IsoArt name={n} field="var(--cover)" /></td></tr>)}
-    </table>
-    <h2>Скіли</h2>
-    <table>
-      {SKILLS.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic"><span class="tile"><IsoArt name={`i-${n}`} field="var(--cover)" still /></span></td></tr>)}
-    </table>
-    <h2>Правила</h2>
-    <table>
-      {RULES.map(([t, m, n], i) => <tr style={cover(i)}><td class="t">{t}<span>{m}</span><code>{n}</code></td><td class="pic"><span class="tile"><IsoArt name={`i-${n}`} field="var(--cover)" still /></span></td></tr>)}
-    </table>
-    <h2>Альтернативи: правила</h2>
-    <p class="note">Поточна іконка і дві альтернативи. Їх немає в CMS, поки не обереш.</p>
-    <table>
-      {ALT_RULES.map(([cur, alts], i) => <tr style={cover(i)}><td class="t">{RULES.find((r) => r[2] === cur)?.[0]}<span>{alts.map(([, m]) => m).join(' · ')}</span><code>{alts.map(([n]) => n).join(' · ')}</code></td><td class="pic trio">{[`i-${cur}`, ...alts.map(([n]) => `x-${n}`)].map((n) => <span class="tile"><IsoArt name={n} field="var(--cover)" still /></span>)}</td></tr>)}
-    </table>
-    <h2>Альтернативи: скіли</h2>
-    <table>
-      {ALT_SKILLS.map(([cur, alts], i) => <tr style={cover(i)}><td class="t">{SKILLS.find((r) => r[2] === cur)?.[0]}<span>{alts.map(([, m]) => m).join(' · ')}</span><code>{alts.map(([n]) => n).join(' · ')}</code></td><td class="pic trio">{[`i-${cur}`, ...alts.map(([n]) => `x-${n}`)].map((n) => <span class="tile"><IsoArt name={n} field="var(--cover)" still /></span>)}</td></tr>)}
-    </table>
+    <p class="note">Поточна ілюстрація (перша, з рамкою), далі всі альтернативи до неї. Альтернатив немає в CMS, поки не обереш.</p>
+    {GROUPS.map(([h, items]) => [<h2>{h}</h2>, items.map(([t, m, n], i) => {
+      const opts = options(n);
+      return (
+        <section class="row" style={cover(i)}>
+          <div class="t">{t}<span>{m}</span></div>
+          <div class:list={['pics', { big: h === 'Сценарії' }]}>
+            <figure class="cell cur"><IsoArt name={pieceOf(h, n)} field="var(--cover)" still={h !== 'Сценарії'} /><figcaption><code>{n}</code>поточна</figcaption></figure>
+            {opts.map(([a, idea]) => <figure class="cell" data-alt={alts[a] ? a : undefined}><IsoArt name={a} field="var(--cover)" still={h !== 'Сценарії' || !!alts[a]} /><figcaption><code>{a.replace(/^[xi]-/, '')}</code>{idea}</figcaption></figure>)}
+          </div>
+        </section>
+      );
+    })])}
+    <h2>Герої хабів і CTA</h2>
+    <div class="pics big heroes">{HEROES.map(([t, n], i) => <figure class="cell" style={cover(i)}><IsoArt name={n} field="var(--cover)" /><figcaption><code>{n}</code>{t}</figcaption></figure>)}</div>
   </main>
 </Base>
+<script>
+  // Alternatives from the /art-alts batch are not in `figures`, so IsoArt leaves them still; play the animated ones here
+  import { alts } from '../art/alt';
+  const hold = new URLSearchParams(location.search).get('t');
+  const hosts = [...document.querySelectorAll<HTMLElement>('[data-alt]')].map((c) => ({ piece: alts[c.dataset.alt!].piece, frame: c.querySelector('[data-frame]')!, fig: c.querySelector<HTMLElement>('figure')! })).filter((h) => h.piece.period > 1);
+  const show = (t: number) => { for (const h of hosts) { h.frame.innerHTML = h.piece.draw(t % h.piece.period); h.fig.style.setProperty('--march', String(-(t * 12) % 14)); } };
+  if (hold !== null) show(Number(hold));
+  else if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { const t0 = performance.now(); const tick = (now: number) => { show((now - t0) / 1000 * .6); requestAnimationFrame(tick); }; requestAnimationFrame(tick); }
+</script>
 <style>
-  .rev { max-width: 1240px; margin: 0 auto; padding: 48px 24px 120px; }
+  .rev { max-width: 1600px; margin: 0 auto; padding: 48px 24px 120px; }
   h2 { font: 500 32px/1.1 var(--font-sans, Inter); margin: 48px 0 16px; }
-  table { width: 100%; border-collapse: collapse; }
-  tr { border-top: 1px solid var(--neutral-100, #eee); }
-  td { padding: 16px 0; vertical-align: middle; }
-  .t { width: 45%; font: 500 18px/1.4 Inter, sans-serif; padding-right: 24px; }
+  .row { display: grid; grid-template-columns: 240px 1fr; gap: 24px; padding: 16px 0; border-top: 1px solid var(--neutral-100, #eee); }
+  .t { font: 500 18px/1.4 Inter, sans-serif; }
   .t span { display: block; color: var(--neutral-500, #888); font-size: 16px; }
-  .t code { display: block; margin-top: 6px; font: 600 12px/1.4 var(--font-mono, monospace); text-transform: uppercase; color: var(--neutral-500, #888); }
-  .pic.big :global(figure.iso-panel) { aspect-ratio: 1; width: 100%; max-width: 560px; }
+  .note { color: var(--neutral-500, #888); margin: 0 0 16px; }
+  .pics { display: grid; grid-template-columns: repeat(auto-fill, 200px); gap: 12px; }
+  .pics.big { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+  .cell { margin: 0; }
+  .cell :global(figure.iso-panel) { aspect-ratio: 1; width: 100%; }
+  .cur :global(figure.iso-panel) { outline: 1px solid var(--neutral-950, #111); outline-offset: -1px; }
+  figcaption { margin-top: 6px; font: 400 13px/1.4 Inter, sans-serif; color: var(--neutral-600, #666); }
+  figcaption code { display: block; font: 600 11px/1.4 var(--font-mono, monospace); text-transform: uppercase; color: var(--neutral-950, #111); }
   .rev :global(figure.iso-panel) { --art-a: var(--cover-450); --art-b: var(--cover-450); --art-c: var(--cover-450); --lit: var(--cover-450); }
-  .note { color: var(--neutral-500, #888); margin: -8px 0 16px; }
-  .trio { display: flex; gap: 8px; }
-  .trio .tile { width: 200px; height: 200px; }
-  .trio .tile :global(figure.iso-panel) { width: 200px; height: 200px; }
-  .tile { display: block; width: 240px; height: 240px; }
-  .tile :global(figure.iso-panel) { width: 240px; height: 240px; }
+  @media (max-width: 800px) { .row { grid-template-columns: 1fr; } }
 </style>
