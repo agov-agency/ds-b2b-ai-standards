@@ -19,7 +19,7 @@ type Data = {
 const DEFAULTS = {
   format: 'square', layout: 'a', vpos: 'end', align: 'left',
   bg: 'black', bgCustom: '#0b0c0d', hue: 'auto', hueCustom: '#3875f6', cover: 0,
-  about: '', lines: true, pattern: false,
+  about: '', lines: true, pattern: false, fade: true,
   logo: true, logoKind: 'mark', logoPos: 'left', logoH: 48, label: true, labelText: '',
   avatar: false, chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, rule: false,
   body: false, bodyText: '', pairs: false, pairsCms: true, pairsText: '', steps: false, stepsText: '', tools: false, toolsText: '', toolsCustom: false, toolsOwn: [{ name: '', logo: 'list' }], github: false,
@@ -104,6 +104,7 @@ export function postHTML(s: State) {
   const [W, H] = FORMATS[s.format], wide = W > H * 1.2, dark = isDark(s);
   const sc = Math.min(W / 1080, H / (wide ? 760 : 1080));
   const cls = ['post', dark ? 'surface-black' : s.bg.startsWith('pastel-') ? 'on-pastel' : '', wide ? 'wide' : '', s.lines ? 'lines' : '', `frame-${s.art.frame}`,
+    s.fade && s.art.id !== 'none' && (s.layout === 'over' || (s.layout !== 'none' && s.art.zoom > 1)) ? `fade fade-${wide || s.layout === 'over' ? s.vpos : s.layout === 'a' ? 'start' : 'end'}` : '',
     `al-${s.align}`, `logo-${s.logoPos}`].filter(Boolean).join(' ');
   const style = `--w:${W}px; --h:${H}px; --s0:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --ax:${s.art.x}%; --ay:${s.art.y}%`;
   const logo = s.logo ? `<img class="p-logo" src="/design-system/brand/${s.logoKind === 'mark' ? 'mark' : dark ? 'logo-b2b' : 'logo-b2b-light'}.svg" alt="">` : '';

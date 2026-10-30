@@ -263,6 +263,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
           <fieldset>
             <legend class="marker">Structure</legend>
             <label class="tg"><span>Edge lines</span><input type="checkbox" role="switch" data-k="lines" /></label>
+            <label class="tg"><span>Fade under text on art</span><input type="checkbox" role="switch" data-k="fade" /></label>
             <label class="tg"><span>Dot pattern</span><input type="checkbox" role="switch" data-k="pattern" /></label>
           </fieldset>
         </div>
@@ -498,6 +499,13 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   /* A zoomed figure runs over its box and is cut only by the post edge; panels and the wave keep their box */
   .post:not(.frame-panel):not(.fitting) .p-art:has(> figure) { overflow: visible; }
   .post .p-top, .post .p-main, .post .p-foot { z-index: 1; }
+  /* Text over the art (text-on-art layout, or a zoomed figure running under it) sits on a fade into the background; off while fitting, its overflow would read as no room */
+  .post.fade:not(.fitting) .p-main { align-self: safe var(--vpos); }
+  /* The fade runs solid toward the post edge the text sits on and ramps out toward the art */
+  .post.fade:not(.fitting) .p-main::before { content: ''; position: absolute; z-index: -1; --f: calc(120px * var(--s0)); inset: calc(-1 * var(--f)) calc(-1 * var(--pad)); background: linear-gradient(var(--a, transparent), var(--pbg) var(--f), var(--pbg) calc(100% - var(--f)), var(--b, transparent)); pointer-events: none; }
+  .post.fade-start .p-main::before { --a: var(--pbg); }
+  .post.fade-end .p-main::before { --b: var(--pbg); }
+  .post.fade :is(.p-top, .p-foot, .p-lines) { z-index: 2; }
   .post.frame-panel .p-art { border-radius: calc(4px * var(--s)); background: var(--panel); }
   /* Stacked layouts: art first or last, at least a third of the height */
   .post .lay-a { grid-template-areas: 'top' 'main' 'art' 'foot'; grid-template-rows: auto auto minmax(34%, 1fr) auto; }
