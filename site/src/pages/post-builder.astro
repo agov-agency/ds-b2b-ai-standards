@@ -495,6 +495,9 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post.wide.frame-bleed .p-art .iso-art { transform: scale(calc(var(--zoom) * 1.14)); }
   .post .p-art img.p-photo { width: 100%; height: 100%; object-fit: cover; translate: none; object-position: calc(50% - var(--ax)) calc(50% - var(--ay)); }
   .post.frame-bleed .p-art { margin-inline: calc(-1 * var(--pad)); }
+  /* A zoomed figure runs over its box and is cut only by the post edge; panels and the wave keep their box */
+  .post:not(.frame-panel):not(.fitting) .p-art:has(> figure) { overflow: visible; }
+  .post .p-top, .post .p-main, .post .p-foot { z-index: 1; }
   .post.frame-panel .p-art { border-radius: calc(4px * var(--s)); background: var(--panel); }
   /* Stacked layouts: art first or last, at least a third of the height */
   .post .lay-a { grid-template-areas: 'top' 'main' 'art' 'foot'; grid-template-rows: auto auto minmax(34%, 1fr) auto; }

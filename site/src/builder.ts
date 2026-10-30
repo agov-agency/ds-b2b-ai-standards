@@ -249,9 +249,10 @@ export function renderInto(host: HTMLElement, s: State, live = false) {
   host.innerHTML = postHTML(s);
   const post = host.firstElementChild as HTMLElement;
   const piece = fillArt(post, s, live);
-  fit(post, s);
+  // Overflowing art would count as overflowing content, so it is clipped while the headline is sized
+  post.classList.add('fitting'); fit(post, s); post.classList.remove('fitting');
   post.querySelectorAll('img').forEach((im) => {
-    if (!im.complete) im.addEventListener('load', () => fit(post, s), { once: true });
+    if (!im.complete) im.addEventListener('load', () => { post.classList.add('fitting'); fit(post, s); post.classList.remove('fitting'); }, { once: true });
     im.addEventListener('error', () => { if (im.crossOrigin) { im.removeAttribute('crossorigin'); im.src = im.src; } }, { once: true });
   });
   return { post, piece };
@@ -369,7 +370,8 @@ async function drawArt(ctx: CanvasRenderingContext2D, post: HTMLElement, R: numb
   const r = artRect(post);
   if (!r || !r.w || !r.h) return;
   const cs = getComputedStyle(r.box), k = post.getBoundingClientRect().width / post.offsetWidth, p = post.getBoundingClientRect();
-  ctx.save(); ctx.beginPath(); ctx.roundRect(r.x * R, r.y * R, r.w * R, r.h * R, (parseFloat(cs.borderRadius) || 0) * R); ctx.clip();
+  ctx.save();
+  if (cs.overflow !== 'visible') { ctx.beginPath(); ctx.roundRect(r.x * R, r.y * R, r.w * R, r.h * R, (parseFloat(cs.borderRadius) || 0) * R); ctx.clip(); }
   if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)') { ctx.fillStyle = cs.backgroundColor; ctx.fillRect(r.x * R, r.y * R, r.w * R, r.h * R); }
   const wave = r.box.querySelector<HTMLElement & { wave?: Wave }>('.p-wave'), svg = r.box.querySelector<SVGSVGElement>('svg.iso-art');
   if (wave?.wave) { const b = wave.wave.canvas.getBoundingClientRect(); ctx.drawImage(wave.wave.canvas, (b.left - p.left) / k * R, (b.top - p.top) / k * R, b.width / k * R, b.height / k * R); }
