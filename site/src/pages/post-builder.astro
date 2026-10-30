@@ -155,6 +155,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
               <label class="fld">Name <input type="text" data-k="aName" /></label>
               <label class="fld">Role, company <input type="text" data-k="aRole" /></label>
               <label class="fld">Photo URL <input type="text" data-k="aPhoto" placeholder="/authors/justin-rowe.jpg" /></label>
+              <label class="btn outlined xs file">Upload a photo<input type="file" accept="image/*" data-file="aPhoto" /></label>
             </div>
           </fieldset>
         </div>
@@ -219,7 +220,10 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
               <label class="tg"><span>Animate (exports as MP4)</span><input type="checkbox" role="switch" data-k="art.animate" /></label>
               <div data-if="art.id!=wave"><label class="tg"><span>Grey, accent on the live part</span><input type="checkbox" role="switch" data-k="art.mono" /></label></div>
             </div>
-            <label class="fld" data-if="art.id=photo">Photo URL (empty = the author's) <input type="text" data-k="art.photo" /></label>
+            <div data-if="art.id=photo">
+              <label class="fld">Photo URL (empty = the author's) <input type="text" data-k="art.photo" /></label>
+              <label class="btn outlined xs file">Upload from your computer<input type="file" accept="image/*" data-file="art.photo" /></label>
+            </div>
           </fieldset>
           <fieldset data-if="art.id=wave">
             <legend class="marker">Wave</legend>
@@ -374,6 +378,8 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .rng { display: grid; grid-template-columns: minmax(0, 1fr) 64px; gap: 12px; align-items: center; }
   .rng .num { min-width: 0; padding: 4px 0 6px; border: 0; border-bottom: 1px solid var(--line-field); background: none; font: 600 12px/1.4 var(--font-mono); color: var(--text); text-align: right; transition: border-color var(--t-fast) ease; }
   .rng .num:focus { outline: none; border-color: var(--neutral-950); }
+  .file { position: relative; margin-top: 8px; cursor: pointer; }
+  .file input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
   .owns { display: grid; gap: 6px; margin-bottom: 6px; }
   .own { display: grid; grid-template-columns: minmax(0, 1fr) 120px 32px; gap: 8px; align-items: end; }
   .own input, .own select { min-width: 0; padding: 6px 0 8px; border: 0; border-bottom: 1px solid var(--line-field); background: none; font: 500 14px/1.4 var(--font-sans); letter-spacing: -.03em; color: var(--text); }
@@ -456,7 +462,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-steps > li { display: grid; align-content: start; gap: calc(8px * var(--s)); padding-top: calc(14px * var(--s)); border-top: 1px solid var(--line); font-size: calc(21px * var(--s)); line-height: 1.25; }
   .post .p-steps > li::before { counter-increment: st; content: counter(st, decimal-leading-zero); font: 600 calc(16px * var(--s))/1 var(--font-mono); color: var(--hue); }
   .post .p-tools { display: flex; flex-wrap: wrap; gap: calc(10px * var(--s)); }
-  .post .p-tool { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); padding: calc(8px * var(--s)) calc(16px * var(--s)) calc(8px * var(--s)) calc(8px * var(--s)); border-radius: 100px; background: var(--bg-muted); font-size: calc(20px * var(--s)); line-height: 1; }
+  .post .p-tool { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); padding: calc(8px * var(--s)) calc(18px * var(--s)) calc(8px * var(--s)) calc(13px * var(--s)); border-radius: 100px; background: var(--bg-muted); font-size: calc(20px * var(--s)); line-height: 1; }
   .post .p-tool svg { width: calc(32px * var(--s)); height: calc(32px * var(--s)); flex: none; }
   .post .p-gh { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); margin-left: auto; flex: none; font: 600 calc(18px * var(--s))/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0; white-space: nowrap; }
   .post .p-gh svg { width: calc(32px * var(--s)); height: calc(32px * var(--s)); }

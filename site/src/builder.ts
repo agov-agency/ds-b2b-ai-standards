@@ -438,7 +438,8 @@ export async function exportMP4(post: HTMLElement, s: State, piece: Piece | unde
 // ---------- Page ----------
 const get = (s: any, k: string) => k.split('.').reduce((o, p) => o?.[p], s);
 const set = (s: any, k: string, v: unknown) => { const ps = k.split('.'), last = ps.pop()!; ps.reduce((o, p) => o[p], s)[last] = v; };
-const encode = (s: State) => btoa(unescape(encodeURIComponent(JSON.stringify(s)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+// An uploaded photo stays in this tab: a data URL is too long for the link
+const encode = (s: State) => btoa(unescape(encodeURIComponent(JSON.stringify(s, (k, v) => (typeof v === 'string' && v.startsWith('data:') ? '' : v))))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const decode = (h: string): State | undefined => { try { return merge(clone(DEFAULTS), JSON.parse(decodeURIComponent(escape(atob(h.replace(/-/g, '+').replace(/_/g, '/')))))); } catch { return undefined; } };
 
 export function boot() {
@@ -469,7 +470,7 @@ export function boot() {
   const sync = () => {
     panel.querySelectorAll<HTMLInputElement>('[data-k]').forEach((el) => {
       const v = get(S, el.dataset.k!);
-      if (el.type === 'checkbox') el.checked = !!v; else el.value = String(v ?? '');
+      if (el.type === 'checkbox') el.checked = !!v; else el.value = /^data:/.test(String(v)) ? 'Uploaded file' : String(v ?? '');
       if (el.type === 'color') (el.parentElement as HTMLElement).style.setProperty('--c', String(v));
     });
     panel.querySelectorAll<HTMLElement>('[data-seg]').forEach((g) => g.querySelectorAll<HTMLElement>('[data-v]').forEach((b) => b.setAttribute('aria-selected', String(String(get(S, g.dataset.seg!)) === b.dataset.v))));
@@ -575,6 +576,13 @@ export function boot() {
   new ResizeObserver(scale).observe(fitBox);
 
   const change = () => { sync(); draw(); };
+  panel.addEventListener('change', (e) => {
+    const el = e.target as HTMLInputElement, f = el.dataset.file && el.files?.[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { set(S, el.dataset.file!, r.result as string); el.value = ''; change(); };
+    r.readAsDataURL(f);
+  });
   panel.addEventListener('input', (e) => {
     const el = e.target as HTMLInputElement;
     if (el.dataset.ownName) { S.toolsOwn[+el.dataset.ownName].name = el.value; return change(); }
