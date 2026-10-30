@@ -266,7 +266,7 @@ function templates(): Tpl[] {
   const promo = { headline: '', context: '', logoKind: 'full', logoH: 56, label: false, lines: true };
   // Launch: the promo visual in every cut the kit asks for, plus a few headline posts
   const G = 'Launch and promo';
-  T.push({ group: G, name: 'Promo · catalogue', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'b', art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: G, name: 'Promo · catalogue', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'b', headline: 'Every rule, skill and scenario in one place.', context: 'Free, community-built, maintained by DemandSense', hmax: 77, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
   T.push({ group: G, name: 'Promo · wave', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Free, community-built, maintained by DemandSense', hmax: 77, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.6, time: 6 } as never }) });
   T.push({ group: G, name: 'AI changed the game', s: B({ format: 'portrait', layout: 'a', headline: 'AI changed the game for LinkedIn Ads.', context: 'But nobody agreed on the rules.', art: { id: 'scenarios', zoom: 1, frame: 'bleed' } as never, hmax: 88 }) });
   T.push({ group: G, name: `${nR} rules`, s: B({ format: 'square', bg: 'white', layout: 'b', label: true, labelText: 'The Standard', headline: `${nR} rules for running LinkedIn Ads with AI.`, context: 'Each one written by a named practitioner', art: { id: 'rules', zoom: 1, frame: 'panel' } as never, cover: 16, hue: '16' }) });
