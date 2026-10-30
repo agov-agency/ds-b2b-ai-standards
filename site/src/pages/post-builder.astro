@@ -115,7 +115,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
             <div class="seg" data-seg="hsize"><button type="button" data-v="auto">Auto size</button><button type="button" data-v="fixed">Fixed size</button></div>
             <label class="fld" data-if="hsize=fixed">Size <input type="range" min="20" max="220" step="1" data-k="hpx" /></label>
             <label class="fld" data-if="hsize=auto">Largest size <input type="range" min="32" max="200" step="2" data-k="hmax" /></label>
-            <label class="fld">Body text size (lists, chips, label and author follow it) <input type="range" min="14" max="44" step="1" data-k="tsize" /></label>
+            <label class="fld">Body text size (lists, chips and author follow it) <input type="range" min="14" max="44" step="1" data-k="tsize" /></label>
           </fieldset>
           <fieldset>
             <legend class="marker">More text</legend>
@@ -426,8 +426,8 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
 
   /* ---------- Post: drawn at its export size; --s scales spacing and small type with the format ---------- */
   /* --k shrinks the text around the headline when auto-fit runs out of room in wide formats */
-  /* --t comes from the body text size (body is 32 × --s), so every small text follows it; the logo keeps its own size */
-  .post .p-top { --s: calc(var(--s0) * var(--t)); }
+  /* --t comes from the body text size (body is 32 × --s), so the small text in the main column and foot follows it; the top row (logo, label) keeps its size */
+  .post .p-top { --s: calc(var(--s0) * .82); }
   .post .p-foot, .post .p-main > :not(.p-head) { --s: calc(var(--s0) * var(--t) * var(--k, 1)); }
   /* Grey is the text colour at part opacity, so it takes on whatever sits behind it (pastels, the wave) */
   .post.post { --text-2: color-mix(in srgb, var(--text) 55%, transparent); }
