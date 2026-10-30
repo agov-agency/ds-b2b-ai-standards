@@ -120,7 +120,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
           <fieldset>
             <legend class="marker">More text</legend>
             <label class="tg"><span>Quote mark</span><input type="checkbox" role="switch" data-k="qmark" /></label>
-            <label class="tg"><span>Round photo (the author's)</span><input type="checkbox" role="switch" data-k="avatar" /></label>
+            <label class="tg"><span>Round photo (instead of the byline)</span><input type="checkbox" role="switch" data-k="avatar" /></label>
             <label class="tg"><span>Chips</span><input type="checkbox" role="switch" data-k="chips" /></label>
             <label class="fld" data-if="chips=true"><input type="text" data-k="chipsText" placeholder="Comma, separated" /></label>
             <label class="tg"><span>Divider under the headline</span><input type="checkbox" role="switch" data-k="rule" /></label>
@@ -152,6 +152,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
           </fieldset>
           <fieldset>
             <legend class="marker">Author</legend>
+            <p class="hint" data-if="avatar=true">Shown as the round photo up top, so there is no byline at the bottom. Turn Round photo off for the byline.</p>
             <label class="tg"><span>Custom (not in the CMS)</span><input type="checkbox" role="switch" data-k="aCustom" /></label>
             <label class="fld" data-if="aCustom=false"><select data-k="author"><option value="">None</option>{data.authors.map((a) => <option value={a.id}>{a.name}</option>)}</select></label>
             <div data-if="aCustom=true">

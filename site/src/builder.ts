@@ -130,7 +130,8 @@ export function postHTML(s: State) {
     s.list && list.length ? `<ul class="p-list">${list.map((l) => { const [k, ...v] = l.split('|'); return v.length ? `<li><b>${esc(k.trim())}</b><span>${esc(v.join('|').trim())}</span></li>` : `<li><b></b><span>${esc(k)}</span></li>`; }).join('')}</ul>` : '',
     s.button && s.buttonText ? `<span class="p-btn">${esc(s.buttonText)}</span>` : '',
   ].join('');
-  const foot = authorBlock(s) + (s.github ? `<p class="p-gh">${GITHUB}<span>Open on GitHub</span></p>` : '');
+  // One or the other: the round photo up top stands for the author, so the byline at the bottom drops out
+  const foot = (s.avatar ? '' : authorBlock(s)) + (s.github ? `<p class="p-gh">${GITHUB}<span>Open on GitHub</span></p>` : '');
   return `<div class="${cls}" style="${style}">
     <div class="p-bg${s.pattern ? ` pattern pattern-fade` : ''}"></div>
     <div class="p-grid lay-${s.art.id === 'none' ? 'none' : s.layout}">
