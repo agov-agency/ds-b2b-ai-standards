@@ -115,6 +115,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
             <div class="seg" data-seg="hsize"><button type="button" data-v="auto">Auto size</button><button type="button" data-v="fixed">Fixed size</button></div>
             <label class="fld" data-if="hsize=fixed">Size <input type="range" min="20" max="220" step="1" data-k="hpx" /></label>
             <label class="fld" data-if="hsize=auto">Largest size <input type="range" min="32" max="200" step="2" data-k="hmax" /></label>
+            <label class="fld">Body text size (lists, chips, label and author follow it) <input type="range" min="14" max="44" step="1" data-k="tsize" /></label>
           </fieldset>
           <fieldset>
             <legend class="marker">More text</legend>
@@ -423,9 +424,9 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
 
   /* ---------- Post: drawn at its export size; --s scales spacing and small type with the format ---------- */
   /* --k shrinks the text around the headline when auto-fit runs out of room in wide formats */
-  /* Everything but the headline and the art runs at 82%, leaving the room to the text */
-  .post .p-top { --s: calc(var(--s0) * .82); }
-  .post .p-foot, .post .p-main > :not(.p-head) { --s: calc(var(--s0) * .82 * var(--k, 1)); }
+  /* --t comes from the body text size (body is 32 × --s), so every small text follows it; the logo keeps its own size */
+  .post .p-top { --s: calc(var(--s0) * var(--t)); }
+  .post .p-foot, .post .p-main > :not(.p-head) { --s: calc(var(--s0) * var(--t) * var(--k, 1)); }
   /* Grey is the text colour at part opacity, so it takes on whatever sits behind it (pastels, the wave) */
   .post.post { --text-2: color-mix(in srgb, var(--text) 55%, transparent); }
   .post.post.surface-black { --text-2: color-mix(in srgb, var(--text) 62%, transparent); }
@@ -442,7 +443,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-top { grid-area: top; position: relative; display: flex; align-items: center; justify-content: space-between; gap: calc(24px * var(--s)); min-width: 0; padding-block: var(--e); }
   .post .p-top > * { min-width: 0; }
   .post.logo-right .p-top { flex-direction: row-reverse; }
-  .post .p-logo { display: block; height: calc(var(--logo) * var(--s) * 1px); width: auto; max-width: 62%; object-fit: contain; object-position: left center; flex: none; }
+  .post .p-logo { display: block; height: calc(var(--logo) * var(--s0) * .82px); width: auto; max-width: 62%; object-fit: contain; object-position: left center; flex: none; }
   .post.logo-right .p-logo { object-position: right center; }
   .post .p-label { display: flex; white-space: nowrap; overflow: hidden; align-items: center; gap: calc(12px * var(--s)); font: 600 calc(17px * var(--s))/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: 0; }
   .post .p-label::before { content: ''; width: calc(11px * var(--s)); height: calc(11px * var(--s)); background: var(--secondary-300); flex: none; }

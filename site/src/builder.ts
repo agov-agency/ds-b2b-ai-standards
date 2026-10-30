@@ -21,7 +21,7 @@ const DEFAULTS = {
   bg: 'black', bgCustom: '#0b0c0d', hue: 'auto', hueCustom: '#3875f6', cover: 0,
   about: '', lines: true, pattern: false, fade: true,
   logo: true, logoKind: 'mark', logoPos: 'left', logoH: 48, label: true, labelText: '',
-  avatar: false, chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, rule: false,
+  avatar: false, chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, tsize: 26, rule: false,
   body: false, bodyText: '', pairs: false, pairsCms: true, pairsText: '', steps: false, stepsText: '', tools: false, toolsText: '', toolsCustom: false, toolsOwn: [{ name: '', logo: 'list' }], github: false,
   list: false, listText: '', button: false, buttonText: '',
   author: '', authorStyle: 'byline', aCustom: false, aName: '', aRole: '', aPhoto: '',
@@ -106,7 +106,7 @@ export function postHTML(s: State) {
   const cls = ['post', dark ? 'surface-black' : s.bg.startsWith('pastel-') ? 'on-pastel' : '', wide ? 'wide' : '', s.lines ? 'lines' : '', `frame-${s.art.frame}`,
     s.fade && s.art.id !== 'none' && (s.layout === 'over' || (s.layout !== 'none' && s.art.zoom > 1)) ? `fade fade-${wide || s.layout === 'over' ? s.vpos : s.layout === 'a' ? 'start' : 'end'}` : '',
     `al-${s.align}`, `logo-${s.logoPos}`, s.hsize === 'fixed' ? 'hfixed' : ''].filter(Boolean).join(' ');
-  const style = `--w:${W}px; --h:${H}px; --s0:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --ax:${s.art.x}%; --ay:${s.art.y}%`;
+  const style = `--w:${W}px; --h:${H}px; --s0:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --t:${(s.tsize / 32).toFixed(4)}; --ax:${s.art.x}%; --ay:${s.art.y}%`;
   const logo = s.logo ? `<img class="p-logo" src="/design-system/brand/${s.logoKind === 'mark' ? 'mark' : dark ? 'logo-b2b' : 'logo-b2b-light'}.svg" alt="">` : '';
   const label = s.label && s.labelText ? `<p class="p-label">${esc(s.labelText)}</p>` : '';
   const head = s.headline || s.context ? `<h1 class="p-head">${br(s.headline)}${s.context ? `${/^\s*\n/.test(s.context) ? '<br>' : ' '}<span class="tone-2">${br(s.context)}</span>` : ''}</h1>` : '';
