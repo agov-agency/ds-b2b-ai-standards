@@ -14,6 +14,9 @@ import { baggage } from './baggage';
 import { analyzer } from './analyzer';
 import { pumpjack } from './pumpjack';
 import { burnin } from './burnin';
+import { blink } from './blink';
+import { seismo } from './seismo';
+import { trivision } from './trivision';
 import type { Piece } from './iso';
 
-export const figures: Record<string, Piece> = { directory, scenarios, skills, rules, cta, typewriter, sorter, orrery, galton, lineshaft, baggage, analyzer, pumpjack, burnin };
+export const figures: Record<string, Piece> = { directory, scenarios, skills, rules, cta, typewriter, sorter, orrery, galton, lineshaft, baggage, analyzer, pumpjack, burnin, blink, seismo, trivision };
