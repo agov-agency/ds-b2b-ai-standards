@@ -26,7 +26,6 @@ const scenarios = (await getCollection('scenarios', mine)).sort(ready);
 const skills = (await getCollection('skills', mine)).sort(ready);
 const rules = (await getCollection('rules', mine)).sort((a, b) => a.data.number - b.data.number);
 const initials = data.name.split(' ').map((w) => w[0]).slice(0, 2).join('');
-const job = [data.role, data.company].filter(Boolean).join(' at ');
 const first = data.name.split(' ')[0];
 const n = (k: number, one: string, many: string) => (k === 1 ? `One ${one}.` : `${k} ${many}.`);
 
@@ -57,7 +56,7 @@ const go = arrow('right');
                 : <><span class="pattern dots" aria-hidden="true" /><span class="ini t-n2" aria-hidden="true">{initials}</span></>}
             </span>
             <div class="who">
-              {job && <p class="chip job">{job}</p>}
+              {(data.company || data.role) && <p class="job">{data.company && <span class="chip">{data.company}</span>}{data.role && <span class="chip">{data.role}</span>}</p>}
               <h1 class="t-h4">{data.name}</h1>
             </div>
             {data.about && <p class="t-p2 body">{data.about}</p>}
@@ -119,7 +118,9 @@ const go = arrow('right');
   .dots { position: absolute; inset: 0; --dot: var(--neutral-850); }
   .ini { position: relative; color: var(--text-meta); }
   .who { display: grid; gap: 12px; justify-items: start; }
-  .job { white-space: normal; } /* same "role at company" chip as the cards */
+  /* Company, then role, as two chips like the cards; here they wrap instead of cutting the role */
+  .job { display: flex; flex-wrap: wrap; gap: 4px; }
+  .job .chip { white-space: normal; }
   .soc { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 24px; border-top: 1px solid var(--line); }
   .soc svg { width: 18px; height: 18px; }
   /* Custom logo from the CMS, drawn in the button colour like the ready glyphs */
