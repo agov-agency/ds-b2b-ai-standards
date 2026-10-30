@@ -264,7 +264,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
           <fieldset>
             <legend class="marker">Structure</legend>
             <label class="tg"><span>Edge lines</span><input type="checkbox" role="switch" data-k="lines" /></label>
-            <label class="tg"><span>Fade under text on art</span><input type="checkbox" role="switch" data-k="fade" /></label>
+            <label class="tg" data-if="layout=over"><span>Fade under the text (text on art)</span><input type="checkbox" role="switch" data-k="fade" /></label>
             <label class="tg"><span>Dot pattern</span><input type="checkbox" role="switch" data-k="pattern" /></label>
           </fieldset>
         </div>
@@ -500,7 +500,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   /* A zoomed figure runs over its box and is cut only by the post edge; panels and the wave keep their box */
   .post:not(.frame-panel):not(.fitting) .p-art:has(> figure) { overflow: visible; }
   .post .p-top, .post .p-main, .post .p-foot { z-index: 1; }
-  /* Text over the art (text-on-art layout, or a zoomed figure running under it) sits on a fade into the background; off while fitting, its overflow would read as no room */
+  /* Text on art sits on a fade into the background; off while fitting, its overflow would read as no room */
   .post.fade:not(.fitting) .p-main { align-self: safe var(--vpos); }
   /* A long eased ramp that ends partway into the text; toward the edge the text sits on it runs past the post (clipped) */
   .post.fade:not(.fitting) .p-main::before { content: ''; position: absolute; z-index: -1; --f: calc(300px * var(--s0)); --g: calc(60px * var(--s0)); --c: var(--pbg); inset: calc(-1 * var(--f)) calc(-1 * var(--pad)); pointer-events: none;

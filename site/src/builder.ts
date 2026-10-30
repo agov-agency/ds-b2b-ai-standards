@@ -104,7 +104,7 @@ export function postHTML(s: State) {
   const [W, H] = FORMATS[s.format], wide = W > H * 1.2, dark = isDark(s);
   const sc = Math.min(W / 1080, H / (wide ? 760 : 1080));
   const cls = ['post', dark ? 'surface-black' : s.bg.startsWith('pastel-') ? 'on-pastel' : '', wide ? 'wide' : '', s.lines ? 'lines' : '', `frame-${s.art.frame}`,
-    s.fade && s.art.id !== 'none' && (s.layout === 'over' || (s.layout !== 'none' && s.art.zoom > 1)) ? `fade fade-${wide || s.layout === 'over' ? s.vpos : s.layout === 'a' ? 'start' : 'end'}` : '',
+    s.fade && s.art.id !== 'none' && s.layout === 'over' ? `fade fade-${s.vpos}` : '',
     `al-${s.align}`, `logo-${s.logoPos}`, s.hsize === 'fixed' ? 'hfixed' : ''].filter(Boolean).join(' ');
   const style = `--w:${W}px; --h:${H}px; --s0:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --t:${(s.tsize / 32).toFixed(4)}; --ax:${s.art.x}%; --ay:${s.art.y}%`;
   const logo = s.logo ? `<img class="p-logo" src="/design-system/brand/${s.logoKind === 'mark' ? 'mark' : dark ? 'logo-b2b' : 'logo-b2b-light'}.svg" alt="">` : '';
