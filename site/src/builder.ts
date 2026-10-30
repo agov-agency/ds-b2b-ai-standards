@@ -651,7 +651,9 @@ export function boot() {
     if (b.dataset.art) S.art.id = b.dataset.art;
     // Text on art sits on the whole figure: a panel would box it in
     if (g?.dataset.seg === 'layout' && S.layout === 'over') S.art.frame = 'bleed';
-    if ((b.dataset.art || g?.dataset.seg === 'art.id') && S.art.id !== 'none' && S.layout === 'none') S.layout = S.art.id === 'wave' ? 'over' : 'a';
+    // The wave is a background: picking it fills the whole post, text on top
+    if ((b.dataset.art || g?.dataset.seg === 'art.id') && S.art.id === 'wave') { S.layout = 'over'; S.art.frame = 'bleed'; }
+    else if ((b.dataset.art || g?.dataset.seg === 'art.id') && S.art.id !== 'none' && S.layout === 'none') S.layout = 'a';
     if (b.dataset.act === 'fill') { const tp = TPL.find((x) => x.s.about === S.about) ?? (S.about.startsWith('author:') && authorById(S.about.slice(7)) ? authorCard(S.about.slice(7)) : undefined); if (tp) CONTENT.forEach((k) => ((S as any)[k] = clone(tp.s[k]))); }
     if (b.dataset.wavePreset) Object.assign(S.wave, WAVES[b.dataset.wavePreset as keyof typeof WAVES]);
     if (b.dataset.act === 'templates') return view('templates');
