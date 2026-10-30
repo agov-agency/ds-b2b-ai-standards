@@ -501,10 +501,11 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-top, .post .p-main, .post .p-foot { z-index: 1; }
   /* Text over the art (text-on-art layout, or a zoomed figure running under it) sits on a fade into the background; off while fitting, its overflow would read as no room */
   .post.fade:not(.fitting) .p-main { align-self: safe var(--vpos); }
-  /* The fade runs solid toward the post edge the text sits on and ramps out toward the art */
-  .post.fade:not(.fitting) .p-main::before { content: ''; position: absolute; z-index: -1; --f: calc(120px * var(--s0)); inset: calc(-1 * var(--f)) calc(-1 * var(--pad)); background: linear-gradient(var(--a, transparent), var(--pbg) var(--f), var(--pbg) calc(100% - var(--f)), var(--b, transparent)); pointer-events: none; }
-  .post.fade-start .p-main::before { --a: var(--pbg); }
-  .post.fade-end .p-main::before { --b: var(--pbg); }
+  /* A long eased ramp that ends partway into the text; toward the edge the text sits on it runs past the post (clipped) */
+  .post.fade:not(.fitting) .p-main::before { content: ''; position: absolute; z-index: -1; --f: calc(300px * var(--s0)); --g: calc(60px * var(--s0)); --c: var(--pbg); inset: calc(-1 * var(--f)) calc(-1 * var(--pad)); pointer-events: none;
+    background: linear-gradient(transparent, color-mix(in srgb, var(--c) 30%, transparent) calc(var(--f) * .45), color-mix(in srgb, var(--c) 70%, transparent) calc(var(--f) * .8), color-mix(in srgb, var(--c) 92%, transparent) calc(var(--f) + var(--g)), color-mix(in srgb, var(--c) 92%, transparent) calc(100% - var(--f) - var(--g)), color-mix(in srgb, var(--c) 70%, transparent) calc(100% - var(--f) * .8), color-mix(in srgb, var(--c) 30%, transparent) calc(100% - var(--f) * .45), transparent); }
+  .post.fade-start .p-main::before { top: -3000px; }
+  .post.fade-end .p-main::before { bottom: -3000px; }
   .post.fade :is(.p-top, .p-foot, .p-lines) { z-index: 2; }
   .post.frame-panel .p-art { border-radius: calc(4px * var(--s)); background: var(--panel); }
   /* Stacked layouts: art first or last, at least a third of the height */
