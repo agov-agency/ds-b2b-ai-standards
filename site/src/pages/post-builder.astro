@@ -517,6 +517,13 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   /* A zoomed figure runs over its box and is cut only by the post edge; panels and the wave keep their box */
   .post:not(.frame-panel):not(.fitting) .p-art:has(> figure) { overflow: visible; }
   .post .p-top, .post .p-main, .post .p-foot { z-index: 1; }
+  /* On black the site's hero look (dark faces, only the live part lit) reads as a silhouette at post size: faces take a little of the accent and the lines come up */
+  .post.surface-black .iso-art.on-dark:not(.mono) { --line: color-mix(in srgb, var(--hue) 55%, var(--neutral-200)); }
+  .post.surface-black .iso-art.on-dark:not(.mono) :is(.f, .dash) { stroke: var(--line); }
+  .post.surface-black .iso-art.on-dark:not(.mono) .det { stroke: color-mix(in srgb, var(--hue) 40%, var(--neutral-700)); }
+  .post.surface-black .iso-art.on-dark:not(.mono) .tint { fill: color-mix(in srgb, var(--hue) 14%, var(--neutral-1000)); }
+  .post.surface-black .iso-art.on-dark:not(.mono) .body { fill: color-mix(in srgb, var(--hue) 30%, var(--neutral-1000)); }
+  .post.surface-black .iso-art.on-dark:not(.mono) .paper { fill: color-mix(in srgb, var(--hue) 8%, var(--neutral-950)); }
   /* Text on art sits on a fade into the background; off while fitting, its overflow would read as no room */
   .post.fade:not(.fitting) .p-main { align-self: safe var(--vpos); }
   /* A long eased ramp that ends partway into the text; toward the edge the text sits on it runs past the post (clipped) */
@@ -539,11 +546,17 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   /* Wide formats: text in one column, art the other, full height */
   .post.wide .lay-a { grid-template-areas: 'top art' 'main art' 'foot art'; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-rows: auto minmax(0, 1fr) auto; }
   .post.wide .lay-b { grid-template-areas: 'art top' 'art main' 'art foot'; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); grid-template-rows: auto minmax(0, 1fr) auto; }
+  /* 16:9 has the room: the text column gets the larger share so a two-tone headline isn't stacked six lines deep */
+  .post.fmt-cover .lay-a { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+  .post.fmt-cover .lay-b { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); }
   .post.wide.frame-bleed .lay-a .p-art { margin-right: calc(-1 * var(--pad)); }
   .post.wide.frame-bleed .p-grid:not(.lay-over):not(:has(> .p-top)) .p-art { margin-top: calc(-1 * var(--e)); }
   .post.wide.frame-bleed .p-grid:not(.lay-over):not(:has(> .p-foot)) .p-art { margin-bottom: calc(-1 * var(--e)); }
   .post.wide.frame-bleed .lay-b .p-art { margin-left: calc(-1 * var(--pad)); }
   .post.wide:not(.frame-bleed) .p-art { margin-block: var(--e); }
+  /* Wide, text first: the label leaves the text column for the far right, over the art, centred on the logo row */
+  .post.wide:not(.logo-right) .lay-a > .p-top:has(> .p-logo) { position: static; }
+  .post.wide:not(.logo-right) .lay-a > .p-top:has(> .p-logo) > .p-label { position: absolute; z-index: 2; top: var(--e); right: var(--pad); height: calc(var(--logo) * var(--s0) * .82px); }
   /* The wave is drawn square and centred in its box, so a long or short box crops it instead of showing the ribbon's ends */
   .post .p-art:has(> .p-wave) { container-type: size; }
   .post .p-art > .p-wave { inset: auto; left: 50%; top: 50%; width: max(100cqw, 100cqh); height: max(100cqw, 100cqh); translate: calc(-50% + var(--ax)) calc(-50% + var(--ay)); overflow: hidden; }

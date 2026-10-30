@@ -21,7 +21,7 @@ const DEFAULTS = {
   bg: 'black', bgCustom: '#0b0c0d', hue: 'auto', hueCustom: '#3875f6', cover: 0,
   about: '', lines: true, pattern: false, fade: true,
   logo: true, logoKind: 'mark', logoPos: 'left', logoH: 48, label: true, labelText: '',
-  avatar: false, chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, tsize: 26, rule: false,
+  avatar: false, chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, tsize: 24, rule: false,
   body: false, bodyText: '', pairs: false, pairsCms: true, pairsText: '', steps: false, stepsLabel: 'Process', stepsText: '', tools: false, toolsLabel: 'Runs with', toolsText: '', toolsCustom: false, toolsOwn: [{ name: '', logo: 'list' }], github: false,
   list: false, listText: '', button: false, buttonText: '',
   author: '', authorStyle: 'byline', aCustom: false, aName: '', aRole: '', aPhoto: '',
@@ -107,7 +107,7 @@ export function postHTML(s: State) {
   if (wide && s.layout === 'over') s = { ...s, layout: 'a' };
   if (wide && s.layout === 'none') s = { ...s, art: { ...s.art, id: 'none' } };
   const sc = Math.min(W / 1080, H / (wide ? 760 : 1080));
-  const cls = ['post', dark ? 'surface-black' : s.bg.startsWith('pastel-') ? 'on-pastel' : '', wide ? 'wide' : '', s.lines ? 'lines' : '', `frame-${s.art.frame}`,
+  const cls = ['post', dark ? 'surface-black' : s.bg.startsWith('pastel-') ? 'on-pastel' : '', wide ? 'wide' : '', `fmt-${s.format}`, s.lines ? 'lines' : '', `frame-${s.art.frame}`,
     s.fade && s.art.id !== 'none' && s.layout === 'over' ? `fade fade-${s.vpos}` : '',
     `al-${s.align}`, `logo-${s.logoPos}`, s.hsize === 'fixed' ? 'hfixed' : '', s.bg !== 'white' && !dark ? 'tinted' : ''].filter(Boolean).join(' ');
   const style = `--w:${W}px; --h:${H}px; --s0:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --t:${(s.tsize / 32).toFixed(4)}; --ax:${s.art.x}%; --ay:${s.art.y}%`;
@@ -295,7 +295,7 @@ function templates(): Tpl[] {
   T.push({ group: G, name: 'Don’t take its word for it', s: B({ format: 'portrait', layout: 'none', vpos: 'center', pattern: true, headline: 'A standard for making ads work with AI,', context: 'without taking its word for it.', button: true, buttonText: 'Read the Standard', hmax: 104 }) });
   T.push({ group: G, name: 'Site preview · opening frame', note: '2 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', logoPos: 'left', label: false, pattern: true, headline: 'The B2B AI Standard', context: 'for LinkedIn Ads', hmax: 96 }) });
   T.push({ group: G, name: 'Site preview · closing frame', note: '3 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', pattern: true, headline: 'Read it free.', context: '\nthe-ai-standard.com', button: true, buttonText: 'Open the Standard', hmax: 96 }) });
-  T.push({ group: G, name: 'Newsletter cover 16:9', s: B({ ...promo, format: 'cover', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Rules, skills and scenarios, each from a named practitioner', hmax: 112, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: G, name: 'Newsletter cover 16:9', s: B({ ...promo, format: 'cover', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Rules, skills and scenarios, each from a named practitioner', hmax: 64, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
 
   const N = 'Newsletter (Demand Wire)';
   T.push({ group: N, name: 'Launch header 1200×480', s: B({ ...promo, format: 'header', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 91, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
