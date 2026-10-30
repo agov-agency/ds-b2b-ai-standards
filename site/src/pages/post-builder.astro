@@ -460,9 +460,17 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-pairs > .hl { background: var(--action); color: var(--action-text); box-shadow: none; }
   .post .p-k { font: 600 calc(16px * var(--s))/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: 0; color: var(--text-2); }
   .post .p-pairs > .hl .p-k { color: color-mix(in srgb, currentColor 60%, transparent); }
-  .post .p-steps { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: calc(20px * var(--s)) calc(16px * var(--s)); counter-reset: st; }
-  .post .p-steps > li { display: grid; align-content: start; gap: calc(8px * var(--s)); padding-top: calc(14px * var(--s)); border-top: 1px solid var(--line); font-size: calc(26px * var(--s)); line-height: 1.25; }
-  .post .p-steps > li::before { counter-increment: st; content: counter(st, decimal-leading-zero); font: 600 calc(18px * var(--s))/1 var(--font-mono); color: var(--hue); }
+  /* The site's timeline (scenarios hub, StepDot): numbered stops on one line, the first (start here) in orange, all in one row */
+  .post .p-steps { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+  .post .p-steps > li { display: grid; align-content: start; gap: calc(6px * var(--s)); padding-right: calc(16px * var(--s)); font-size: calc(26px * var(--s)); line-height: 1.2; letter-spacing: -.03em; overflow-wrap: break-word; }
+  .post .p-steps > li:last-child { padding-right: 0; }
+  .post .p-tick { position: relative; z-index: 0; display: flex; align-items: center; height: calc(88px * var(--s)); }
+  .post .p-tick::after { content: ''; position: absolute; z-index: -1; left: 0; right: calc(-16px * var(--s)); top: 50%; height: 1px; background: var(--line); }
+  .post .p-steps > li:last-child .p-tick::after { display: none; }
+  .post .p-tick > i { --r: var(--line); display: grid; place-items: center; width: calc(80px * var(--s)); height: calc(80px * var(--s)); border-radius: 50%; font-style: normal; background: radial-gradient(circle closest-side, color-mix(in srgb, var(--r) 50%, var(--pbg)) 75%, color-mix(in srgb, var(--r) 25%, var(--pbg)) 75.5%, color-mix(in srgb, var(--r) 25%, var(--pbg)) 99%, transparent), var(--pbg); }
+  .post .p-tick b { display: grid; place-items: center; width: calc(40px * var(--s)); height: calc(40px * var(--s)); border-radius: 50%; background: color-mix(in srgb, var(--r) 100%, var(--pbg)); font: 600 calc(19px * var(--s))/1 var(--font-mono); letter-spacing: 0; }
+  .post .p-steps > li.on .p-tick > i { --r: var(--secondary-300); }
+  .post .p-steps > li.on .p-tick b { background: var(--secondary-300); color: var(--neutral-950); }
   .post .p-tools { display: flex; flex-wrap: wrap; gap: calc(10px * var(--s)); }
   .post .p-tool { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); padding: calc(8px * var(--s)) calc(18px * var(--s)) calc(8px * var(--s)) calc(13px * var(--s)); border-radius: 100px; background: var(--bg-muted); font-size: calc(24px * var(--s)); line-height: 1; }
   .post .p-tool svg { width: calc(38px * var(--s)); height: calc(38px * var(--s)); flex: none; }
@@ -523,8 +531,8 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post.wide .lay-a { grid-template-areas: 'top art' 'main art' 'foot art'; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-rows: auto minmax(0, 1fr) auto; }
   .post.wide .lay-b { grid-template-areas: 'art top' 'art main' 'art foot'; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); grid-template-rows: auto minmax(0, 1fr) auto; }
   .post.wide.frame-bleed .lay-a .p-art { margin-right: calc(-1 * var(--pad)); }
-  .post.wide.frame-bleed .p-grid:not(:has(> .p-top)) .p-art { margin-top: calc(-1 * var(--e)); }
-  .post.wide.frame-bleed .p-grid:not(:has(> .p-foot)) .p-art { margin-bottom: calc(-1 * var(--e)); }
+  .post.wide.frame-bleed .p-grid:not(.lay-over):not(:has(> .p-top)) .p-art { margin-top: calc(-1 * var(--e)); }
+  .post.wide.frame-bleed .p-grid:not(.lay-over):not(:has(> .p-foot)) .p-art { margin-bottom: calc(-1 * var(--e)); }
   .post.wide.frame-bleed .lay-b .p-art { margin-left: calc(-1 * var(--pad)); }
   .post.wide:not(.frame-bleed) .p-art { margin-block: var(--e); }
   /* The wave is drawn square and centred in its box, so a long or short box crops it instead of showing the ribbon's ends */

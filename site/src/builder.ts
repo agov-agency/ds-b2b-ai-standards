@@ -90,13 +90,12 @@ function authorBlock(s: State) {
   return `<div class="p-author"><span class="p-av">${photo ? `<img src="${esc(img(photo, 256))}" alt="" crossorigin="anonymous">` : esc(initials(name))}</span><span><span>${esc(name)}</span>${role ? `<span class="tone-2">${esc(role)}</span>` : ''}</span></div>`;
 }
 
-// Boxes straight from the item: a rule's LinkedIn default against the Standard, a skill's tools
+// Boxes straight from the item: a rule's LinkedIn default against the Standard (a skill's tools go in the tool chips)
 const rulePairs = (x: Data['rules'][number]) => [x.advises && `LinkedIn default | ${x.advises}`, x.adds && `*The Standard | ${x.adds}`].filter(Boolean).join('\n');
-const skillPairs = (x: Data['skills'][number]) => x.connectors.length ? `Runs on | ${x.connectors.filter((c) => !/claude|chatgpt|gemini|perplexity/i.test(c)).join(', ') || x.connectors.join(', ')}` : '';
 function cmsPairs(s: State) {
   const [kind, id] = s.about.split(':');
-  const r = kind === 'rule' && D.rules.find((x) => x.id === id), k = kind === 'skill' && D.skills.find((x) => x.id === id);
-  return r ? rulePairs(r) : k ? skillPairs(k) : undefined;
+  const r = kind === 'rule' && D.rules.find((x) => x.id === id);
+  return r ? rulePairs(r) : undefined;
 }
 const GITHUB = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.1.9 2.3v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>';
 
@@ -121,7 +120,7 @@ export function postHTML(s: State) {
     s.rule ? '<div class="p-rule"></div>' : '',
     s.body && s.bodyText ? `<p class="p-body">${br(s.bodyText)}</p>` : '',
     s.pairs && pairs.length ? `<div class="p-pairs">${pairs.join('')}</div>` : '',
-    s.steps && steps.length ? `<ol class="p-steps" style="--n:${Math.min(steps.length, wide ? 4 : steps.length > 4 ? Math.ceil(steps.length / 2) : steps.length)}">${steps.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>` : '',
+    s.steps && steps.length ? `<ol class="p-steps" style="--n:${steps.length}">${steps.map((t, i) => `<li${i ? '' : ' class="on"'}><span class="p-tick"><i><b>${i + 1}</b></i></span>${esc(t)}</li>`).join('')}</ol>` : '',
     s.tools && tools.length ? `<p class="p-tools">${tools.map((t) => `<span class="p-tool">${t.svg}${esc(t.name)}</span>`).join('')}</p>` : '',
     s.list && list.length ? `<ul class="p-list">${list.map((l) => { const [k, ...v] = l.split('|'); return v.length ? `<li><b>${esc(k.trim())}</b><span>${esc(v.join('|').trim())}</span></li>` : `<li><b></b><span>${esc(k)}</span></li>`; }).join('')}</ul>` : '',
     s.button && s.buttonText ? `<span class="p-btn">${esc(s.buttonText)}</span>` : '',
@@ -288,7 +287,7 @@ function templates(): Tpl[] {
     author: x.author ?? '', hmax: 67, art: { id: x.art?.piece ?? 'sorter', zoom: 1, frame: 'bleed' } as never }) });
   const skill = (x: Data['skills'][number]): Tpl => ({ group: 'Skill cards', name: x.title, s: B({
     about: `skill:${x.id}`, format: 'square', layout: 'b', bg: 'white', cover: x.cover, labelText: 'Skill', chips: true, chipsText: x.category, headline: x.title, context: x.description, hmax: 58,
-    pairs: x.connectors.length > 0, pairsText: skillPairs(x), github: true,
+    tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '), github: true,
     author: x.author ?? 'demandsense', art: { id: x.icon, zoom: 1, frame: 'panel' } as never }) });
   const rule = (x: Data['rules'][number]): Tpl => {
     const pairs = rulePairs(x);
