@@ -356,8 +356,11 @@ async function layers(post: HTMLElement, R: number) {
   const W = post.offsetWidth, H = post.offsetHeight;
   fontCSS ??= getFontEmbedCSS(post);
   const opts = { width: W, height: H, pixelRatio: R, fontEmbedCSS: await fontCSS, style: { transform: 'none' } };
+  // Hairlines are thickened for the scaled-down preview; the export draws them at their true 1px
+  post.style.setProperty('--hair', '1px');
   post.classList.add('x-bg'); const bg = await toCanvas(post, opts); post.classList.remove('x-bg');
   post.classList.add('x-copy'); const copy = await toCanvas(post, opts); post.classList.remove('x-copy');
+  post.style.removeProperty('--hair');
   return { bg, copy, W, H };
 }
 // Where the art box sits inside the post, in post pixels (the preview is scaled)
@@ -602,6 +605,8 @@ export function boot() {
     if (!current) return;
     const [W, H] = FORMATS[S.format], r = fitBox.getBoundingClientRect(), k = Math.min((r.width - 48) / W, (r.height - 48) / H, 1);
     scaleBox.style.transform = `translate(-50%, -50%) scale(${k})`;
+    // 1px lines vanish between pixels once the post is scaled down; keep each at least one screen pixel
+    scaleBox.style.setProperty('--hair', `${Math.max(1, 1 / k).toFixed(3)}px`);
     $('[data-size]').textContent = `${W} × ${H} · exports ${W * 2} × ${H * 2}`;
   };
   let pending = 0;
@@ -703,6 +708,7 @@ export function boot() {
     const [W, H] = FORMATS[s.format], box = btn.querySelector('.pb-thumb')!.getBoundingClientRect().width;
     renderInto(holder, s);
     holder.style.transform = `translate(-50%, -50%) scale(${(box - 24) / Math.max(W, H)})`;
+    holder.style.setProperty('--hair', `${(Math.max(W, H) / (box - 24)).toFixed(3)}px`);
   }), { rootMargin: '400px 0px' });
   const observeThumbs = () => groups.querySelectorAll('.pb-card').forEach((c) => { if (!c.querySelector('.post')) io.observe(c); });
   groups.addEventListener('click', (e) => {

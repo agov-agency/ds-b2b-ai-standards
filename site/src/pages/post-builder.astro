@@ -464,7 +464,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-q { width: calc(56px * var(--s)); height: calc(42px * var(--s)); fill: var(--hue); }
   .post .p-chips { display: flex; flex-wrap: wrap; gap: calc(8px * var(--s)); }
   .post .p-chips .chip { padding: calc(7px * var(--s)) calc(14px * var(--s)); font-size: calc(23px * var(--s)); }
-  .post .p-rule { height: 1px; background: var(--line); }
+  .post .p-rule { height: var(--hair, 1px); background: var(--line); }
   .post .p-body { color: var(--text-body); font-size: calc(32px * var(--s)); text-wrap: pretty; }
   .post .p-pairs { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: calc(12px * var(--s)); }
   .post .p-pairs > div { display: grid; align-content: start; gap: calc(10px * var(--s)); padding: calc(24px * var(--s)); border-radius: calc(4px * var(--s)); box-shadow: inset 0 0 0 1px var(--line); font-size: calc(28px * var(--s)); line-height: 1.3; }
@@ -477,7 +477,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-steps > li { display: grid; align-content: start; gap: calc(6px * var(--s)); padding-right: calc(16px * var(--s)); font-size: calc(26px * var(--s)); line-height: 1.2; letter-spacing: -.03em; overflow-wrap: break-word; }
   .post .p-steps > li:last-child { padding-right: 0; }
   .post .p-tick { position: relative; z-index: 0; display: flex; align-items: center; height: calc(88px * var(--s)); }
-  .post .p-tick::after { content: ''; position: absolute; z-index: -1; left: 0; right: calc(-16px * var(--s)); top: 50%; height: 1px; background: var(--line); }
+  .post .p-tick::after { content: ''; position: absolute; z-index: -1; left: 0; right: calc(-16px * var(--s)); top: 50%; height: var(--hair, 1px); background: var(--line); }
   .post .p-steps > li:last-child .p-tick::after { display: none; }
   .post .p-tick > i { --r: var(--line); display: grid; place-items: center; width: calc(80px * var(--s)); height: calc(80px * var(--s)); border-radius: 50%; font-style: normal; background: radial-gradient(circle closest-side, color-mix(in srgb, var(--r) 50%, var(--pbg)) 75%, color-mix(in srgb, var(--r) 25%, var(--pbg)) 75.5%, color-mix(in srgb, var(--r) 25%, var(--pbg)) 99%, transparent), var(--pbg); }
   .post .p-tick b { display: grid; place-items: center; width: calc(40px * var(--s)); height: calc(40px * var(--s)); border-radius: 50%; background: color-mix(in srgb, var(--r) 100%, var(--pbg)); font: 600 calc(19px * var(--s))/1 var(--font-mono); letter-spacing: 0; }
@@ -491,7 +491,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-tool svg { width: calc(38px * var(--s)); height: calc(38px * var(--s)); flex: none; }
   .post .p-gh { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); margin-left: auto; flex: none; font: 600 calc(18px * var(--s))/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0; white-space: nowrap; }
   .post .p-gh svg { width: calc(32px * var(--s)); height: calc(32px * var(--s)); }
-  .post .p-list > li { display: grid; grid-template-columns: calc(150px * var(--s)) minmax(0, 1fr); gap: calc(16px * var(--s)); padding-block: calc(14px * var(--s)); border-top: 1px solid var(--line); font-size: calc(28px * var(--s)); line-height: 1.3; }
+  .post .p-list > li { display: grid; grid-template-columns: calc(150px * var(--s)) minmax(0, 1fr); gap: calc(16px * var(--s)); padding-block: calc(14px * var(--s)); border-top: var(--hair, 1px) solid var(--line); font-size: calc(28px * var(--s)); line-height: 1.3; }
   .post .p-list > li > b { font: 600 calc(20px * var(--s))/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: 0; color: var(--text-2); }
   .post .p-btn { justify-self: start; display: inline-flex; align-items: center; height: calc(76px * var(--s)); padding: 0 calc(36px * var(--s)); border-radius: 100px; background: var(--action); color: var(--action-text); font: 600 calc(24px * var(--s))/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0; }
   .post .p-author { display: flex; align-items: center; gap: calc(20px * var(--s)); min-width: 0; }
@@ -507,8 +507,8 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post.al-center .p-main { justify-items: center; text-align: center; }
   .post.al-center .p-btn { justify-self: center; }
   /* Edge lines: the site's 1px structure, half the padding in from the edge, rules under the top and over the foot */
-  .post.lines .p-lines { background: linear-gradient(var(--line), var(--line)) calc(var(--pad) / 2) 0 / 1px 100% no-repeat, linear-gradient(var(--line), var(--line)) calc(100% - var(--pad) / 2) 0 / 1px 100% no-repeat; }
-  .post.lines .p-top::after, .post.lines .p-foot::before { content: ''; position: absolute; left: calc(-1 * var(--pad)); right: calc(-1 * var(--pad)); height: 1px; background: var(--line); }
+  .post.lines .p-lines { background: linear-gradient(var(--line), var(--line)) calc(var(--pad) / 2) 0 / var(--hair, 1px) 100% no-repeat, linear-gradient(var(--line), var(--line)) calc(100% - var(--pad) / 2) 0 / var(--hair, 1px) 100% no-repeat; }
+  .post.lines .p-top::after, .post.lines .p-foot::before { content: ''; position: absolute; left: calc(-1 * var(--pad)); right: calc(-1 * var(--pad)); height: var(--hair, 1px); background: var(--line); }
   .post.lines .p-top::after { bottom: 0; }
   .post.lines .p-foot::before { top: 0; }
   /* Wide posts are columns: no rules across them */
