@@ -31,7 +31,8 @@ const initials = data.name.split(' ').map((w) => w[0]).slice(0, 2).join('');
 <style>
   /* Grid card: no frame of its own; the rail draws the cell lines */
   /* --in: side inset; a list can zero it on one side so the outer cards line up with the headline */
-  .acard { --in: 24px; --in-l: var(--in); display: grid; grid-template-rows: auto 1fr auto; height: 100%; padding-block: 16px 24px; overflow: hidden; transition: background-color var(--t-fast) var(--ease-out); }
+  /* --bleed-l/-r: how far the hover fill runs past the card, so an outer card's fill reaches the edge line */
+  .acard { --in: 24px; --in-l: var(--in); --bleed-l: 0px; --bleed-r: 0px; --fill: transparent; display: grid; grid-template-rows: auto 1fr auto; height: 100%; padding-block: 16px 24px; overflow: hidden; background: var(--fill); box-shadow: calc(-1 * var(--bleed-l)) 0 var(--fill), var(--bleed-r) 0 var(--fill); transition: background-color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out); }
   /* Round portrait, 96px, top-left of the card (the profile keeps its big one) */
   .photo { position: relative; display: grid; place-items: center; width: 96px; height: 96px; margin: 24px var(--in) 0 var(--in-l); border-radius: 50%; background: var(--bg-subtle); box-shadow: inset 0 0 0 1px var(--line-card); overflow: hidden; }
   .photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -51,7 +52,7 @@ const initials = data.name.split(' ').map((w) => w[0]).slice(0, 2).join('');
   .work .chip::before { content: ''; width: 6px; height: 6px; background: var(--accent); flex: none; }
   .work .chip { color: var(--text); box-shadow: inset 0 0 0 1px var(--neutral-800); transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out); }
   @media (hover: hover) and (pointer: fine) {
-    .acard:hover { background: var(--bg-subtle); }
+    .acard:hover { --fill: var(--bg-subtle); }
     .acard:hover .ini { color: var(--text); }
     .acard:hover .work .chip { background: var(--neutral-0); color: var(--neutral-950); box-shadow: inset 0 0 0 1px var(--neutral-0); } /* fills white on hover */
   }

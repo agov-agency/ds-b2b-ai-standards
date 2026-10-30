@@ -68,6 +68,10 @@ const two = (n: number) => String(n).padStart(2, '0');
   .cells > li:nth-child(4n + 1)::before, .cells > li:nth-child(4n)::after { display: block; }
   .cells > li:not(:nth-child(4n)) { border-right: 1px solid var(--line); }
   .cells > li:nth-child(4n + 1) :global(.acard) { --in-l: 0px; }
+  /* outer cards' hover fill runs to the edge line (which takes the first/last px of the inset) */
+  .cells { --bleed: calc(var(--edge-inset) - 1px); }
+  .cells > li:nth-child(4n + 1) :global(.acard) { --bleed-l: var(--bleed); }
+  .cells > li:nth-child(4n) :global(.acard) { --bleed-r: var(--bleed); }
 
   @media (max-width: 999px) {
     .hero { flex-direction: column; align-items: start; }
@@ -76,6 +80,9 @@ const two = (n: number) => String(n).padStart(2, '0');
     .cells > li:nth-child(odd) { border-right: 1px solid var(--line); }
     .cells > li:nth-child(n) :global(.acard) { --in-l: var(--in); }
     .cells > li:nth-child(odd) :global(.acard) { --in-l: 0px; }
+    .cells > li:nth-child(n) :global(.acard) { --bleed-l: 0px; --bleed-r: 0px; }
+    .cells > li:nth-child(odd) :global(.acard) { --bleed-l: var(--bleed); }
+    .cells > li:nth-child(even) :global(.acard) { --bleed-r: var(--bleed); }
     .cells > li:nth-child(n)::before, .cells > li:nth-child(n)::after { display: none; }
     .cells > li:nth-child(odd)::before, .cells > li:nth-child(even)::after { display: block; }
   }
@@ -83,7 +90,7 @@ const two = (n: number) => String(n).padStart(2, '0');
     .hero { padding-block: 24px; gap: 24px; }
     .cells { --cols: 1; }
     .cells > li:nth-child(n) { border-right: 0; }
-    .cells > li:nth-child(n) :global(.acard) { --in-l: 0px; }
+    .cells > li:nth-child(n) :global(.acard) { --in-l: 0px; --bleed-l: var(--bleed); --bleed-r: var(--bleed); }
     .cells > li:nth-child(n)::before, .cells > li:nth-child(n)::after { display: block; }
   }
 </style>
