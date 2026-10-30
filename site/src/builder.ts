@@ -460,10 +460,34 @@ const set = (s: any, k: string, v: unknown) => { const ps = k.split('.'), last =
 const encode = (s: State) => btoa(unescape(encodeURIComponent(JSON.stringify(s, (k, v) => (typeof v === 'string' && v.startsWith('data:') ? '' : v))))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const decode = (h: string): State | undefined => { try { return merge(clone(DEFAULTS), JSON.parse(decodeURIComponent(escape(atob(h.replace(/-/g, '+').replace(/_/g, '/')))))); } catch { return undefined; } };
 
+// Panel layout: every control sits on its own card; a toggle's card also holds what the toggle reveals
+function cardify(root: HTMLElement) {
+  const card = (before: Element, cls = 'cc') => { const d = document.createElement('div'); d.className = cls; before.before(d); return d; };
+  root.querySelectorAll<HTMLElement>('.tg').forEach((tg) => {
+    const k = tg.querySelector<HTMLInputElement>('input')!.dataset.k, box = card(tg, 'cc tc');
+    if (tg.dataset.if) { box.dataset.if = tg.dataset.if; delete tg.dataset.if; }
+    let n = tg.nextElementSibling;
+    box.append(tg);
+    while (n && n.getAttribute('data-if')?.startsWith(`${k}=`)) { const nx = n.nextElementSibling; box.append(n); n = nx; }
+  });
+  const run = (box: Element) => {
+    let cur: Element | null = null, join = false;
+    for (const el of [...box.children]) {
+      if (el.tagName === 'LEGEND') { cur = null; continue; }
+      if (el.classList.contains('cc')) { cur = el; continue; }
+      if (el.tagName === 'DIV' && el.hasAttribute('data-if') && !el.className) { run(el); cur = null; continue; }
+      if (cur && (join || el.matches('.hint, .btn, .art-grid, [data-if]:not(div)'))) { cur.append(el); join = false; continue; }
+      if (!cur && el.matches('.hint')) continue;
+      cur = card(el); cur.append(el); join = el.matches('.lbl-2');
+    }
+  };
+  root.querySelectorAll('fieldset').forEach(run);
+}
 export function boot() {
   D = JSON.parse(document.getElementById('pb-data')!.textContent!);
   const $ = <T extends Element = HTMLElement>(q: string) => document.querySelector<T>(q)!;
   const panel = $('[data-panel]'), scaleBox = $('[data-scale]'), fitBox = $('[data-fit]'), toast = $('[data-toast]');
+  cardify(panel);
   const TPL = templates();
   let S: State = clone(DEFAULTS), base: State = clone(DEFAULTS), tname = 'Blank', current: { post: HTMLElement; piece?: Piece } | undefined, raf = 0, t = 0, last = 0, busy = false;
 
