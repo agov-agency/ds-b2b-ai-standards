@@ -121,7 +121,7 @@ export function postHTML(s: State) {
     s.body && s.bodyText ? `<p class="p-body">${br(s.bodyText)}</p>` : '',
     s.pairs && pairs.length ? `<div class="p-pairs">${pairs.join('')}</div>` : '',
     s.steps && steps.length ? `<ol class="p-steps" style="--n:${Math.min(steps.length, wide ? 4 : steps.length > 4 ? Math.ceil(steps.length / 2) : steps.length)}">${steps.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>` : '',
-    s.tools && tools.length ? `<div class="p-tools"><p class="p-k">Tools</p><p>${tools.map((t) => `<span class="p-tool">${t.svg}${esc(t.name)}</span>`).join('')}</p></div>` : '',
+    s.tools && tools.length ? `<p class="p-tools">${tools.map((t) => `<span class="p-tool">${t.svg}${esc(t.name)}</span>`).join('')}</p>` : '',
     s.list && list.length ? `<ul class="p-list">${list.map((l) => { const [k, ...v] = l.split('|'); return v.length ? `<li><b>${esc(k.trim())}</b><span>${esc(v.join('|').trim())}</span></li>` : `<li><b></b><span>${esc(k)}</span></li>`; }).join('')}</ul>` : '',
     s.button && s.buttonText ? `<span class="p-btn">${esc(s.buttonText)}</span>` : '',
   ].join('');

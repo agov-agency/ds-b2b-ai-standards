@@ -419,6 +419,9 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   /* Everything but the headline and the art runs at 82%, leaving the room to the text */
   .post .p-top { --s: calc(var(--s0) * .82); }
   .post .p-foot, .post .p-main > :not(.p-head) { --s: calc(var(--s0) * .82 * var(--k, 1)); }
+  /* Grey is the text colour at part opacity, so it takes on whatever sits behind it (pastels, the wave) */
+  .post.post { --text-2: color-mix(in srgb, var(--text) 55%, transparent); }
+  .post.post.surface-black { --text-2: color-mix(in srgb, var(--text) 62%, transparent); }
   .post { --s: var(--s0); --pad: calc(72px * var(--s)); --e: calc(40px * var(--s)); --gap: calc(36px * var(--s)); --hue: var(--primary-450); position: relative; width: var(--w); height: var(--h); overflow: hidden; background: var(--pbg); color: var(--text); font: 500 calc(28px * var(--s))/1.35 var(--font-sans); letter-spacing: -.04em; text-align: left; -webkit-font-smoothing: antialiased; }
   .post.on-pastel { --line: color-mix(in srgb, var(--neutral-950) 14%, transparent); --line-card: color-mix(in srgb, var(--neutral-950) 10%, transparent); --bg-muted: color-mix(in srgb, var(--neutral-0) 70%, transparent); --text-2: var(--neutral-500); }
   .post .p-bg, .post .p-lines { position: absolute; inset: 0; pointer-events: none; }
@@ -452,12 +455,9 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-steps { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: calc(20px * var(--s)) calc(16px * var(--s)); counter-reset: st; }
   .post .p-steps > li { display: grid; align-content: start; gap: calc(8px * var(--s)); padding-top: calc(14px * var(--s)); border-top: 1px solid var(--line); font-size: calc(21px * var(--s)); line-height: 1.25; }
   .post .p-steps > li::before { counter-increment: st; content: counter(st, decimal-leading-zero); font: 600 calc(16px * var(--s))/1 var(--font-mono); color: var(--hue); }
-  /* Tools: a labelled row on the same divider as the steps, plain logos and names (no pills) */
-  .post .p-tools { display: grid; gap: calc(14px * var(--s)); padding-top: calc(14px * var(--s)); border-top: 1px solid var(--line); }
-  .post .p-tools .p-k { font: 600 calc(16px * var(--s))/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0; color: var(--text-2); }
-  .post .p-tools > p:last-child { display: flex; flex-wrap: wrap; gap: calc(14px * var(--s)) calc(32px * var(--s)); }
-  .post .p-tool { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); font-size: calc(21px * var(--s)); line-height: 1.25; }
-  .post .p-tool svg { width: calc(28px * var(--s)); height: calc(28px * var(--s)); flex: none; }
+  .post .p-tools { display: flex; flex-wrap: wrap; gap: calc(10px * var(--s)); }
+  .post .p-tool { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); padding: calc(8px * var(--s)) calc(16px * var(--s)) calc(8px * var(--s)) calc(8px * var(--s)); border-radius: 100px; background: var(--bg-muted); font-size: calc(20px * var(--s)); line-height: 1; }
+  .post .p-tool svg { width: calc(32px * var(--s)); height: calc(32px * var(--s)); flex: none; }
   .post .p-gh { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); margin-left: auto; flex: none; font: 600 calc(18px * var(--s))/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0; white-space: nowrap; }
   .post .p-gh svg { width: calc(32px * var(--s)); height: calc(32px * var(--s)); }
   .post .p-list > li { display: grid; grid-template-columns: calc(150px * var(--s)) minmax(0, 1fr); gap: calc(16px * var(--s)); padding-block: calc(14px * var(--s)); border-top: 1px solid var(--line); font-size: calc(24px * var(--s)); line-height: 1.3; }
