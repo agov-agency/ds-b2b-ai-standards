@@ -6,6 +6,10 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import IsoArt from '../components/IsoArt.astro';
 import { ART_POOLS, pieces } from '../art';
+import { figures } from '../art/figures';
+import { ALT_RULES } from '../art/alt-rules';
+import { ALT_SKILLS_A } from '../art/alt-skills-1';
+import { ALT_SKILLS_B } from '../art/alt-skills-2';
 import { alts } from '../art/alt';
 import { ICON_POOLS } from '../icons';
 import { area, AREA_LIST } from '../areas';
@@ -36,33 +40,34 @@ const data = {
   categories: AREA_LIST.map((c) => c.title),
 };
 
-// Art the posts can use, grouped as the CMS pools are; alternatives are the takes not yet picked
-const figureNames = Object.keys(pieces).filter((n) => !n.startsWith('i-') && !n.startsWith('x-'));
-const artGroups = [
-  { label: 'Scenario figures', items: ART_POOLS.scenario },
-  { label: 'Hub and CTA figures', items: figureNames.filter((n) => !ART_POOLS.scenario.includes(n)) },
-  { label: 'Skill icons', items: ICON_POOLS.skill.map((n) => `i-${n}`).filter((n) => pieces[n]) },
-  { label: 'Rule icons', items: ICON_POOLS.rule.map((n) => `i-${n}`).filter((n) => pieces[n]) },
-  { label: 'Alternatives', items: [...Object.keys(pieces).filter((n) => n.startsWith('x-')), ...Object.keys(alts).map((n) => `alt:${n}`)] },
+// Art the posts can use, by what it belongs to: each category has the pieces in use, then the alternatives not yet picked
+const ALT_X = { rule: Object.keys(ALT_RULES), skill: [...Object.keys(ALT_SKILLS_A), ...Object.keys(ALT_SKILLS_B)] };
+const altsOf = (test: (of: string) => boolean) => Object.entries(alts).filter(([, a]) => test(a.of)).map(([n]) => `alt:${n}`);
+const hub = Object.keys(figures).filter((n) => !ART_POOLS.scenario.includes(n));
+const artCats = [
+  { id: 'scenario', label: 'Scenarios', items: ART_POOLS.scenario, alts: altsOf((o) => ART_POOLS.scenario.includes(o)) },
+  { id: 'skill', label: 'Skills', items: ICON_POOLS.skill.map((n) => `i-${n}`).filter((n) => pieces[n]), alts: [...ALT_X.skill.map((n) => `x-${n}`), ...altsOf((o) => ICON_POOLS.skill.includes(o.replace(/^i-/, '')))] },
+  { id: 'rule', label: 'Rules', items: ICON_POOLS.rule.map((n) => `i-${n}`).filter((n) => pieces[n]), alts: [...ALT_X.rule.map((n) => `x-${n}`), ...altsOf((o) => ICON_POOLS.rule.includes(o.replace(/^i-/, '')))] },
+  { id: 'hub', label: 'Site', items: hub, alts: altsOf((o) => hub.includes(o)) },
 ];
+const connectorNames = [...new Set([...scenarios, ...skills].flatMap((x) => x.data.connectors))].sort();
 const pretty = (n: string) => n.replace(/^(i-|x-|alt:)/, '').replace(/[-_]/g, ' ');
 const logos = import.meta.glob('../../../design-system/logos/*.svg', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 const logoSet = Object.fromEntries(Object.entries(logos).map(([p, svg]) => [p.split('/').pop()!.replace('.svg', ''), svg]));
 
-const FORMATS = [['square', 'Square 1080'], ['portrait', '4:5 1080×1350'], ['story', '9:16'], ['wide', 'Email 1200×628'], ['header', 'Header 1200×480'], ['block', 'Block 1200×240'], ['cover', 'Cover 1920×1080']];
+const FORMATS = [['square', '1:1', 1080, 1080], ['portrait', '4:5', 1080, 1350], ['story', '9:16', 1080, 1920], ['wide', 'Landscape', 1200, 628], ['header', 'Header', 1200, 480], ['block', 'Block', 1200, 240], ['cover', '16:9', 1920, 1080]] as const;
 const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
-const seg = (k: string, opts: string[][]) => ({ k, opts });
 ---
 <Base title="Post builder · The B2B AI Standard" description="Internal tool">
   <meta slot="head" name="robots" content="noindex, nofollow" />
-  <script type="application/json" id="pb-data" set:html={JSON.stringify({ ...data, logos: logoSet })} />
+  <script type="application/json" id="pb-data" set:html={JSON.stringify({ ...data, logos: logoSet, connectorNames })} />
 
   <header class="pb-bar surface-black">
     <img src="/design-system/brand/logo-b2b.svg" alt="The B2B AI Standard for LinkedIn Ads" height="28" />
     <p class="lbl">Post builder</p>
-    <div class="tab-switch" role="tablist" aria-label="View">
-      <button role="tab" aria-selected="true" data-view="templates">Templates</button>
-      <button role="tab" aria-selected="false" data-view="editor">Editor</button>
+    <div class="seg" role="tablist" aria-label="View">
+      <button type="button" role="tab" aria-selected="true" data-view="templates">Templates</button>
+      <button type="button" role="tab" aria-selected="false" data-view="editor">Editor</button>
     </div>
   </header>
 
@@ -77,128 +82,148 @@ const seg = (k: string, opts: string[][]) => ({ k, opts });
 
     <section class="pb-view pb-editor" data-pane="editor" aria-label="Editor" hidden>
       <form class="pb-panel" data-panel onsubmit="return false">
-        <fieldset>
-          <legend class="marker">Template</legend>
+        <div class="pb-ptop">
+          <p class="lbl-2">Template</p>
           <p class="t-p2" data-tname>Blank</p>
           <div class="row"><button type="button" class="btn outlined xs" data-act="templates">All templates</button><button type="button" class="btn ghost xs" data-act="reset">Reset</button></div>
-        </fieldset>
-
-        <fieldset>
-          <legend class="marker">Format and layout</legend>
-          <div class="tab-switch" data-seg="format">{FORMATS.map(([v, l]) => <button type="button" role="tab" data-v={v}>{l}</button>)}</div>
-          <p class="lbl-2">Layout</p>
-          <div class="tab-switch" data-seg="layout"><button type="button" role="tab" data-v="a" data-wide="Text left">Text first</button><button type="button" role="tab" data-v="b" data-wide="Art left">Art first</button><button type="button" role="tab" data-v="over">Text over art</button><button type="button" role="tab" data-v="none">Text only</button></div>
-          <p class="lbl-2">Text sits</p>
-          <div class="tab-switch" data-seg="vpos"><button type="button" role="tab" data-v="start">Top</button><button type="button" role="tab" data-v="center">Middle</button><button type="button" role="tab" data-v="end">Bottom</button></div>
-          <div class="tab-switch" data-seg="align"><button type="button" role="tab" data-v="left">Left</button><button type="button" role="tab" data-v="center">Centred</button></div>
-        </fieldset>
-
-        <fieldset>
-          <legend class="marker">Colour</legend>
-          <p class="lbl-2">Background</p>
-          <div class="sw" data-swatch="bg">
-            <button type="button" data-v="black" style="--c: var(--neutral-1000)" aria-label="Black"></button>
-            <button type="button" data-v="white" style="--c: var(--neutral-0)" aria-label="White"></button>
-            {PASTELS.map((n) => <button type="button" data-v={`pastel-${n}`} style={`--c: var(--pastel-${n})`} aria-label={`Pastel ${n}`}></button>)}
-            <label class="pick" aria-label="Custom background"><input type="color" data-k="bgCustom" /></label>
+          <div class="seg" role="tablist" aria-label="Settings">
+            <button type="button" role="tab" data-ptab-btn="content" aria-selected="true">Content</button>
+            <button type="button" role="tab" data-ptab-btn="layout">Layout</button>
+            <button type="button" role="tab" data-ptab-btn="art">Art</button>
+            <button type="button" role="tab" data-ptab-btn="colour">Colour</button>
           </div>
-          <p class="lbl-2">Accent (art, quote mark, band)</p>
-          <div class="sw" data-swatch="hue">
-            <button type="button" data-v="auto" class="auto" aria-label="Auto: the background's or the item's hue">A</button>
-            <button type="button" data-v="primary" style="--c: var(--primary-450)" aria-label="Primary blue"></button>
-            {PASTELS.map((n) => <button type="button" data-v={String(n)} style={`--c: var(--pastel-${n}-450)`} aria-label={`Hue ${n}`}></button>)}
-            <label class="pick" aria-label="Custom accent"><input type="color" data-k="hueCustom" /></label>
-          </div>
-          <label class="ck"><input type="checkbox" data-k="lines" /> Edge lines</label>
-          <label class="ck"><input type="checkbox" data-k="pattern" /> Dot pattern</label>
-          <label class="ck" data-if="layout=over"><input type="checkbox" data-k="scrim" /> Fade art under the text</label>
-        </fieldset>
+        </div>
 
-        <fieldset>
-          <legend class="marker">Top</legend>
-          <label class="ck"><input type="checkbox" data-k="logo" /> Logo</label>
-          <div data-if="logo=true">
-            <div class="tab-switch" data-seg="logoKind"><button type="button" role="tab" data-v="full">Full</button><button type="button" role="tab" data-v="mark">Mark</button></div>
-            <div class="tab-switch" data-seg="logoPos"><button type="button" role="tab" data-v="left">Left</button><button type="button" role="tab" data-v="right">Right</button></div>
-            <label class="fld">Logo height <input type="range" min="20" max="160" step="2" data-k="logoH" /></label>
-          </div>
-          <label class="ck"><input type="checkbox" data-k="label" /> Label</label>
-          <label class="fld" data-if="label=true"><input type="text" data-k="labelText" placeholder="Rule 08" /></label>
-        </fieldset>
+        <div class="pb-ptab" data-ptab="content">
+          <fieldset>
+            <legend class="marker">About</legend>
+            <label class="fld">The item the post is about <select data-k="about"><option value="">Nothing in particular</option>
+              <optgroup label="Scenarios">{data.scenarios.map((x) => <option value={`scenario:${x.id}`}>{x.title}</option>)}</optgroup>
+              <optgroup label="Skills">{data.skills.map((x) => <option value={`skill:${x.id}`}>{x.title}</option>)}</optgroup>
+              <optgroup label="Rules">{data.rules.map((x) => <option value={`rule:${x.id}`}>{String(x.number).padStart(2, '0')} · {x.title}</option>)}</optgroup>
+              <optgroup label="Authors">{data.authors.map((x) => <option value={`author:${x.id}`}>{x.name}</option>)}</optgroup>
+            </select></label>
+            <p class="hint" data-if="about!=">Picking it sets its colour and illustration; alternatives are under Art.</p>
+            <button type="button" class="btn outlined xs" data-act="fill" data-if="about!=">Fill the text from it</button>
+          </fieldset>
+          <fieldset>
+            <legend class="marker">Headline</legend>
+            <label class="tg"><span>Label</span><input type="checkbox" role="switch" data-k="label" /></label>
+            <label class="fld" data-if="label=true"><input type="text" data-k="labelText" placeholder="Rule 08" /></label>
+            <label class="fld">Headline <textarea rows="3" data-k="headline"></textarea></label>
+            <label class="fld">Grey part <textarea rows="2" data-k="context"></textarea></label>
+            <div class="seg" data-seg="hsize"><button type="button" data-v="auto">Auto size</button><button type="button" data-v="fixed">Fixed size</button></div>
+            <label class="fld" data-if="hsize=fixed">Size <input type="range" min="20" max="220" step="1" data-k="hpx" /></label>
+            <label class="fld" data-if="hsize=auto">Largest size <input type="range" min="32" max="200" step="2" data-k="hmax" /></label>
+          </fieldset>
+          <fieldset>
+            <legend class="marker">More text</legend>
+            <label class="tg"><span>Quote mark</span><input type="checkbox" role="switch" data-k="qmark" /></label>
+            <label class="tg"><span>Chips</span><input type="checkbox" role="switch" data-k="chips" /></label>
+            <label class="fld" data-if="chips=true"><input type="text" data-k="chipsText" placeholder="Comma, separated" /></label>
+            <label class="tg"><span>Divider under the headline</span><input type="checkbox" role="switch" data-k="rule" /></label>
+            <label class="tg"><span>Body text</span><input type="checkbox" role="switch" data-k="body" /></label>
+            <label class="fld" data-if="body=true"><textarea rows="3" data-k="bodyText"></textarea></label>
+            <label class="tg"><span>Boxes</span><input type="checkbox" role="switch" data-k="pairs" /></label>
+            <div data-if="pairs=true">
+              <label class="tg" data-if="about!="><span>From the item (CMS)</span><input type="checkbox" role="switch" data-k="pairsCms" /></label>
+              <label class="fld" data-if="pairsCms=false">One per line: <code>Label | text</code>, * fills it <textarea rows="3" data-k="pairsText"></textarea></label>
+            </div>
+            <label class="tg"><span>Steps</span><input type="checkbox" role="switch" data-k="steps" /></label>
+            <label class="fld" data-if="steps=true">One step per line <textarea rows="4" data-k="stepsText"></textarea></label>
+            <label class="tg"><span>Tools</span><input type="checkbox" role="switch" data-k="tools" /></label>
+            <details class="ms" data-if="tools=true">
+              <summary data-ms-sum>Pick tools</summary>
+              <div class="ms-list">{connectorNames.map((n) => <label class="ms-item"><input type="checkbox" data-tool={n} /><span>{n}</span></label>)}</div>
+            </details>
+            <div data-if="tools=true">
+              <label class="tg"><span>Add your own</span><input type="checkbox" role="switch" data-k="toolsCustom" /></label>
+              <label class="fld" data-if="toolsCustom=true">Names, comma separated <input type="text" data-k="toolsExtra" placeholder="Clay, Apollo" /></label>
+            </div>
+            <label class="tg"><span>List</span><input type="checkbox" role="switch" data-k="list" /></label>
+            <label class="fld" data-if="list=true">One per line: <code>Label | text</code> <textarea rows="4" data-k="listText"></textarea></label>
+            <label class="tg"><span>GitHub mark</span><input type="checkbox" role="switch" data-k="github" /></label>
+            <label class="tg"><span>Button</span><input type="checkbox" role="switch" data-k="button" /></label>
+            <label class="fld" data-if="button=true"><input type="text" data-k="buttonText" /></label>
+          </fieldset>
+          <fieldset>
+            <legend class="marker">Author</legend>
+            <label class="tg"><span>Custom (not in the CMS)</span><input type="checkbox" role="switch" data-k="aCustom" /></label>
+            <label class="fld" data-if="aCustom=false"><select data-k="author"><option value="">None</option>{data.authors.map((a) => <option value={a.id}>{a.name}</option>)}</select></label>
+            <div class="seg" data-seg="authorStyle"><button type="button" data-v="byline">At the bottom</button><button type="button" data-v="card">In the text</button></div>
+            <div data-if="aCustom=true">
+              <label class="fld">Name <input type="text" data-k="aName" /></label>
+              <label class="fld">Role, company <input type="text" data-k="aRole" /></label>
+              <label class="fld">Photo URL <input type="text" data-k="aPhoto" placeholder="/authors/justin-rowe.jpg" /></label>
+            </div>
+          </fieldset>
+        </div>
 
-        <fieldset>
-          <legend class="marker">Text</legend>
-          <label class="ck"><input type="checkbox" data-k="chips" /> Chips</label>
-          <label class="fld" data-if="chips=true"><input type="text" data-k="chipsText" placeholder="Comma, separated" /></label>
-          <label class="ck"><input type="checkbox" data-k="qmark" /> Quote mark</label>
-          <label class="fld">Headline <textarea rows="3" data-k="headline"></textarea></label>
-          <label class="fld">Grey part <textarea rows="2" data-k="context"></textarea></label>
-          <div class="tab-switch" data-seg="hsize"><button type="button" role="tab" data-v="auto">Auto size</button><button type="button" role="tab" data-v="fixed">Fixed size</button></div>
-          <label class="fld" data-if="hsize=fixed">Headline size <input type="range" min="20" max="220" step="1" data-k="hpx" /></label>
-          <label class="fld" data-if="hsize=auto">Largest auto size <input type="range" min="32" max="220" step="2" data-k="hmax" /></label>
-          <label class="ck"><input type="checkbox" data-k="rule" /> Divider under the headline</label>
-          <label class="ck"><input type="checkbox" data-k="body" /> Body text</label>
-          <label class="fld" data-if="body=true"><textarea rows="3" data-k="bodyText"></textarea></label>
-          <label class="ck"><input type="checkbox" data-k="pairs" /> Boxes (default vs Standard, Runs on)</label>
-          <label class="fld" data-if="pairs=true">One per line: <code>Label | text</code>, start with * to fill it <textarea rows="3" data-k="pairsText"></textarea></label>
-          <label class="ck"><input type="checkbox" data-k="steps" /> Steps strip</label>
-          <label class="fld" data-if="steps=true">One step per line <textarea rows="4" data-k="stepsText"></textarea></label>
-          <label class="ck"><input type="checkbox" data-k="tools" /> Tools</label>
-          <label class="fld" data-if="tools=true"><input type="text" data-k="toolsText" placeholder="Claude, LinkedIn Ads export, CRM export" /></label>
-          <label class="ck"><input type="checkbox" data-k="list" /> List</label>
-          <label class="fld" data-if="list=true">One per line: <code>Label | text</code> <textarea rows="4" data-k="listText"></textarea></label>
-          <label class="ck"><input type="checkbox" data-k="button" /> Button</label>
-          <label class="fld" data-if="button=true"><input type="text" data-k="buttonText" /></label>
-        </fieldset>
+        <div class="pb-ptab" data-ptab="layout" hidden>
+          <fieldset>
+            <legend class="marker">Format</legend>
+            <div class="cards fmt" data-seg="format">{FORMATS.map(([v, l, w, h]) => <button type="button" data-v={v}><i style={`aspect-ratio: ${w} / ${h}`}></i><b>{l}</b><small>{w}×{h}</small></button>)}</div>
+          </fieldset>
+          <fieldset>
+            <legend class="marker">Layout</legend>
+            <div class="cards lay" data-seg="layout">
+              <button type="button" data-v="a"><i class="d-a"></i><b data-wide="Text left">Text first</b></button>
+              <button type="button" data-v="b"><i class="d-b"></i><b data-wide="Art left">Art first</b></button>
+              <button type="button" data-v="over"><i class="d-over"></i><b>Text on art</b></button>
+              <button type="button" data-v="none"><i class="d-none"></i><b>Text only</b></button>
+            </div>
+            <p class="lbl-2">Text sits</p>
+            <div class="seg" data-seg="vpos"><button type="button" data-v="start">Top</button><button type="button" data-v="center">Middle</button><button type="button" data-v="end">Bottom</button></div>
+            <div class="seg" data-seg="align"><button type="button" data-v="left">Left</button><button type="button" data-v="center">Centred</button></div>
+          </fieldset>
+          <fieldset>
+            <legend class="marker">Logo</legend>
+            <label class="tg"><span>Logo</span><input type="checkbox" role="switch" data-k="logo" /></label>
+            <div data-if="logo=true">
+              <div class="seg" data-seg="logoKind"><button type="button" data-v="mark">Icon</button><button type="button" data-v="full">Full</button></div>
+              <div class="seg" data-seg="logoPos"><button type="button" data-v="left">Left</button><button type="button" data-v="right">Right</button></div>
+              <label class="fld">Size <input type="range" min="20" max="160" step="2" data-k="logoH" /></label>
+            </div>
+          </fieldset>
+        </div>
 
-        <fieldset>
-          <legend class="marker">Author</legend>
-          <label class="fld"><select data-k="author"><option value="">None</option><option value="custom">Someone else…</option>{data.authors.map((a) => <option value={a.id}>{a.name}</option>)}</select></label>
-          <div data-if="author!=">
-            <div class="tab-switch" data-seg="authorStyle"><button type="button" role="tab" data-v="byline">Byline at the bottom</button><button type="button" role="tab" data-v="card">Card in the text</button></div>
-          </div>
-          <div data-if="author=custom">
-            <label class="fld">Name <input type="text" data-k="aName" /></label>
-            <label class="fld">Role, company <input type="text" data-k="aRole" /></label>
-            <label class="fld">Photo URL <input type="text" data-k="aPhoto" placeholder="/authors/justin-rowe.jpg" /></label>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend class="marker">Bottom</legend>
-          <label class="ck"><input type="checkbox" data-k="meta" /> Footer text</label>
-          <div data-if="meta=true">
-            <label class="fld"><input type="text" data-k="metaText" /></label>
-            <div class="tab-switch" data-seg="foot"><button type="button" role="tab" data-v="plain">Plain</button><button type="button" role="tab" data-v="band">Colour band</button></div>
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend class="marker">Art</legend>
-          <label class="fld"><select data-k="art.id">
-            <option value="none">None</option>
-            <option value="wave">Wave</option>
-            <option value="photo">Photo</option>
-            {artGroups.map((g) => <optgroup label={g.label}>{g.items.map((n) => <option value={n}>{pretty(n)}</option>)}</optgroup>)}
-          </select></label>
-          <div data-if="art.id!=none">
-            <div class="tab-switch" data-seg="art.frame"><button type="button" role="tab" data-v="bleed">To the edge</button><button type="button" role="tab" data-v="panel">On a panel</button><button type="button" role="tab" data-v="free">Free</button></div>
-            <label class="fld">Zoom <input type="range" min=".4" max="3" step=".02" data-k="art.zoom" /></label>
+        <div class="pb-ptab" data-ptab="art" hidden>
+          <fieldset>
+            <legend class="marker">Illustration</legend>
+            <div class="cards kinds" data-seg="art.id">
+              <button type="button" data-v="none"><b>None</b></button>
+              <button type="button" data-v="wave"><b>Wave</b></button>
+              <button type="button" data-v="photo"><b>Photo</b></button>
+            </div>
+            <div class="seg" data-artcat-tabs>
+              <button type="button" data-artcat="item" data-if="about!=">This item</button>
+              {artCats.map((c) => <button type="button" data-artcat={c.id}>{c.label}</button>)}
+            </div>
+            <div class="art-grid" data-artgrid data-cat="item"></div>
+            {artCats.map((c) => (
+              <div class="art-grid" data-artgrid data-cat={c.id} hidden>
+                {c.items.map((n) => <button type="button" data-art={n} title={pretty(n)} aria-label={pretty(n)}></button>)}
+                {c.alts.length > 0 && <p class="lbl-2 sub">Alternatives</p>}
+                {c.alts.map((n) => <button type="button" data-art={n} title={pretty(n)} aria-label={pretty(n)}></button>)}
+              </div>
+            ))}
+          </fieldset>
+          <fieldset data-if="art.id!=none">
+            <legend class="marker">Placement</legend>
+            <div class="seg" data-seg="art.frame"><button type="button" data-v="bleed">To the edge</button><button type="button" data-v="panel">On a panel</button><button type="button" data-v="free">Free</button></div>
+            <label class="fld">Zoom <input type="range" min=".5" max="3" step=".02" data-k="art.zoom" /></label>
             <label class="fld">Move ↔ <input type="range" min="-60" max="60" step="1" data-k="art.x" /></label>
             <label class="fld">Move ↕ <input type="range" min="-60" max="60" step="1" data-k="art.y" /></label>
-          </div>
-          <div data-if="art.id!=wave">
-            <label class="fld" data-if="art.id!=photo">Moment (the still frame, and where the video starts) <input type="range" min="0" max="12" step=".05" data-k="art.t" /></label>
-            <label class="ck" data-if="art.id!=photo"><input type="checkbox" data-k="art.mono" /> Grey, accent only on the live part</label>
-          </div>
-          <label class="ck" data-if="art.id!=photo"><input type="checkbox" data-k="art.animate" /> Animate (exports as MP4)</label>
-          <label class="fld" data-if="art.id=photo">Photo URL (empty = the author's) <input type="text" data-k="art.photo" /></label>
-          <div data-if="art.id=wave" class="wave-set">
-            <div class="row">
-              <button type="button" class="btn outlined xs" data-wave-preset="brand">Brand</button>
-              <button type="button" class="btn outlined xs" data-wave-preset="cta">CTA blue</button>
-              <button type="button" class="btn outlined xs" data-wave-preset="mono">Grey</button>
+            <div data-if="art.id!=photo">
+              <label class="fld" data-if="art.id!=wave">Moment (still frame, and where the video starts) <input type="range" min="0" max="12" step=".05" data-k="art.t" /></label>
+              <label class="tg"><span>Animate (exports as MP4)</span><input type="checkbox" role="switch" data-k="art.animate" /></label>
+              <div data-if="art.id!=wave"><label class="tg"><span>Grey, accent on the live part</span><input type="checkbox" role="switch" data-k="art.mono" /></label></div>
             </div>
+            <label class="fld" data-if="art.id=photo">Photo URL (empty = the author's) <input type="text" data-k="art.photo" /></label>
+          </fieldset>
+          <fieldset data-if="art.id=wave">
+            <legend class="marker">Wave</legend>
+            <div class="seg"><button type="button" data-wave-preset="brand">Brand</button><button type="button" data-wave-preset="cta">CTA blue</button><button type="button" data-wave-preset="mono">Grey</button></div>
             <div class="row colors">
               <label class="pick" aria-label="Wave colour 1"><input type="color" data-k="wave.c1" /></label>
               <label class="pick" aria-label="Wave colour 2"><input type="color" data-k="wave.c2" /></label>
@@ -208,8 +233,35 @@ const seg = (k: string, opts: string[][]) => ({ k, opts });
             </div>
             <label class="fld">Ribbon size <input type="range" min=".4" max="3" step=".02" data-k="wave.k" /></label>
             <label class="fld">Moment <input type="range" min="0" max="60" step=".1" data-k="wave.time" /></label>
-          </div>
-        </fieldset>
+          </fieldset>
+        </div>
+
+        <div class="pb-ptab" data-ptab="colour" hidden>
+          <fieldset>
+            <legend class="marker">Background</legend>
+            <div class="sw" data-swatch="bg">
+              <button type="button" data-v="black" style="--c: var(--neutral-1000)" aria-label="Black"></button>
+              <button type="button" data-v="white" style="--c: var(--neutral-0)" aria-label="White"></button>
+              {PASTELS.map((n) => <button type="button" data-v={`pastel-${n}`} style={`--c: var(--pastel-${n})`} aria-label={`Pastel ${n}`}></button>)}
+              <label class="pick" aria-label="Custom background"><input type="color" data-k="bgCustom" /></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend class="marker">Accent</legend>
+            <p class="hint">Illustration, quote mark, steps, colour band. Auto follows the background or the item.</p>
+            <div class="sw" data-swatch="hue">
+              <button type="button" data-v="auto" class="auto" aria-label="Auto">A</button>
+              <button type="button" data-v="primary" style="--c: var(--primary-450)" aria-label="Primary blue"></button>
+              {PASTELS.map((n) => <button type="button" data-v={String(n)} style={`--c: var(--pastel-${n}-450)`} aria-label={`Hue ${n}`}></button>)}
+              <label class="pick" aria-label="Custom accent"><input type="color" data-k="hueCustom" /></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend class="marker">Structure</legend>
+            <label class="tg"><span>Edge lines</span><input type="checkbox" role="switch" data-k="lines" /></label>
+            <label class="tg"><span>Dot pattern</span><input type="checkbox" role="switch" data-k="pattern" /></label>
+          </fieldset>
+        </div>
       </form>
 
       <div class="pb-stage">
@@ -239,15 +291,21 @@ const seg = (k: string, opts: string[][]) => ({ k, opts });
 </script>
 
 <style is:global>
-  /* Builder chrome: the site's tab switch, buttons, markers and underline fields; posts are styled below */
-  .pb-bar { position: sticky; top: 0; z-index: var(--z-sticky); display: flex; align-items: center; gap: 24px; padding: 14px 24px; box-shadow: inset 0 -1px 0 var(--line); }
+  /* Builder chrome: site buttons, markers, underline fields, the DS toggle (§8.3) and a pill segmented control */
+  .pb-bar { position: sticky; top: 0; z-index: var(--z-sticky); display: flex; align-items: center; gap: 24px; padding: 12px 24px; box-shadow: inset 0 -1px 0 var(--line); }
   .pb-bar img { height: 28px; width: auto; }
   .pb-bar .lbl { margin-right: auto; color: var(--text-2); }
-  .pb-bar .tab-switch > [role=tab] { color: var(--text-2); }
+  .pb-bar .seg { width: 240px; }
   .pb-view { animation: pb-in var(--t-base) var(--ease-out); }
-  .pb-view[hidden] { display: none; }
+  .pb-view[hidden], .pb-ptab[hidden], .pb-panel [hidden] { display: none !important; }
+  .pb-ptab { animation: pb-in var(--t-base) var(--ease-out); }
   @keyframes pb-in { from { opacity: 0; transform: translateY(6px); } }
-
+  .seg { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: 3px; border-radius: var(--radius-pill); background: var(--bg-muted); }
+  .seg > button { min-height: 30px; padding: 0 10px; border: 0; border-radius: var(--radius-pill); background: none; color: var(--text-2); font: 600 11px/1.2 var(--font-mono); text-transform: uppercase; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out); }
+  .seg > button[aria-selected=true] { background: var(--neutral-0); color: var(--neutral-950); box-shadow: 0 1px 3px #0000001f, inset 0 0 0 1px var(--line-card); }
+  .surface-black .seg > button[aria-selected=true] { box-shadow: none; }
+  .seg > button[hidden] { display: none; }
+  @media (hover: hover) and (pointer: fine) { .seg > button:not([aria-selected=true]):hover { color: var(--text); } }
   .pb-gallery { padding: 48px 24px 120px; display: grid; gap: 48px; }
   .pb-intro { display: grid; gap: 12px; max-width: 760px; }
   .pb-groups { display: grid; gap: 56px; }
@@ -262,30 +320,75 @@ const seg = (k: string, opts: string[][]) => ({ k, opts });
   .pb-card:active .pb-thumb { transform: scale(.98); }
   @media (hover: hover) and (pointer: fine) { .pb-card:hover .pb-thumb { box-shadow: inset 0 0 0 1px var(--text), var(--shadow-lift); } }
 
-  .pb-editor { display: grid; grid-template-columns: 380px minmax(0, 1fr); min-height: calc(100vh - 57px); }
-  .pb-panel { height: calc(100vh - 57px); overflow-y: auto; overscroll-behavior: contain; position: sticky; top: 57px; padding: 24px; display: grid; align-content: start; gap: 0; box-shadow: inset -1px 0 0 var(--line); }
+  .pb-editor { display: grid; grid-template-columns: 400px minmax(0, 1fr); min-height: calc(100vh - 57px); }
+  .pb-panel { height: calc(100vh - 57px); overflow-y: auto; overscroll-behavior: contain; position: sticky; top: 57px; display: grid; align-content: start; box-shadow: inset -1px 0 0 var(--line); }
+  .pb-ptop { position: sticky; top: 0; z-index: var(--z-raised); display: grid; gap: 8px; padding: 20px 24px 16px; background: var(--bg); box-shadow: inset 0 -1px 0 var(--line); }
+  .pb-ptop .seg { margin-top: 8px; }
+  .pb-ptop .lbl-2 { color: var(--text-2); }
+  .pb-ptab { display: grid; padding: 0 24px 40px; }
   .pb-panel fieldset { display: grid; gap: 12px; margin: 0; padding: 20px 0; border: 0; border-bottom: 1px solid var(--line); min-width: 0; }
+  .pb-panel fieldset:last-child { border-bottom: 0; }
   .pb-panel legend { float: left; padding: 0; margin-bottom: 4px; }
   .pb-panel legend + * { clear: both; }
-  .pb-panel [data-if] { display: grid; gap: 12px; }
-  .pb-panel [hidden] { display: none; }
-  .pb-panel .tab-switch > [role=tab] { padding: 6px 10px; font-size: 11px; }
+  .pb-panel div[data-if] { display: grid; gap: 12px; }
+  .pb-panel [hidden] { display: none !important; }
+  .hint { font: 500 13px/1.4 var(--font-sans); letter-spacing: -.02em; color: var(--text-2); }
   .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .ck { display: flex; align-items: center; gap: 8px; font: 500 14px/1.4 var(--font-sans); letter-spacing: -.03em; cursor: pointer; min-height: 28px; }
-  .ck input { width: 16px; height: 16px; margin: 0; accent-color: var(--neutral-950); }
+  .tg { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; font: 600 12px/1.4 var(--font-mono); text-transform: uppercase; color: var(--text); cursor: pointer; }
+  .tg input { appearance: none; position: relative; flex: none; width: 40px; height: 20px; margin: 0; border-radius: var(--radius-pill); background: var(--neutral-100); cursor: pointer; transition: background-color var(--t-fast) var(--ease-out); }
+  .tg input::before { content: ''; position: absolute; left: 2px; top: 2px; width: 24px; height: 16px; border-radius: var(--radius-pill); background: var(--neutral-0); box-shadow: 0 1px 2px #0003; transition: transform 200ms var(--ease-out); }
+  .tg input:checked { background: var(--neutral-950); }
+  .tg input:checked::before { transform: translateX(12px); }
+  @media (hover: hover) and (pointer: fine) { .tg:hover input:not(:checked) { background: var(--neutral-200); } .tg:hover input:checked { background: var(--hover-on-950); } }
   .fld { display: grid; gap: 4px; font: 600 10px/1.4 var(--font-mono); text-transform: uppercase; letter-spacing: 0; color: var(--text-body); }
   .fld code { font: inherit; text-transform: none; color: var(--text); }
   .fld :is(input[type=text], textarea, select) { width: 100%; padding: 6px 0 8px; border: 0; border-bottom: 1px solid var(--line-field); border-radius: 0; background: none; color: var(--text); font: 500 14px/1.4 var(--font-sans); letter-spacing: -.03em; text-transform: none; resize: vertical; transition: border-color var(--t-fast) ease; }
   .fld :is(input[type=text], textarea, select):is(:hover, :focus) { border-color: var(--neutral-950); outline: none; }
   .fld input[type=range] { width: 100%; accent-color: var(--neutral-950); }
+  /* Option cards: format (its proportion drawn), layout (a sketch), illustration kinds */
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .cards.kinds { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cards > button { display: grid; justify-items: center; align-content: center; gap: 6px; min-height: 44px; padding: 10px 4px; border: 0; border-radius: var(--radius-4); background: none; box-shadow: inset 0 0 0 1px var(--line); color: var(--text-2); font: 600 10px/1.2 var(--font-mono); text-transform: uppercase; cursor: pointer; transition: box-shadow var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out); }
+  .cards > button b { font-weight: 600; color: var(--text); }
+  .cards > button small { font-size: 9px; }
+  .cards > button[aria-selected=true] { box-shadow: inset 0 0 0 1.5px var(--neutral-950); background: var(--bg-subtle); }
+  .cards > button:active { transform: scale(.97); }
+  .fmt i { display: block; height: 28px; max-width: 44px; border-radius: 2px; box-shadow: inset 0 0 0 1px currentColor; }
+  .fmt [data-v=block] i, .fmt [data-v=header] i { height: auto; width: 44px; }
+  .lay i { position: relative; display: block; width: 30px; height: 36px; border-radius: 2px; box-shadow: inset 0 0 0 1px currentColor; background: linear-gradient(currentColor, currentColor) 5px var(--ty, 6px) / 14px 3px no-repeat, linear-gradient(currentColor, currentColor) 5px calc(var(--ty, 6px) + 5px) / 10px 2px no-repeat; }
+  .lay i::after { content: ''; position: absolute; left: 4px; right: 4px; top: var(--ay2, 17px); height: 14px; border-radius: 1px; background: color-mix(in srgb, currentColor 30%, transparent); }
+  .lay .d-b { --ty: 25px; --ay2: 4px; }
+  .lay .d-over::after { inset: 2px; height: auto; }
+  .lay .d-over { --ty: 22px; }
+  .lay .d-none::after { display: none; }
+  @media (hover: hover) and (pointer: fine) { .cards > button:not([aria-selected=true]):hover { box-shadow: inset 0 0 0 1px var(--text-2); color: var(--text); } }
+  /* Illustration grid: each button draws its piece's still frame */
+  .art-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .art-grid .sub { grid-column: 1 / -1; margin-top: 8px; color: var(--text-2); }
+  .art-grid > button { position: relative; aspect-ratio: 1; padding: 0; border: 0; border-radius: var(--radius-4); background: var(--bg-subtle); box-shadow: inset 0 0 0 1px var(--line); cursor: pointer; overflow: hidden; transition: box-shadow var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out); }
+  .art-grid > button[aria-pressed=true] { box-shadow: inset 0 0 0 1.5px var(--neutral-950); }
+  .art-grid > button:active { transform: scale(.96); }
+  .art-grid > button > figure.iso-panel[class] { position: absolute; inset: 6px; margin: 0; background: none; }
+  @media (hover: hover) and (pointer: fine) { .art-grid > button:not([aria-pressed=true]):hover { box-shadow: inset 0 0 0 1px var(--text-2); } }
+  /* Tools: a dropdown with a checkbox per connector */
+  .ms { position: relative; }
+  .ms > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0 8px; border-bottom: 1px solid var(--line-field); list-style: none; cursor: pointer; font: 500 14px/1.4 var(--font-sans); letter-spacing: -.03em; transition: border-color var(--t-fast) ease; }
+  .ms > summary::-webkit-details-marker { display: none; }
+  .ms > summary::after { content: ''; width: 8px; height: 8px; border: solid var(--text-2); border-width: 0 1.5px 1.5px 0; transform: translateY(-2px) rotate(45deg); transition: transform var(--t-fast) var(--ease-out); flex: none; }
+  .ms[open] > summary::after { transform: translateY(2px) rotate(-135deg); }
+  .ms > summary:hover { border-color: var(--neutral-950); }
+  .ms-list { display: grid; max-height: 260px; overflow-y: auto; margin-top: 6px; padding: 6px; border-radius: var(--radius-4); background: var(--bg); box-shadow: var(--shadow-pop), inset 0 0 0 1px var(--line-card); animation: pb-in 180ms var(--ease-out); }
+  .ms-item { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: var(--radius-2); font: 500 14px/1.3 var(--font-sans); letter-spacing: -.03em; cursor: pointer; transition: background-color var(--t-fast) ease; }
+  .ms-item input { width: 16px; height: 16px; margin: 0; accent-color: var(--neutral-950); }
+  @media (hover: hover) and (pointer: fine) { .ms-item:hover { background: var(--bg-muted); } }
   .sw { display: flex; flex-wrap: wrap; gap: 6px; }
-  .sw > button, .pick { width: 24px; height: 24px; padding: 0; border: 0; border-radius: var(--radius-2); background: var(--c); box-shadow: inset 0 0 0 1px var(--line-card); cursor: pointer; transition: box-shadow var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out); }
+  .sw > button, .pick { width: 28px; height: 28px; padding: 0; border: 0; border-radius: var(--radius-2); background: var(--c); box-shadow: inset 0 0 0 1px var(--line-card); cursor: pointer; transition: box-shadow var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out); }
   .sw > button.auto { font: 600 10px/1 var(--font-mono); color: var(--text-body); background: var(--bg-muted); }
   .sw > button[aria-pressed=true] { box-shadow: 0 0 0 2px var(--neutral-0), 0 0 0 3px var(--neutral-950); }
   .sw > button:active { transform: scale(.92); }
   .pick { position: relative; overflow: hidden; background: conic-gradient(from 90deg, #ff6a4b, #ffb900, #00ac6f, #55c0f9, #3875f6, #7c0f99, #ff6a4b); }
-  .pick input { position: absolute; inset: -8px; width: 40px; height: 40px; opacity: 0; cursor: pointer; }
-  .wave-set .colors .pick { background: var(--c, #000); }
+  .pick input { position: absolute; inset: -8px; width: 44px; height: 44px; opacity: 0; cursor: pointer; }
+  .colors .pick { background: var(--c, #000); }
 
   .pb-stage { display: grid; grid-template-rows: auto auto 1fr; gap: 16px; padding: 24px; min-width: 0; }
   .pb-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -304,16 +407,21 @@ const seg = (k: string, opts: string[][]) => ({ k, opts });
   @media (prefers-reduced-motion: reduce) { .pb-view { animation: none; } }
 
   /* ---------- Post: drawn at its export size; --s scales spacing and small type with the format ---------- */
-  .post { --pad: calc(72px * var(--s)); --gap: calc(40px * var(--s)); --hue: var(--primary-450); position: relative; width: var(--w); height: var(--h); overflow: hidden; background: var(--pbg); color: var(--text); font: 500 calc(28px * var(--s))/1.35 var(--font-sans); letter-spacing: -.04em; text-align: left; -webkit-font-smoothing: antialiased; }
+  .post { --pad: calc(72px * var(--s)); --e: calc(40px * var(--s)); --gap: calc(48px * var(--s)); --hue: var(--primary-450); position: relative; width: var(--w); height: var(--h); overflow: hidden; background: var(--pbg); color: var(--text); font: 500 calc(28px * var(--s))/1.35 var(--font-sans); letter-spacing: -.04em; text-align: left; -webkit-font-smoothing: antialiased; }
   .post.on-pastel { --line: color-mix(in srgb, var(--neutral-950) 14%, transparent); --line-card: color-mix(in srgb, var(--neutral-950) 10%, transparent); --bg-muted: color-mix(in srgb, var(--neutral-0) 70%, transparent); --text-2: var(--neutral-500); }
-  .post .p-bg, .post .p-lines, .post .p-scrim { position: absolute; inset: 0; pointer-events: none; }
+  .post .p-bg, .post .p-lines { position: absolute; inset: 0; pointer-events: none; }
   .post .p-bg.pattern { --pitch: calc(12px * var(--s)); --dot: #0b0c0d24; }
   .post.surface-black .p-bg.pattern { --dot: var(--neutral-850); }
-  .post .p-grid { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap); padding: var(--pad); overflow: hidden; }
-  .post .p-top { grid-area: top; position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: calc(40px * var(--s)); }
+  /* Top and foot rows hold their element with the same space above and below it: edge → element = element → divider */
+  .post .p-grid { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap) calc(56px * var(--s)); padding: 0 var(--pad); overflow: hidden; }
+  .post .p-grid:not(:has(> .p-top)) { padding-top: var(--pad); }
+  .post .p-grid:not(:has(> .p-foot)) { padding-bottom: var(--pad); }
+  .post .p-top { grid-area: top; position: relative; display: flex; align-items: center; justify-content: space-between; gap: calc(24px * var(--s)); min-width: 0; padding-block: var(--e); }
+  .post .p-top > * { min-width: 0; }
   .post.logo-right .p-top { flex-direction: row-reverse; }
-  .post .p-logo { display: block; height: calc(var(--logo) * var(--s) * 1px); width: auto; flex: none; }
-  .post .p-label { display: inline-flex; align-items: center; gap: calc(12px * var(--s)); font: 600 calc(22px * var(--s))/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: 0; }
+  .post .p-logo { display: block; height: calc(var(--logo) * var(--s) * 1px); width: auto; max-width: 62%; object-fit: contain; object-position: left center; flex: none; }
+  .post.logo-right .p-logo { object-position: right center; }
+  .post .p-label { display: flex; white-space: nowrap; overflow: hidden; align-items: center; gap: calc(12px * var(--s)); font: 600 calc(22px * var(--s))/1.2 var(--font-mono); text-transform: uppercase; letter-spacing: 0; }
   .post .p-label::before { content: ''; width: calc(14px * var(--s)); height: calc(14px * var(--s)); background: var(--secondary-300); flex: none; }
   .post .p-main { grid-area: main; position: relative; display: grid; align-content: start; gap: calc(28px * var(--s)); min-width: 0; }
   .post .p-head { font-weight: 500; font-size: calc(var(--hs) * 1px); line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; overflow-wrap: break-word; }
@@ -331,9 +439,14 @@ const seg = (k: string, opts: string[][]) => ({ k, opts });
   .post .p-steps { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: calc(20px * var(--s)) calc(16px * var(--s)); counter-reset: st; }
   .post .p-steps > li { display: grid; align-content: start; gap: calc(8px * var(--s)); padding-top: calc(14px * var(--s)); border-top: 1px solid var(--line); font-size: calc(21px * var(--s)); line-height: 1.25; }
   .post .p-steps > li::before { counter-increment: st; content: counter(st, decimal-leading-zero); font: 600 calc(16px * var(--s))/1 var(--font-mono); color: var(--hue); }
-  .post .p-tools { display: flex; flex-wrap: wrap; gap: calc(10px * var(--s)); }
-  .post .p-tool { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); padding: calc(8px * var(--s)) calc(16px * var(--s)) calc(8px * var(--s)) calc(8px * var(--s)); border-radius: 100px; background: var(--bg-muted); font-size: calc(20px * var(--s)); line-height: 1; }
-  .post .p-tool svg { width: calc(32px * var(--s)); height: calc(32px * var(--s)); flex: none; }
+  /* Tools: a labelled row on the same divider as the steps, plain logos and names (no pills) */
+  .post .p-tools { display: grid; gap: calc(14px * var(--s)); padding-top: calc(14px * var(--s)); border-top: 1px solid var(--line); }
+  .post .p-tools .p-k { font: 600 calc(16px * var(--s))/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0; color: var(--text-2); }
+  .post .p-tools > p:last-child { display: flex; flex-wrap: wrap; gap: calc(14px * var(--s)) calc(32px * var(--s)); }
+  .post .p-tool { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); font-size: calc(21px * var(--s)); line-height: 1.25; }
+  .post .p-tool svg { width: calc(28px * var(--s)); height: calc(28px * var(--s)); flex: none; }
+  .post .p-gh { display: inline-flex; align-items: center; gap: calc(10px * var(--s)); margin-left: auto; flex: none; font: 600 calc(18px * var(--s))/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0; white-space: nowrap; }
+  .post .p-gh svg { width: calc(32px * var(--s)); height: calc(32px * var(--s)); }
   .post .p-list > li { display: grid; grid-template-columns: calc(150px * var(--s)) minmax(0, 1fr); gap: calc(16px * var(--s)); padding-block: calc(14px * var(--s)); border-top: 1px solid var(--line); font-size: calc(24px * var(--s)); line-height: 1.3; }
   .post .p-list > li > b { font: 600 calc(18px * var(--s))/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: 0; color: var(--text-2); }
   .post .p-btn { justify-self: start; display: inline-flex; align-items: center; height: calc(76px * var(--s)); padding: 0 calc(36px * var(--s)); border-radius: 100px; background: var(--action); color: var(--action-text); font: 600 calc(24px * var(--s))/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0; }
@@ -344,21 +457,19 @@ const seg = (k: string, opts: string[][]) => ({ k, opts });
   .post .p-author .tone-2 { color: var(--text-2); }
   .post .p-main .p-author .p-av { width: calc(112px * var(--s)); height: calc(112px * var(--s)); }
   .post .p-main .p-author > span:last-child { font-size: calc(30px * var(--s)); }
-  .post .p-foot { grid-area: foot; position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; min-width: 0; }
-  .post .p-meta { margin-left: auto; font: 600 calc(20px * var(--s))/1.3 var(--font-mono); text-transform: uppercase; letter-spacing: 0; color: var(--text-2); text-align: right; }
-  .post.foot-band .p-foot { margin: 0 calc(-1 * var(--pad)) calc(-1 * var(--pad)); padding: calc(26px * var(--s)) var(--pad); background: var(--hue); color: var(--neutral-0); }
-  .post.foot-band .p-meta, .post.foot-band .p-author .tone-2 { color: inherit; }
+  .post .p-foot { grid-area: foot; position: relative; display: flex; align-items: center; justify-content: space-between; gap: calc(24px * var(--s)); min-width: 0; padding-block: var(--e); }
+  .post .p-foot > * { min-width: 0; }
   .post.al-center .p-main { justify-items: center; text-align: center; }
   .post.al-center .p-btn { justify-self: center; }
   /* Edge lines: the site's 1px structure, half the padding in from the edge, rules under the top and over the foot */
   .post.lines .p-lines { background: linear-gradient(var(--line), var(--line)) calc(var(--pad) / 2) 0 / 1px 100% no-repeat, linear-gradient(var(--line), var(--line)) calc(100% - var(--pad) / 2) 0 / 1px 100% no-repeat; }
-  .post.lines .p-top::after, .post.lines:not(.foot-band) .p-foot::before { content: ''; position: absolute; left: calc(-1 * var(--pad)); right: calc(-1 * var(--pad)); height: 1px; background: var(--line); }
-  .post.lines .p-top::after { bottom: calc(var(--gap) / -2); }
-  .post.lines .p-foot::before { top: calc(var(--gap) / -2); }
+  .post.lines .p-top::after { bottom: 0; }
+  .post.lines .p-foot::before { top: 0; }
 
   .post .p-art { grid-area: art; position: relative; min-height: 0; overflow: hidden; }
   .post .p-art > * { position: absolute; inset: 0; translate: var(--ax) var(--ay); }
   .post .p-art figure.iso-panel { margin: 0; background: none; border-radius: 0; overflow: visible; }
+  .post .p-art .iso-art { inset: 0; width: 100%; height: 100%; }
   .post .p-art img.p-photo { width: 100%; height: 100%; object-fit: cover; translate: none; object-position: calc(50% - var(--ax)) calc(50% - var(--ay)); }
   .post.frame-bleed .p-art { margin-inline: calc(-1 * var(--pad)); }
   .post.frame-panel .p-art { border-radius: calc(4px * var(--s)); background: var(--panel); }
@@ -368,20 +479,17 @@ const seg = (k: string, opts: string[][]) => ({ k, opts });
   .post .lay-over, .post .lay-none { grid-template-areas: 'top' 'main' 'foot'; grid-template-rows: auto minmax(0, 1fr) auto; }
   .post .lay-over .p-art { position: absolute; inset: 0; margin: 0; border-radius: 0; }
   .post .lay-none .p-art { display: none; }
-  .post .p-scrim { display: none; }
-  .post.scrim .p-scrim { display: block; background: linear-gradient(to var(--scrim-to, top), var(--pbg) 18%, color-mix(in srgb, var(--pbg) 70%, transparent) 45%, transparent 75%); }
-  .post .lay-over .p-main, .post .lay-none .p-main, .post.wide .p-main { align-content: safe var(--vpos); }
+    .post .lay-over .p-main, .post .lay-none .p-main, .post.wide .p-main { align-content: safe var(--vpos); }
   /* Wide formats: text in one column, art the other, full height */
   .post.wide .lay-a { grid-template-areas: 'top art' 'main art' 'foot art'; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; }
   .post.wide .lay-b { grid-template-areas: 'art top' 'art main' 'art foot'; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; }
-  .post.wide.frame-bleed .lay-a .p-art { margin: calc(-1 * var(--pad)) calc(-1 * var(--pad)) calc(-1 * var(--pad)) 0; }
-  .post.wide.frame-bleed .lay-b .p-art { margin: calc(-1 * var(--pad)) 0 calc(-1 * var(--pad)) calc(-1 * var(--pad)); }
-  .post.wide.foot-band .lay-a .p-foot { margin-right: 0; }
-  .post.wide.foot-band .lay-b .p-foot { margin-left: 0; }
+  .post.wide.frame-bleed .lay-a .p-art { margin-right: calc(-1 * var(--pad)); }
+  .post.wide.frame-bleed .lay-b .p-art { margin-left: calc(-1 * var(--pad)); }
+  .post.wide:not(.frame-bleed) .p-art { margin-block: var(--e); }
   .post .p-wave { overflow: hidden; }
   .post .p-wave canvas, .post .p-wave img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
   /* Export passes: the background, then the copy over the art (the art is drawn between them frame by frame) */
-  .post.x-bg :is(.p-art, .p-grid > :not(.p-art), .p-lines, .p-scrim) { visibility: hidden; }
+  .post.x-bg :is(.p-art, .p-grid > :not(.p-art), .p-lines) { visibility: hidden; }
   .post.x-copy { background: transparent !important; }
   .post.x-copy :is(.p-art, .p-bg) { visibility: hidden; }
 </style>

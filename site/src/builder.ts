@@ -19,13 +19,12 @@ type Data = {
 const DEFAULTS = {
   format: 'square', layout: 'a', vpos: 'end', align: 'left',
   bg: 'black', bgCustom: '#0b0c0d', hue: 'auto', hueCustom: '#3875f6', cover: 0,
-  lines: true, pattern: false, scrim: true,
-  logo: true, logoKind: 'full', logoPos: 'left', logoH: 44, label: true, labelText: '',
-  chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 96, hmax: 120, rule: false,
-  body: false, bodyText: '', pairs: false, pairsText: '', steps: false, stepsText: '', tools: false, toolsText: '',
+  about: '', lines: true, pattern: false,
+  logo: true, logoKind: 'mark', logoPos: 'left', logoH: 48, label: true, labelText: '',
+  chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, rule: false,
+  body: false, bodyText: '', pairs: false, pairsCms: true, pairsText: '', steps: false, stepsText: '', tools: false, toolsText: '', toolsCustom: false, toolsExtra: '', github: false,
   list: false, listText: '', button: false, buttonText: '',
-  author: '', authorStyle: 'byline', aName: '', aRole: '', aPhoto: '',
-  meta: true, metaText: 'The B2B AI Standard · free, community-built', foot: 'plain',
+  author: '', authorStyle: 'byline', aCustom: false, aName: '', aRole: '', aPhoto: '',
   art: { id: 'none', zoom: 1, x: 0, y: 0, t: 0, mono: false, animate: true, frame: 'bleed', photo: '' },
   wave: { c1: '#3875f6', c2: '#fa8c16', c3: '#3875f6', ground: '#000000', k: 1.37, time: 0 },
 };
@@ -77,23 +76,33 @@ function logoPick(name: string) {
 
 function authorBlock(s: State) {
   let name = '', role = '', photo = '';
-  if (s.author === 'custom') ({ aName: name, aRole: role, aPhoto: photo } = s);
+  if (s.aCustom) ({ aName: name, aRole: role, aPhoto: photo } = s);
   else { const a = authorById(s.author); if (!a) return ''; name = a.name; role = [a.role, a.company].filter(Boolean).join(', '); photo = a.photo; }
   if (!name) return '';
   return `<div class="p-author"><span class="p-av">${photo ? `<img src="${esc(photo)}" alt="" crossorigin="anonymous">` : esc(initials(name))}</span><span><span>${esc(name)}</span>${role ? `<span class="tone-2">${esc(role)}</span>` : ''}</span></div>`;
 }
 
+// Boxes straight from the item: a rule's LinkedIn default against the Standard, a skill's tools
+const rulePairs = (x: Data['rules'][number]) => [x.advises && `LinkedIn default | ${x.advises}`, x.adds && `*The Standard | ${x.adds}`].filter(Boolean).join('\n');
+const skillPairs = (x: Data['skills'][number]) => x.connectors.length ? `Runs on | ${x.connectors.filter((c) => !/claude|chatgpt|gemini|perplexity/i.test(c)).join(', ') || x.connectors.join(', ')}` : '';
+function cmsPairs(s: State) {
+  const [kind, id] = s.about.split(':');
+  const r = kind === 'rule' && D.rules.find((x) => x.id === id), k = kind === 'skill' && D.skills.find((x) => x.id === id);
+  return r ? rulePairs(r) : k ? skillPairs(k) : undefined;
+}
+const GITHUB = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.1.9 2.3v3.3c0 .3.1.7.8.6A12 12 0 0 0 12 .3"/></svg>';
+
 export function postHTML(s: State) {
   const [W, H] = FORMATS[s.format], wide = W > H * 1.2, dark = isDark(s);
   const sc = Math.min(W / 1080, H / (wide ? 600 : 1080));
   const cls = ['post', dark ? 'surface-black' : s.bg.startsWith('pastel-') ? 'on-pastel' : '', wide ? 'wide' : '', s.lines ? 'lines' : '', `frame-${s.art.frame}`,
-    s.layout === 'over' && s.scrim ? 'scrim' : '', s.meta && s.foot === 'band' ? 'foot-band' : '', `al-${s.align}`, `logo-${s.logoPos}`].filter(Boolean).join(' ');
-  const style = `--w:${W}px; --h:${H}px; --s:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --ax:${s.art.x}%; --ay:${s.art.y}%; --scrim-to:${s.vpos === 'start' ? 'bottom' : 'top'}`;
+    `al-${s.align}`, `logo-${s.logoPos}`].filter(Boolean).join(' ');
+  const style = `--w:${W}px; --h:${H}px; --s:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --ax:${s.art.x}%; --ay:${s.art.y}%`;
   const logo = s.logo ? `<img class="p-logo" src="/design-system/brand/${s.logoKind === 'mark' ? 'mark' : dark ? 'logo-b2b' : 'logo-b2b-light'}.svg" alt="">` : '';
   const label = s.label && s.labelText ? `<p class="p-label">${esc(s.labelText)}</p>` : '';
   const head = s.headline || s.context ? `<h1 class="p-head">${esc(s.headline)}${s.context ? ` <span class="tone-2">${esc(s.context)}</span>` : ''}</h1>` : '';
-  const pairs = lines(s.pairsText).map((l) => { const hl = l.startsWith('*'), [k, ...v] = l.replace(/^\*\s*/, '').split('|'); return `<div class="${hl ? 'hl' : ''}"><p class="p-k">${esc(k.trim())}</p><p>${esc(v.join('|').trim())}</p></div>`; });
-  const steps = lines(s.stepsText), list = lines(s.listText), tools = s.toolsText.split(',').map((t) => t.trim()).filter(Boolean);
+  const pairs = lines((s.pairsCms && cmsPairs(s)) || s.pairsText).map((l) => { const hl = l.startsWith('*'), [k, ...v] = l.replace(/^\*\s*/, '').split('|'); return `<div class="${hl ? 'hl' : ''}"><p class="p-k">${esc(k.trim())}</p><p>${esc(v.join('|').trim())}</p></div>`; });
+  const steps = lines(s.stepsText), list = lines(s.listText), tools = [s.toolsText, s.toolsCustom ? s.toolsExtra : ''].join(',').split(',').map((t) => t.trim()).filter(Boolean);
   const main = [
     s.qmark ? '<svg class="p-q" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13L7 0h6L9 12h5v12zm18 0V13l7-13h6l-4 12h5v12z"/></svg>' : '',
     s.chips && s.chipsText ? `<p class="p-chips">${s.chipsText.split(',').map((c) => c.trim()).filter(Boolean).map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</p>` : '',
@@ -102,16 +111,16 @@ export function postHTML(s: State) {
     s.body && s.bodyText ? `<p class="p-body">${esc(s.bodyText)}</p>` : '',
     s.pairs && pairs.length ? `<div class="p-pairs">${pairs.join('')}</div>` : '',
     s.steps && steps.length ? `<ol class="p-steps" style="--n:${Math.min(steps.length, wide ? 4 : steps.length > 4 ? Math.ceil(steps.length / 2) : steps.length)}">${steps.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>` : '',
-    s.tools && tools.length ? `<p class="p-tools">${tools.map((t) => `<span class="p-tool">${logoPick(t)}${esc(t)}</span>`).join('')}</p>` : '',
+    s.tools && tools.length ? `<div class="p-tools"><p class="p-k">Tools</p><p>${tools.map((t) => `<span class="p-tool">${logoPick(t)}${esc(t)}</span>`).join('')}</p></div>` : '',
     s.list && list.length ? `<ul class="p-list">${list.map((l) => { const [k, ...v] = l.split('|'); return v.length ? `<li><b>${esc(k.trim())}</b><span>${esc(v.join('|').trim())}</span></li>` : `<li><b></b><span>${esc(k)}</span></li>`; }).join('')}</ul>` : '',
-    s.author && s.authorStyle === 'card' ? authorBlock(s) : '',
+    s.authorStyle === 'card' ? authorBlock(s) : '',
     s.button && s.buttonText ? `<span class="p-btn">${esc(s.buttonText)}</span>` : '',
   ].join('');
-  const foot = (s.author && s.authorStyle === 'byline' ? authorBlock(s) : '') + (s.meta && s.metaText ? `<p class="p-meta">${esc(s.metaText)}</p>` : '');
+  const foot = (s.authorStyle === 'byline' ? authorBlock(s) : '') + (s.github ? `<p class="p-gh">${GITHUB}<span>Open on GitHub</span></p>` : '');
   return `<div class="${cls}" style="${style}">
     <div class="p-bg${s.pattern ? ` pattern pattern-fade` : ''}"></div>
     <div class="p-grid lay-${s.art.id === 'none' ? 'none' : s.layout}">
-      ${s.art.id !== 'none' && s.layout !== 'none' ? '<div class="p-art"></div><div class="p-scrim"></div>' : ''}
+      ${s.art.id !== 'none' && s.layout !== 'none' ? '<div class="p-art"></div>' : ''}
       ${logo || label ? `<div class="p-top">${logo}${label}</div>` : ''}
       <div class="p-main">${main}</div>
       ${foot ? `<div class="p-foot">${foot}</div>` : ''}
@@ -121,15 +130,42 @@ export function postHTML(s: State) {
 }
 
 // ---------- Art ----------
+// Pieces leave a lot of air around the drawing; posts crop to what it draws over a whole loop (plus a little margin)
+const tight = new Map<Piece, { viewBox: string; focus: [number, number] }>();
+function tightBox(piece: Piece) {
+  let hit = tight.get(piece);
+  if (hit) return hit;
+  const [vx, vy, vw, vh] = piece.viewBox.split(/[ ,]+/).map(Number), [fx, fy] = piece.focus ?? [.5, .5];
+  const svg = document.querySelector('.pb-protos svg')!.cloneNode(true) as SVGSVGElement, g = svg.querySelector<SVGGElement>('[data-frame]')!;
+  document.querySelector('.pb-protos')!.append(svg);
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (let i = 0; i < (piece.period ? 8 : 1); i++) {
+    g.innerHTML = piece.draw(piece.rest + i * piece.period / 8);
+    const b = g.getBBox();
+    if (!b.width) continue;
+    x0 = Math.min(x0, b.x); y0 = Math.min(y0, b.y); x1 = Math.max(x1, b.x + b.width); y1 = Math.max(y1, b.y + b.height);
+  }
+  svg.remove();
+  if (!isFinite(x0)) hit = { viewBox: piece.viewBox, focus: [fx, fy] };
+  else {
+    const m = Math.max(x1 - x0, y1 - y0) * .04;
+    x0 = Math.max(vx, x0 - m); y0 = Math.max(vy, y0 - m); x1 = Math.min(vx + vw, x1 + m); y1 = Math.min(vy + vh, y1 + m);
+    const fpx = vx + fx * vw, fpy = vy + fy * vh, cl = (v: number) => Math.min(1, Math.max(0, v));
+    hit = { viewBox: `${x0} ${y0} ${x1 - x0} ${y1 - y0}`, focus: [cl((fpx - x0) / (x1 - x0)), cl((fpy - y0) / (y1 - y0))] };
+  }
+  tight.set(piece, hit);
+  return hit;
+}
 // Figures clone the IsoArt markup rendered on the page, so they carry its scoped styles
 function figureEl(s: State, piece: Piece) {
   const dark = isDark(s);
   const fig = document.querySelector(dark ? '.pb-proto-d' : '.pb-proto-l')!.cloneNode(true) as HTMLElement;
   fig.classList.remove('pb-proto-d', 'pb-proto-l');
   const svg = fig.querySelector('svg')!;
-  svg.setAttribute('viewBox', piece.viewBox);
+  const tb = tightBox(piece);
+  svg.setAttribute('viewBox', tb.viewBox);
   svg.classList.toggle('mono', !dark && s.art.mono);
-  const [fx, fy] = piece.focus ?? [.5, .5], hue = hueValue(s);
+  const [fx, fy] = tb.focus, hue = hueValue(s);
   fig.style.cssText = `--field: transparent; --zoom: ${s.art.zoom}; --fx: ${fx * 100}%; --fy: ${fy * 100}%; --art-a: ${hue}; --art-b: ${hue}; --art-c: ${hue}; --lit: ${hue}`;
   fig.querySelector('[data-frame]')!.innerHTML = piece.draw(piece.rest + s.art.t);
   return fig;
@@ -168,7 +204,7 @@ function fillArt(post: HTMLElement, s: State, live: boolean) {
     return undefined;
   }
   if (s.art.id === 'photo') {
-    const src = s.art.photo || (s.author === 'custom' ? s.aPhoto : authorById(s.author)?.photo) || '';
+    const src = s.art.photo || (s.aCustom ? s.aPhoto : authorById(s.author)?.photo) || '';
     if (src) box.innerHTML = `<img class="p-photo" src="${esc(src)}" alt="" crossorigin="anonymous" style="transform: scale(${s.art.zoom})">`;
     return undefined;
   }
@@ -209,41 +245,41 @@ type Tpl = { group: string; name: string; note?: string; s: State };
 function templates(): Tpl[] {
   const T: Tpl[] = [], B = (o: Parameters<typeof merge>[1]) => merge(clone(DEFAULTS), o);
   const nR = D.rules.length, nA = D.authors.filter((a) => a.id !== 'demandsense').length;
-  const promo = { headline: '', context: '', logoH: 64, label: false, meta: true, metaText: 'Rules, skills and scenarios · free, community-built', lines: true };
+  const promo = { headline: '', context: '', logoKind: 'full', logoH: 56, label: false, lines: true };
   // Launch: the promo visual in every cut the kit asks for, plus a few headline posts
   const G = 'Launch and promo';
-  T.push({ group: G, name: 'Promo · catalogue', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'b', art: { id: 'directory', zoom: 1.15, t: 2.5, frame: 'bleed' } as never }) });
-  T.push({ group: G, name: 'Promo · wave', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Free, community-built, maintained by DemandSense', hmax: 96, logo: false, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.6, time: 6 } as never }) });
-  T.push({ group: G, name: 'AI changed the game', s: B({ format: 'portrait', layout: 'a', headline: 'AI changed the game for LinkedIn Ads.', context: 'But nobody agreed on the rules.', art: { id: 'scenarios', zoom: 1.3, frame: 'bleed' } as never, hmax: 110 }) });
-  T.push({ group: G, name: `${nR} rules`, s: B({ format: 'square', bg: 'white', layout: 'b', label: true, labelText: 'The Standard', headline: `${nR} rules for running LinkedIn Ads with AI.`, context: 'Each one written by a named practitioner', art: { id: 'rules', zoom: 1.1, frame: 'panel' } as never, cover: 16, hue: '16' }) });
-  T.push({ group: G, name: 'Built with practitioners', s: B({ format: 'square', bg: 'pastel-14', layout: 'a', label: true, labelText: `${nA} practitioners`, headline: 'Written with the people who run the accounts.', context: 'One open standard, kept up to date', art: { id: 'skills', zoom: 1.2, frame: 'bleed' } as never }) });
-  T.push({ group: G, name: 'Don’t take its word for it', s: B({ format: 'portrait', layout: 'none', vpos: 'center', pattern: true, headline: 'A standard for making ads work with AI,', context: 'without taking its word for it.', button: true, buttonText: 'Read the Standard', hmax: 130 }) });
-  T.push({ group: G, name: 'Site preview · opening frame', note: '2 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', logoPos: 'left', logo: false, label: false, pattern: true, headline: 'The B2B AI Standard', context: 'for LinkedIn Ads', meta: false, hmax: 120 }) });
-  T.push({ group: G, name: 'Site preview · closing frame', note: '3 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', pattern: true, headline: 'Read it free.', context: 'the-ai-standard.com', button: true, buttonText: 'Open the Standard', meta: false, hmax: 120 }) });
-  T.push({ group: G, name: 'Newsletter cover 16:9', s: B({ ...promo, format: 'cover', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Rules, skills and scenarios, each from a named practitioner', hmax: 110, art: { id: 'directory', zoom: 1.2, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: G, name: 'Promo · catalogue', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'b', art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: G, name: 'Promo · wave', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Free, community-built, maintained by DemandSense', hmax: 77, logo: false, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.6, time: 6 } as never }) });
+  T.push({ group: G, name: 'AI changed the game', s: B({ format: 'portrait', layout: 'a', headline: 'AI changed the game for LinkedIn Ads.', context: 'But nobody agreed on the rules.', art: { id: 'scenarios', zoom: 1, frame: 'bleed' } as never, hmax: 88 }) });
+  T.push({ group: G, name: `${nR} rules`, s: B({ format: 'square', bg: 'white', layout: 'b', label: true, labelText: 'The Standard', headline: `${nR} rules for running LinkedIn Ads with AI.`, context: 'Each one written by a named practitioner', art: { id: 'rules', zoom: 1, frame: 'panel' } as never, cover: 16, hue: '16' }) });
+  T.push({ group: G, name: 'Built with practitioners', s: B({ format: 'square', bg: 'pastel-14', layout: 'a', label: true, labelText: `${nA} practitioners`, headline: 'Written with the people who run the accounts.', context: 'One open standard, kept up to date', art: { id: 'skills', zoom: 1, frame: 'bleed' } as never }) });
+  T.push({ group: G, name: 'Don’t take its word for it', s: B({ format: 'portrait', layout: 'none', vpos: 'center', pattern: true, headline: 'A standard for making ads work with AI,', context: 'without taking its word for it.', button: true, buttonText: 'Read the Standard', hmax: 104 }) });
+  T.push({ group: G, name: 'Site preview · opening frame', note: '2 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', logoPos: 'left', logo: false, label: false, pattern: true, headline: 'The B2B AI Standard', context: 'for LinkedIn Ads', hmax: 96 }) });
+  T.push({ group: G, name: 'Site preview · closing frame', note: '3 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', pattern: true, headline: 'Read it free.', context: 'the-ai-standard.com', button: true, buttonText: 'Open the Standard', hmax: 96 }) });
+  T.push({ group: G, name: 'Newsletter cover 16:9', s: B({ ...promo, format: 'cover', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Rules, skills and scenarios, each from a named practitioner', hmax: 88, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
 
   const N = 'Newsletter (Demand Wire)';
-  T.push({ group: N, name: 'Launch header 1200×480', s: B({ ...promo, format: 'header', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 90, meta: false, art: { id: 'directory', zoom: 1.4, t: 2.5, frame: 'bleed' } as never }) });
-  T.push({ group: N, name: 'Launch header · wave', s: B({ ...promo, format: 'header', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 90, meta: false, scrim: true, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.2, time: 4 } as never }) });
-  T.push({ group: N, name: 'Block · From the Standard', s: B({ format: 'block', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', context: '', hmax: 150, logoH: 110, meta: false, lines: false, vpos: 'center', art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1, time: 10 } as never }) });
-  T.push({ group: N, name: 'Block · light', s: B({ format: 'block', bg: 'white', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', hmax: 150, logoH: 110, meta: false, lines: false, vpos: 'center', art: { id: 'directory', zoom: 1.6, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: N, name: 'Launch header 1200×480', s: B({ ...promo, format: 'header', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 72, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: N, name: 'Launch header · wave', s: B({ ...promo, format: 'header', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 72, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.2, time: 4 } as never }) });
+  T.push({ group: N, name: 'Block · From the Standard', s: B({ format: 'block', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', context: '', hmax: 120, logoH: 110, lines: false, vpos: 'center', art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1, time: 10 } as never }) });
+  T.push({ group: N, name: 'Block · light', s: B({ format: 'block', bg: 'white', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', hmax: 120, logoH: 110, lines: false, vpos: 'center', art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
 
   const scenario = (x: Data['scenarios'][number]): Tpl => ({ group: 'Scenario cards', name: x.title, note: x.status === 'soon' ? 'Coming soon' : 'Animated: MP4', s: B({
-    format: 'portrait', layout: 'b', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Scenario · ${x.cadence}`, headline: x.title, context: '', body: false, bodyText: x.description, steps: x.steps.length > 0, stepsText: x.steps.slice(0, 7).join('\n'), tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '),
-    author: x.author ?? '', metaText: 'AI Standard', hmax: 84, art: { id: x.art?.piece ?? 'sorter', zoom: x.art?.zoom ?? 1, frame: 'bleed' } as never }) });
+    about: `scenario:${x.id}`, format: 'portrait', layout: 'b', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Scenario · ${x.cadence}`, headline: x.title, context: '', body: false, bodyText: x.description, steps: x.steps.length > 0, stepsText: x.steps.slice(0, 7).join('\n'), tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '),
+    author: x.author ?? '', hmax: 67, art: { id: x.art?.piece ?? 'sorter', zoom: x.art?.zoom ?? 1, frame: 'bleed' } as never }) });
   const skill = (x: Data['skills'][number]): Tpl => ({ group: 'Skill cards', name: x.title, s: B({
-    format: 'square', layout: 'b', bg: 'white', cover: x.cover, labelText: 'Skill', chips: true, chipsText: x.category, headline: x.title, context: x.description, hmax: 72,
-    pairs: x.connectors.length > 0, pairsText: `Runs on | ${x.connectors.filter((c) => !/claude|chatgpt|gemini|perplexity/i.test(c)).join(', ') || x.connectors.join(', ')}`,
-    author: x.author ?? 'demandsense', metaText: 'Open on GitHub', art: { id: x.icon, zoom: 1, frame: 'panel' } as never }) });
+    about: `skill:${x.id}`, format: 'square', layout: 'b', bg: 'white', cover: x.cover, labelText: 'Skill', chips: true, chipsText: x.category, headline: x.title, context: x.description, hmax: 58,
+    pairs: x.connectors.length > 0, pairsText: skillPairs(x), github: true,
+    author: x.author ?? 'demandsense', art: { id: x.icon, zoom: 1, frame: 'panel' } as never }) });
   const rule = (x: Data['rules'][number]): Tpl => {
-    const pairs = [x.advises && `LinkedIn default | ${x.advises}`, x.adds && `*The Standard | ${x.adds}`].filter(Boolean).join('\n');
+    const pairs = rulePairs(x);
     return { group: 'Rule cards', name: `${String(x.number).padStart(2, '0')} · ${x.title}`, s: B({
-      format: 'portrait', layout: 'a', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Rule ${String(x.number).padStart(2, '0')}`, headline: x.title, context: x.why, hmax: 84,
-      pairs: !!pairs, pairsText: pairs, author: x.author && x.author !== 'demandsense' ? x.author : '', metaText: 'AI Standard', art: { id: x.icon, zoom: 1, frame: 'bleed' } as never }) };
+      about: `rule:${x.id}`, format: 'portrait', layout: 'a', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Rule ${String(x.number).padStart(2, '0')}`, headline: x.title, context: x.why, hmax: 67,
+      pairs: !!pairs, pairsText: pairs, author: x.author && x.author !== 'demandsense' ? x.author : '', art: { id: x.icon, zoom: 1, frame: 'bleed' } as never }) };
   };
   const quote = (text: string, name: string, role: string, photo: string, about: string, author?: string): Tpl => ({ group: 'Quote cards', name: `${name}: ${about}`, s: B({
-    format: 'portrait', layout: 'none', vpos: 'center', qmark: true, labelText: about, headline: text, hmax: 72, rule: false,
-    ...(author ? { author } : { author: 'custom', aName: name, aRole: role, aPhoto: photo }), metaText: 'AI Standard' }) });
+    format: 'portrait', layout: 'none', vpos: 'center', qmark: true, labelText: about, headline: text, hmax: 58, rule: false,
+    ...(author ? { author } : { aCustom: true, aName: name, aRole: role, aPhoto: photo }) }) });
 
   D.scenarios.forEach((x) => T.push(scenario(x)));
   D.skills.forEach((x) => T.push(skill(x)));
@@ -263,11 +299,17 @@ function templates(): Tpl[] {
   [...adds].sort((a, b) => b[1].length - a[1].length).forEach(([id, items]) => {
     const a = authorById(id)!;
     T.push({ group: 'Author cards', name: a.name, note: `${items.length} in the Standard`, s: B({
-      format: 'portrait', layout: 'b', bg: 'white', labelText: 'Author', headline: a.name, context: [a.role, a.company].filter(Boolean).join(', '), hmax: 84,
-      list: true, listText: [...new Set(items)].slice(0, 4).join('\n'), metaText: 'AI Standard', art: { id: 'photo', zoom: 1, frame: 'panel' } as never, author: id, authorStyle: 'card' }) });
+      about: `author:${id}`, format: 'portrait', layout: 'b', bg: 'white', labelText: 'Author', headline: a.name, context: [a.role, a.company].filter(Boolean).join(', '), hmax: 67,
+      list: true, listText: [...new Set(items)].slice(0, 4).join('\n'), art: { id: 'photo', zoom: 1, frame: 'panel' } as never, author: id, authorStyle: 'card' }) });
   });
   // An author card shows the person as the art; the byline would repeat them
   T.filter((t) => t.group === 'Author cards').forEach((t) => (t.s.author = '', t.s.art.photo = authorById(D.authors.find((a) => a.name === t.name)?.id)?.photo ?? ''));
+  // Email: each card type at 1200 wide, text left and art right; pick another item under Content → About
+  const E = 'Email (1200 wide)', first = (g: string) => T.find((t) => t.group === g);
+  ['Scenario cards', 'Skill cards', 'Rule cards', 'Quote cards', 'Author cards'].forEach((g) => {
+    const tp = first(g);
+    if (tp) T.push({ group: E, name: g.replace(' cards', ''), note: tp.name, s: merge(clone(tp.s), { format: 'wide', layout: tp.s.layout === 'none' ? 'none' : 'a', steps: false, list: false }) });
+  });
   return T;
 }
 
@@ -414,7 +456,57 @@ export function boot() {
     const wide = FORMATS[S.format][0] > FORMATS[S.format][1] * 1.2;
     panel.querySelectorAll<HTMLElement>('[data-seg=layout] [data-wide]').forEach((b) => { b.dataset.tall ??= b.textContent!; b.textContent = wide ? b.dataset.wide! : b.dataset.tall; });
     $('[data-tname]').textContent = tname;
+    const tools = S.toolsText.split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
+    panel.querySelectorAll<HTMLInputElement>('[data-tool]').forEach((el) => (el.checked = tools.includes(el.dataset.tool!.toLowerCase())));
+    $('[data-ms-sum]').textContent = S.toolsText.trim() || 'Pick tools';
+    itemGrid();
+    panel.querySelectorAll<HTMLElement>('[data-art]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.art === S.art.id)));
   };
+
+  // Settings tabs
+  const ptab = (id: string) => {
+    panel.querySelectorAll<HTMLElement>('[data-ptab-btn]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.ptabBtn === id)));
+    panel.querySelectorAll<HTMLElement>('[data-ptab]').forEach((p) => (p.hidden = p.dataset.ptab !== id));
+    if (id === 'art') artcat(S.about ? 'item' : panel.querySelector<HTMLElement>(`[data-cat]:not([data-cat=item]) [data-art="${CSS.escape(S.art.id)}"]`)?.closest<HTMLElement>('[data-cat]')!.dataset.cat ?? 'scenario');
+  };
+  // Art picker: one grid per category, thumbnails drawn the first time a grid shows
+  const artcat = (id: string) => {
+    panel.querySelectorAll<HTMLElement>('[data-artcat]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.artcat === id)));
+    panel.querySelectorAll<HTMLElement>('[data-artgrid]').forEach((g) => (g.hidden = g.dataset.cat !== id));
+    thumbs(panel.querySelector<HTMLElement>(`[data-artgrid][data-cat=${id}]`)!);
+  };
+  const thumbs = (grid: HTMLElement) => grid.querySelectorAll<HTMLElement>('[data-art]').forEach((b) => {
+    if (b.firstElementChild) return;
+    const piece = pieceOf(b.dataset.art!);
+    if (piece) b.append(figureEl(merge(clone(DEFAULTS), { bg: 'white', cover: S.cover }), piece));
+  });
+  // "This item": the item's own art, then the alternatives drawn for it
+  let itemKey = '';
+  const itemArt = () => {
+    const [kind, id] = S.about.split(':');
+    if (kind === 'scenario') return D.scenarios.find((x) => x.id === id)?.art?.piece ?? 'sorter';
+    if (kind === 'skill') return D.skills.find((x) => x.id === id)?.icon;
+    if (kind === 'rule') return D.rules.find((x) => x.id === id)?.icon;
+    if (kind === 'author') return 'photo';
+  };
+  const itemGrid = () => {
+    const art = itemArt() ?? '', key = `${art}|${S.cover}`;
+    if (key === itemKey) return;
+    itemKey = key;
+    const grid = panel.querySelector<HTMLElement>('[data-artgrid][data-cat=item]')!;
+    const names = art && art !== 'photo' ? [art, ...Object.entries(alts).filter(([, a]) => a.of === art || `i-${a.of}` === art).map(([n]) => `alt:${n}`)] : [];
+    grid.innerHTML = names.map((n) => `<button type="button" data-art="${esc(n)}" title="${esc(n)}" aria-label="${esc(n)}"></button>`).join('') || '<p class="hint">An author card uses their photo: Art → Photo.</p>';
+    if (!grid.hidden) thumbs(grid);
+  };
+  // Picking the item takes its colour and art
+  const about = () => {
+    const [kind, id] = S.about.split(':');
+    const x = kind === 'scenario' ? D.scenarios.find((y) => y.id === id) : kind === 'skill' ? D.skills.find((y) => y.id === id) : kind === 'rule' ? D.rules.find((y) => y.id === id) : undefined;
+    if (x) { S.cover = x.cover; if (S.bg.startsWith('pastel-')) S.bg = `pastel-${x.cover}`; }
+    const art = itemArt();
+    if (art) { S.art.id = art; if (art === 'photo') { S.art.photo = ''; S.author = id; } if (S.layout === 'none') S.layout = 'a'; }
+  };
+  const CONTENT = ['label', 'labelText', 'headline', 'context', 'qmark', 'chips', 'chipsText', 'rule', 'body', 'bodyText', 'pairs', 'pairsCms', 'pairsText', 'steps', 'stepsText', 'tools', 'toolsText', 'github', 'list', 'listText', 'author', 'authorStyle', 'aCustom', 'aName', 'aRole', 'aPhoto'] as const;
 
   const tick = (now: number) => {
     raf = 0;
@@ -448,18 +540,24 @@ export function boot() {
   const change = () => { sync(); draw(); };
   panel.addEventListener('input', (e) => {
     const el = e.target as HTMLInputElement;
+    if (el.dataset.tool) { S.toolsText = [...panel.querySelectorAll<HTMLInputElement>('[data-tool]:checked')].map((t) => t.dataset.tool).join(', '); return change(); }
     if (!el.dataset.k) return;
     set(S, el.dataset.k, el.type === 'checkbox' ? el.checked : el.type === 'range' ? +el.value : el.value);
     if (el.dataset.k === 'bgCustom') S.bg = 'custom';
     if (el.dataset.k === 'hueCustom') S.hue = 'custom';
-    if (el.dataset.k === 'art.id' && el.value === 'wave' && S.layout === 'none') S.layout = 'over';
+    if (el.dataset.k === 'about') about();
     change();
   });
   panel.addEventListener('click', (e) => {
-    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-v], [data-act], [data-wave-preset]');
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-v], [data-act], [data-wave-preset], [data-art], [data-artcat], [data-ptab-btn]');
     if (!b) return;
+    if (b.dataset.ptabBtn) return ptab(b.dataset.ptabBtn);
+    if (b.dataset.artcat) return artcat(b.dataset.artcat);
     const g = b.closest<HTMLElement>('[data-seg], [data-swatch]');
     if (g && b.dataset.v) set(S, g.dataset.seg ?? g.dataset.swatch!, b.dataset.v);
+    if (b.dataset.art) S.art.id = b.dataset.art;
+    if ((b.dataset.art || g?.dataset.seg === 'art.id') && S.art.id !== 'none' && S.layout === 'none') S.layout = S.art.id === 'wave' ? 'over' : 'a';
+    if (b.dataset.act === 'fill') { const tp = TPL.find((x) => x.s.about === S.about); if (tp) CONTENT.forEach((k) => ((S as any)[k] = clone(tp.s[k]))); }
     if (b.dataset.wavePreset) Object.assign(S.wave, WAVES[b.dataset.wavePreset as keyof typeof WAVES]);
     if (b.dataset.act === 'templates') return view('templates');
     if (b.dataset.act === 'reset') { const tp = TPL.find((x) => x.name === tname); S = clone(tp ? tp.s : DEFAULTS); }
@@ -498,6 +596,7 @@ export function boot() {
     'Rule cards': 'Number, title, the rule in a line, LinkedIn’s default against the Standard',
     'Quote cards': 'One line a contributor said, their photo, name and company, the rule it is about',
     'Author cards': 'Contributors with what they added, most first',
+    'Email (1200 wide)': 'One of each card at 1200 wide for email. Switch the item under Content → About, then Fill the text from it',
   };
   groups.innerHTML = [...byGroup].map(([g, ids]) => `<section class="pb-group"><header><h2 class="marker">${esc(g)} · ${ids.length}</h2><p class="t-p2">${esc(NOTES[g] ?? '')}</p></header><div class="pb-cards">${ids.map((i) => `<button type="button" class="pb-card" data-tpl="${i}"><span class="pb-thumb"><div></div></span><span class="t-p2">${esc(TPL[i].name)}</span>${TPL[i].note ? `<span class="t-p3">${esc(TPL[i].note!)}</span>` : ''}</button>`).join('')}</div></section>`).join('');
   const io = new IntersectionObserver((es) => es.forEach((e) => {
@@ -514,7 +613,7 @@ export function boot() {
     if (!b) return;
     const tp = TPL[+b.dataset.tpl!];
     S = clone(tp.s); tname = `${tp.group}: ${tp.name}`;
-    sync(); view('editor'); scrollTo({ top: 0 });
+    sync(); view('editor'); ptab('content'); scrollTo({ top: 0 });
   });
 
   // Wave thumbnails share one still frame of the brand wave
