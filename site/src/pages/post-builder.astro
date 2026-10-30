@@ -370,6 +370,9 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .art-grid > button > figure.iso-panel[class] { position: absolute; inset: 6px; margin: 0; background: none; }
   @media (hover: hover) and (pointer: fine) { .art-grid > button:not([aria-pressed=true]):hover { box-shadow: inset 0 0 0 1px var(--text-2); } }
   /* Tools: a dropdown with a checkbox per connector */
+  .rng { display: grid; grid-template-columns: minmax(0, 1fr) 64px; gap: 12px; align-items: center; }
+  .rng .num { min-width: 0; padding: 4px 0 6px; border: 0; border-bottom: 1px solid var(--line-field); background: none; font: 600 12px/1.4 var(--font-mono); color: var(--text); text-align: right; transition: border-color var(--t-fast) ease; }
+  .rng .num:focus { outline: none; border-color: var(--neutral-950); }
   .owns { display: grid; gap: 6px; margin-bottom: 6px; }
   .own { display: grid; grid-template-columns: minmax(0, 1fr) 120px 32px; gap: 8px; align-items: end; }
   .own input, .own select { min-width: 0; padding: 6px 0 8px; border: 0; border-bottom: 1px solid var(--line-field); background: none; font: 500 14px/1.4 var(--font-sans); letter-spacing: -.03em; color: var(--text); }
@@ -412,16 +415,19 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
 
   /* ---------- Post: drawn at its export size; --s scales spacing and small type with the format ---------- */
   /* --k shrinks the text around the headline when auto-fit runs out of room in wide formats */
-  .post .p-foot, .post .p-main > :not(.p-head) { --s: calc(var(--s0) * var(--k, 1)); }
-  .post { --s: var(--s0); --pad: calc(72px * var(--s)); --e: calc(40px * var(--s)); --gap: calc(48px * var(--s)); --hue: var(--primary-450); position: relative; width: var(--w); height: var(--h); overflow: hidden; background: var(--pbg); color: var(--text); font: 500 calc(28px * var(--s))/1.35 var(--font-sans); letter-spacing: -.04em; text-align: left; -webkit-font-smoothing: antialiased; }
+  /* Everything but the headline and the art runs at 82%, leaving the room to the text */
+  .post .p-top { --s: calc(var(--s0) * .82); }
+  .post .p-foot, .post .p-main > :not(.p-head) { --s: calc(var(--s0) * .82 * var(--k, 1)); }
+  .post { --s: var(--s0); --pad: calc(72px * var(--s)); --e: calc(40px * var(--s)); --gap: calc(36px * var(--s)); --hue: var(--primary-450); position: relative; width: var(--w); height: var(--h); overflow: hidden; background: var(--pbg); color: var(--text); font: 500 calc(28px * var(--s))/1.35 var(--font-sans); letter-spacing: -.04em; text-align: left; -webkit-font-smoothing: antialiased; }
   .post.on-pastel { --line: color-mix(in srgb, var(--neutral-950) 14%, transparent); --line-card: color-mix(in srgb, var(--neutral-950) 10%, transparent); --bg-muted: color-mix(in srgb, var(--neutral-0) 70%, transparent); --text-2: var(--neutral-500); }
   .post .p-bg, .post .p-lines { position: absolute; inset: 0; pointer-events: none; }
   .post .p-bg.pattern { --pitch: calc(12px * var(--s)); --dot: #0b0c0d24; }
   .post.surface-black .p-bg.pattern { --dot: var(--neutral-850); }
   /* Top and foot rows hold their element with the same space above and below it: edge → element = element → divider */
   .post .p-grid { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap) calc(56px * var(--s)); padding: 0 var(--pad); overflow: hidden; }
-  .post .p-grid:not(:has(> .p-top)) { padding-top: var(--pad); }
-  .post .p-grid:not(:has(> .p-foot)) { padding-bottom: var(--pad); }
+  /* Without a top or foot row the text keeps the logo's edge distance */
+  .post .p-grid:not(:has(> .p-top)) { padding-top: var(--e); }
+  .post .p-grid:not(:has(> .p-foot)) { padding-bottom: var(--e); }
   .post .p-top { grid-area: top; position: relative; display: flex; align-items: center; justify-content: space-between; gap: calc(24px * var(--s)); min-width: 0; padding-block: var(--e); }
   .post .p-top > * { min-width: 0; }
   .post.logo-right .p-top { flex-direction: row-reverse; }
@@ -477,6 +483,8 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .p-art > * { position: absolute; inset: 0; translate: var(--ax) var(--ay); }
   .post .p-art figure.iso-panel { margin: 0; background: none; border-radius: 0; overflow: visible; }
   .post .p-art .iso-art { inset: 0; width: 100%; height: 100%; }
+  /* Wide posts are short: figures run a little past the edges so they read at the size of the text column */
+  .post.wide.frame-bleed .p-art .iso-art { transform: scale(calc(var(--zoom) * 1.14)); }
   .post .p-art img.p-photo { width: 100%; height: 100%; object-fit: cover; translate: none; object-position: calc(50% - var(--ax)) calc(50% - var(--ay)); }
   .post.frame-bleed .p-art { margin-inline: calc(-1 * var(--pad)); }
   .post.frame-panel .p-art { border-radius: calc(4px * var(--s)); background: var(--panel); }
@@ -488,12 +496,16 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post .lay-none .p-art { display: none; }
     .post .lay-over .p-main, .post .lay-none .p-main, .post.wide .p-main { align-content: safe var(--vpos); }
   /* Wide formats: text in one column, art the other, full height */
-  .post.wide .lay-a { grid-template-areas: 'top art' 'main art' 'foot art'; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; }
-  .post.wide .lay-b { grid-template-areas: 'art top' 'art main' 'art foot'; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; }
+  .post.wide .lay-a { grid-template-areas: 'top art' 'main art' 'foot art'; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-rows: auto minmax(0, 1fr) auto; }
+  .post.wide .lay-b { grid-template-areas: 'art top' 'art main' 'art foot'; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); grid-template-rows: auto minmax(0, 1fr) auto; }
   .post.wide.frame-bleed .lay-a .p-art { margin-right: calc(-1 * var(--pad)); }
+  .post.wide.frame-bleed .p-grid:not(:has(> .p-top)) .p-art { margin-top: calc(-1 * var(--e)); }
+  .post.wide.frame-bleed .p-grid:not(:has(> .p-foot)) .p-art { margin-bottom: calc(-1 * var(--e)); }
   .post.wide.frame-bleed .lay-b .p-art { margin-left: calc(-1 * var(--pad)); }
   .post.wide:not(.frame-bleed) .p-art { margin-block: var(--e); }
-  .post .p-wave { overflow: hidden; }
+  /* The wave is drawn square and centred in its box, so a long or short box crops it instead of showing the ribbon's ends */
+  .post .p-art:has(> .p-wave) { container-type: size; }
+  .post .p-art > .p-wave { inset: auto; left: 50%; top: 50%; width: max(100cqw, 100cqh); height: max(100cqw, 100cqh); translate: calc(-50% + var(--ax)) calc(-50% + var(--ay)); overflow: hidden; }
   .post .p-wave canvas, .post .p-wave img { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
   /* Export passes: the background, then the copy over the art (the art is drawn between them frame by frame) */
   .post.x-bg :is(.p-art, .p-grid > :not(.p-art), .p-lines) { visibility: hidden; }

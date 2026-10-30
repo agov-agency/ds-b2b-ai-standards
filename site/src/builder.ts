@@ -41,6 +41,7 @@ const clone = <T,>(o: T): T => JSON.parse(JSON.stringify(o));
 const merge = (base: State, over: Partial<State> & { art?: Partial<State['art']>; wave?: Partial<State['wave']> }): State =>
   ({ ...base, ...over, art: { ...base.art, ...over.art }, wave: { ...base.wave, ...over.wave } }) as State;
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+const br = (s: string) => esc(s.trim()).replace(/\n/g, '<br>'); // Enter in a text field is a line break in the post
 const lines = (s: string) => s.split('\n').map((l) => l.trim()).filter(Boolean);
 const initials = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
 const pieceOf = (id: string): Piece | undefined => (id.startsWith('alt:') ? alts[id.slice(4)]?.piece : pieces[id]);
@@ -101,7 +102,7 @@ export function postHTML(s: State) {
   const style = `--w:${W}px; --h:${H}px; --s0:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --ax:${s.art.x}%; --ay:${s.art.y}%`;
   const logo = s.logo ? `<img class="p-logo" src="/design-system/brand/${s.logoKind === 'mark' ? 'mark' : dark ? 'logo-b2b' : 'logo-b2b-light'}.svg" alt="">` : '';
   const label = s.label && s.labelText ? `<p class="p-label">${esc(s.labelText)}</p>` : '';
-  const head = s.headline || s.context ? `<h1 class="p-head">${esc(s.headline)}${s.context ? ` <span class="tone-2">${esc(s.context)}</span>` : ''}</h1>` : '';
+  const head = s.headline || s.context ? `<h1 class="p-head">${br(s.headline)}${s.context ? `${/^\s*\n/.test(s.context) ? '<br>' : ' '}<span class="tone-2">${br(s.context)}</span>` : ''}</h1>` : '';
   const pairs = lines((s.pairsCms && cmsPairs(s)) || s.pairsText).map((l) => { const hl = l.startsWith('*'), [k, ...v] = l.replace(/^\*\s*/, '').split('|'); return `<div class="${hl ? 'hl' : ''}"><p class="p-k">${esc(k.trim())}</p><p>${esc(v.join('|').trim())}</p></div>`; });
   const steps = lines(s.stepsText), list = lines(s.listText), tools = [...s.toolsText.split(',').map((t) => t.trim()).filter(Boolean).map((t) => ({ name: t, svg: logoPick(t) })),
     ...(s.toolsCustom ? s.toolsOwn.filter((t) => t.name.trim()).map((t) => ({ name: t.name.trim(), svg: D.logos[t.logo] ?? '' })) : [])];
@@ -110,7 +111,7 @@ export function postHTML(s: State) {
     s.chips && s.chipsText ? `<p class="p-chips">${s.chipsText.split(',').map((c) => c.trim()).filter(Boolean).map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</p>` : '',
     head,
     s.rule ? '<div class="p-rule"></div>' : '',
-    s.body && s.bodyText ? `<p class="p-body">${esc(s.bodyText)}</p>` : '',
+    s.body && s.bodyText ? `<p class="p-body">${br(s.bodyText)}</p>` : '',
     s.pairs && pairs.length ? `<div class="p-pairs">${pairs.join('')}</div>` : '',
     s.steps && steps.length ? `<ol class="p-steps" style="--n:${Math.min(steps.length, wide ? 4 : steps.length > 4 ? Math.ceil(steps.length / 2) : steps.length)}">${steps.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>` : '',
     s.tools && tools.length ? `<div class="p-tools"><p class="p-k">Tools</p><p>${tools.map((t) => `<span class="p-tool">${t.svg}${esc(t.name)}</span>`).join('')}</p></div>` : '',
@@ -258,20 +259,20 @@ function templates(): Tpl[] {
   // Launch: the promo visual in every cut the kit asks for, plus a few headline posts
   const G = 'Launch and promo';
   T.push({ group: G, name: 'Promo · catalogue', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'b', art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
-  T.push({ group: G, name: 'Promo · wave', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Free, community-built, maintained by DemandSense', hmax: 77, logo: false, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.6, time: 6 } as never }) });
+  T.push({ group: G, name: 'Promo · wave', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Free, community-built, maintained by DemandSense', hmax: 77, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.6, time: 6 } as never }) });
   T.push({ group: G, name: 'AI changed the game', s: B({ format: 'portrait', layout: 'a', headline: 'AI changed the game for LinkedIn Ads.', context: 'But nobody agreed on the rules.', art: { id: 'scenarios', zoom: 1, frame: 'bleed' } as never, hmax: 88 }) });
   T.push({ group: G, name: `${nR} rules`, s: B({ format: 'square', bg: 'white', layout: 'b', label: true, labelText: 'The Standard', headline: `${nR} rules for running LinkedIn Ads with AI.`, context: 'Each one written by a named practitioner', art: { id: 'rules', zoom: 1, frame: 'panel' } as never, cover: 16, hue: '16' }) });
   T.push({ group: G, name: 'Built with practitioners', s: B({ format: 'square', bg: 'pastel-14', layout: 'a', label: true, labelText: `${nA} practitioners`, headline: 'Written with the people who run the accounts.', context: 'One open standard, kept up to date', art: { id: 'skills', zoom: 1, frame: 'bleed' } as never }) });
   T.push({ group: G, name: 'Don’t take its word for it', s: B({ format: 'portrait', layout: 'none', vpos: 'center', pattern: true, headline: 'A standard for making ads work with AI,', context: 'without taking its word for it.', button: true, buttonText: 'Read the Standard', hmax: 104 }) });
-  T.push({ group: G, name: 'Site preview · opening frame', note: '2 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', logoPos: 'left', logo: false, label: false, pattern: true, headline: 'The B2B AI Standard', context: 'for LinkedIn Ads', hmax: 96 }) });
+  T.push({ group: G, name: 'Site preview · opening frame', note: '2 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', logoPos: 'left', label: false, pattern: true, headline: 'The B2B AI Standard', context: 'for LinkedIn Ads', hmax: 96 }) });
   T.push({ group: G, name: 'Site preview · closing frame', note: '3 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', pattern: true, headline: 'Read it free.', context: 'the-ai-standard.com', button: true, buttonText: 'Open the Standard', hmax: 96 }) });
-  T.push({ group: G, name: 'Newsletter cover 16:9', s: B({ ...promo, format: 'cover', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Rules, skills and scenarios, each from a named practitioner', hmax: 88, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: G, name: 'Newsletter cover 16:9', s: B({ ...promo, format: 'cover', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Rules, skills and scenarios, each from a named practitioner', hmax: 112, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
 
   const N = 'Newsletter (Demand Wire)';
-  T.push({ group: N, name: 'Launch header 1200×480', s: B({ ...promo, format: 'header', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 72, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
-  T.push({ group: N, name: 'Launch header · wave', s: B({ ...promo, format: 'header', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 72, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.2, time: 4 } as never }) });
-  T.push({ group: N, name: 'Block · From the Standard', s: B({ format: 'block', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', context: '', hmax: 120, logoH: 110, lines: false, vpos: 'center', art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1, time: 10 } as never }) });
-  T.push({ group: N, name: 'Block · light', s: B({ format: 'block', bg: 'white', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', hmax: 120, logoH: 110, lines: false, vpos: 'center', art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: N, name: 'Launch header 1200×480', s: B({ ...promo, format: 'header', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 91, art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: N, name: 'Launch header · wave', s: B({ ...promo, format: 'header', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 91, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.6, time: 4 } as never }) });
+  T.push({ group: N, name: 'Block · From the Standard', s: B({ format: 'block', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', context: '', hmax: 152, logoH: 110, lines: false, vpos: 'center', art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.6, time: 10 } as never }) });
+  T.push({ group: N, name: 'Block · light', s: B({ format: 'block', bg: 'white', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', hmax: 152, logoH: 110, lines: false, vpos: 'center', art: { id: 'directory', zoom: 1, t: 2.5, frame: 'bleed' } as never }) });
 
   const scenario = (x: Data['scenarios'][number]): Tpl => ({ group: 'Scenario cards', name: x.title, note: x.status === 'soon' ? 'Coming soon' : 'Animated: MP4', s: B({
     about: `scenario:${x.id}`, format: 'portrait', layout: 'b', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Scenario · ${x.cadence}`, headline: x.title, context: '', body: false, bodyText: x.description, steps: x.steps.length > 0, stepsText: x.steps.slice(0, 7).join('\n'), tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '),
@@ -317,7 +318,7 @@ function templates(): Tpl[] {
   const E = 'Email (1200 wide)', first = (g: string) => T.find((t) => t.group === g);
   ['Scenario cards', 'Skill cards', 'Rule cards', 'Quote cards', 'Author cards'].forEach((g) => {
     const tp = first(g);
-    if (tp) T.push({ group: E, name: g.replace(' cards', ''), note: tp.name, s: merge(clone(tp.s), { format: 'wide', layout: tp.s.layout === 'none' ? 'none' : 'a', steps: false, list: false }) });
+    if (tp) T.push({ group: E, name: g.replace(' cards', ''), note: tp.name, s: merge(clone(tp.s), { format: 'wide', hmax: Math.round(tp.s.hmax * 1.3), layout: tp.s.layout === 'none' ? 'none' : 'a', steps: false, list: false }) });
   });
   return T;
 }
@@ -364,7 +365,7 @@ async function drawArt(ctx: CanvasRenderingContext2D, post: HTMLElement, R: numb
   ctx.save(); ctx.beginPath(); ctx.roundRect(r.x * R, r.y * R, r.w * R, r.h * R, (parseFloat(cs.borderRadius) || 0) * R); ctx.clip();
   if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)') { ctx.fillStyle = cs.backgroundColor; ctx.fillRect(r.x * R, r.y * R, r.w * R, r.h * R); }
   const wave = r.box.querySelector<HTMLElement & { wave?: Wave }>('.p-wave'), svg = r.box.querySelector<SVGSVGElement>('svg.iso-art');
-  if (wave?.wave) ctx.drawImage(wave.wave.canvas, r.x * R, r.y * R, r.w * R, r.h * R);
+  if (wave?.wave) { const b = wave.wave.canvas.getBoundingClientRect(); ctx.drawImage(wave.wave.canvas, (b.left - p.left) / k * R, (b.top - p.top) / k * R, b.width / k * R, b.height / k * R); }
   else if (svg) {
     const b = svg.getBoundingClientRect(), x = (b.left - p.left) / k, y = (b.top - p.top) / k, w = b.width / k, h = b.height / k;
     ctx.drawImage(await svgImage(svg, w, h, R), x * R, y * R, w * R, h * R);
@@ -438,7 +439,7 @@ export function boot() {
   const $ = <T extends Element = HTMLElement>(q: string) => document.querySelector<T>(q)!;
   const panel = $('[data-panel]'), scaleBox = $('[data-scale]'), fitBox = $('[data-fit]'), toast = $('[data-toast]');
   const TPL = templates();
-  let S: State = clone(DEFAULTS), tname = 'Blank', current: { post: HTMLElement; piece?: Piece } | undefined, raf = 0, t = 0, last = 0, busy = false;
+  let S: State = clone(DEFAULTS), base: State = clone(DEFAULTS), tname = 'Blank', current: { post: HTMLElement; piece?: Piece } | undefined, raf = 0, t = 0, last = 0, busy = false;
 
   const say = (msg: string) => { toast.textContent = msg; toast.classList.add('on'); clearTimeout((say as any).h); (say as any).h = setTimeout(() => toast.classList.remove('on'), 2600); };
   const view = (v: string) => {
@@ -448,6 +449,15 @@ export function boot() {
   };
   document.querySelectorAll<HTMLElement>('[data-view]').forEach((b) => b.addEventListener('click', () => view(b.dataset.view!)));
 
+  // Every slider gets a number field beside it for typing an exact value
+  panel.querySelectorAll<HTMLInputElement>('input[type=range][data-k]').forEach((r) => {
+    const row = document.createElement('span'), n = document.createElement('input');
+    row.className = 'rng';
+    Object.assign(n, { type: 'number', min: r.min, max: r.max, step: r.step, className: 'num' });
+    n.dataset.k = r.dataset.k;
+    n.setAttribute('aria-label', r.closest('label')?.firstChild?.textContent?.trim() || 'Value');
+    r.replaceWith(row); row.append(r, n);
+  });
   // Panel ← state
   const sync = () => {
     panel.querySelectorAll<HTMLInputElement>('[data-k]').forEach((el) => {
@@ -564,7 +574,8 @@ export function boot() {
     if (el.dataset.ownLogo) { S.toolsOwn[+el.dataset.ownLogo].logo = el.value; return change(); }
     if (el.dataset.tool) { S.toolsText = [...panel.querySelectorAll<HTMLInputElement>('[data-tool]:checked')].map((t) => t.dataset.tool).join(', '); return change(); }
     if (!el.dataset.k) return;
-    set(S, el.dataset.k, el.type === 'checkbox' ? el.checked : el.type === 'range' ? +el.value : el.value);
+    if (el.type === 'number' && el.value === '') return;
+    set(S, el.dataset.k, el.type === 'checkbox' ? el.checked : el.type === 'range' || el.type === 'number' ? +el.value : el.value);
     if (el.dataset.k === 'bgCustom') S.bg = 'custom';
     if (el.dataset.k === 'hueCustom') S.hue = 'custom';
     if (el.dataset.k === 'about') about();
@@ -584,7 +595,7 @@ export function boot() {
     if (b.dataset.act === 'fill') { const tp = TPL.find((x) => x.s.about === S.about); if (tp) CONTENT.forEach((k) => ((S as any)[k] = clone(tp.s[k]))); }
     if (b.dataset.wavePreset) Object.assign(S.wave, WAVES[b.dataset.wavePreset as keyof typeof WAVES]);
     if (b.dataset.act === 'templates') return view('templates');
-    if (b.dataset.act === 'reset') { const tp = TPL.find((x) => x.name === tname); S = clone(tp ? tp.s : DEFAULTS); }
+    if (b.dataset.act === 'reset') S = clone(base); // back to the template as it opened
     change();
   });
 
@@ -636,7 +647,7 @@ export function boot() {
     const b = (e.target as HTMLElement).closest<HTMLElement>('[data-tpl]');
     if (!b) return;
     const tp = TPL[+b.dataset.tpl!];
-    S = clone(tp.s); tname = `${tp.group}: ${tp.name}`;
+    S = clone(tp.s); base = clone(tp.s); tname = `${tp.group}: ${tp.name}`;
     sync(); view('editor'); ptab('content'); scrollTo({ top: 0 });
   });
 
@@ -652,5 +663,5 @@ export function boot() {
   });
 
   const fromHash = location.hash.length > 1 ? decode(location.hash.slice(1)) : undefined;
-  if (fromHash) { S = fromHash; tname = 'From link'; sync(); view('editor'); } else { sync(); view('templates'); }
+  if (fromHash) { S = fromHash; base = clone(fromHash); tname = 'From link'; sync(); view('editor'); } else { sync(); view('templates'); }
 }
