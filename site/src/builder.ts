@@ -103,6 +103,9 @@ const GITHUB = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentC
 
 export function postHTML(s: State) {
   const [W, H] = FORMATS[s.format], wide = W > H * 1.2, dark = isDark(s);
+  // Wide posts split into a text column and an art column: text on art becomes text left, text only means no art
+  if (wide && s.layout === 'over') s = { ...s, layout: 'a' };
+  if (wide && s.layout === 'none') s = { ...s, art: { ...s.art, id: 'none' } };
   const sc = Math.min(W / 1080, H / (wide ? 760 : 1080));
   const cls = ['post', dark ? 'surface-black' : s.bg.startsWith('pastel-') ? 'on-pastel' : '', wide ? 'wide' : '', s.lines ? 'lines' : '', `frame-${s.art.frame}`,
     s.fade && s.art.id !== 'none' && s.layout === 'over' ? `fade fade-${s.vpos}` : '',
@@ -245,6 +248,14 @@ function fit(post: HTMLElement, s: State) {
     post.style.setProperty('--hs', String(Math.floor(lo)));
     if (lo >= s.hmax * sc * .6) return;
   }
+  // Still too much text: the art gives up its third of the height (down to a fifth) instead of the text running off the post
+  const art = grid.querySelector<HTMLElement>(':scope > .p-art');
+  if (!art || post.classList.contains('wide') || art.offsetParent === null) return;
+  post.classList.add('hfixed');
+  const room = () => ok() && art.offsetHeight >= post.offsetHeight * .2;
+  let lo = 16 * sc, hi = s.hmax * sc;
+  for (let i = 0; i < 10; i++) { const mid = (lo + hi) / 2; post.style.setProperty('--hs', String(mid)); if (room()) lo = mid; else hi = mid; }
+  post.style.setProperty('--hs', String(Math.floor(lo)));
 }
 
 export function renderInto(host: HTMLElement, s: State, live = false) {
@@ -486,6 +497,7 @@ export function boot() {
     });
     const wide = FORMATS[S.format][0] > FORMATS[S.format][1] * 1.2;
     panel.querySelectorAll<HTMLElement>('[data-seg=layout] [data-wide]').forEach((b) => { b.dataset.tall ??= b.textContent!; b.textContent = wide ? b.dataset.wide! : b.dataset.tall; });
+    panel.querySelectorAll<HTMLElement>('[data-seg=layout] [data-v=over], [data-seg=layout] [data-v=none]').forEach((b) => (b.hidden = wide));
     $('[data-tname]').textContent = tname;
     const tools = S.toolsText.split(',').map((t) => t.trim().toLowerCase()).filter(Boolean);
     panel.querySelectorAll<HTMLInputElement>('[data-tool]').forEach((el) => (el.checked = tools.includes(el.dataset.tool!.toLowerCase())));

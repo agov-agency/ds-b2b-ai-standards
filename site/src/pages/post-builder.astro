@@ -502,6 +502,8 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post.lines .p-top::after, .post.lines .p-foot::before { content: ''; position: absolute; left: calc(-1 * var(--pad)); right: calc(-1 * var(--pad)); height: 1px; background: var(--line); }
   .post.lines .p-top::after { bottom: 0; }
   .post.lines .p-foot::before { top: 0; }
+  /* Wide posts are columns: no rules across them */
+  .post.wide.lines .p-top::after, .post.wide.lines .p-foot::before { display: none; }
 
   .post .p-art { grid-area: art; position: relative; min-height: 0; overflow: hidden; }
   .post .p-art > * { position: absolute; inset: 0; translate: var(--ax) var(--ay); }
