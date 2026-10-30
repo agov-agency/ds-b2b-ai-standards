@@ -163,7 +163,7 @@ Preview the specimen: start the `design-system` server from `.claude/launch.json
 - `.claude/skills/`, `.claude/agents/`, `.claude/settings.json`, `.agents/skills/` (hairline, anatomy), `skills-lock.json`
 - `design-system/` — `tokens.css`, `specimen.html`, `fonts/`, `icons/`, `logos/` (connector logos), `wave/`, `wave.js`, `word-reveal.js`. Shared by site and landing. No images stored: visual reference = Figma node IDs in `DESIGN.md` + the specimen
 - `illustrations/` — shared hairline figures and line icons (`icons/`, `icons.js`)
-- `site/` — the tool (Astro): `src/pages` (`index` Home, `collection`, `scenarios`, `skills`, `rules`, `authors`, `contribute`, `art-lab`), `src/components`, `src/layouts`, `src/art` (code-drawn figures), `src/sanity.ts` (content loader), `src/content.config.ts`, `src/site.ts` (names, areas, nav), `content/` (Markdown fallback). See `site/README.md`
+- `site/` — the tool (Astro): `src/pages` (`index` Home, `collection`, `scenarios`, `skills`, `rules`, `authors`, `contribute`, `art-lab`, `post-builder`: unlinked social post builder, see `docs/post-builder.md`), `src/components`, `src/layouts`, `src/art` (code-drawn figures), `src/sanity.ts` (content loader), `src/content.config.ts`, `src/site.ts` (names, areas, nav), `content/` (Markdown fallback). See `site/README.md`
 - `studio/` — Sanity Studio: `schemas/`, `migrations/`, `seed/`, `connectors.json`
 - `landing/` — earlier promo landing (`index.html`, `landing.css`, `landing.js`, `assets/`), frozen; root-absolute paths, serve from the repo root
 - `lab/` — design experiments, not deployed

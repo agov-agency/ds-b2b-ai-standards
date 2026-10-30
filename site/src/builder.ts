@@ -1,0 +1,533 @@
+// Post builder (src/pages/post-builder.astro): state → post markup, the template gallery, and PNG/MP4 export.
+// Export draws three layers per frame: background, art (the figure redrawn at time t, or the wave canvas), copy on top.
+import { toCanvas, getFontEmbedCSS } from 'html-to-image';
+import { Muxer, ArrayBufferTarget } from 'mp4-muxer';
+import { pieces } from './art';
+import { alts } from './art/alt';
+import type { Piece } from './art/iso';
+
+type Author = { id: string; name: string; role: string; company: string; photo: string };
+type Data = {
+  authors: Author[];
+  scenarios: { id: string; title: string; description: string; cadence: string; author?: string; status: string; cover: number; category: string; connectors: string[]; art?: { piece: string; zoom: number }; steps: string[] }[];
+  skills: { id: string; title: string; description: string; author?: string; status: string; cover: number; category: string; connectors: string[]; icon: string; changes: string }[];
+  rules: { id: string; number: number; title: string; why: string; author?: string; cover: number; category: string; icon: string; advises: string; adds: string; voices: { name: string; author?: string; company: string; quote: string }[] }[];
+  quotes: { name: string; company: string; photo: string; text: string }[];
+  logos: Record<string, string>;
+};
+
+const DEFAULTS = {
+  format: 'square', layout: 'a', vpos: 'end', align: 'left',
+  bg: 'black', bgCustom: '#0b0c0d', hue: 'auto', hueCustom: '#3875f6', cover: 0,
+  lines: true, pattern: false, scrim: true,
+  logo: true, logoKind: 'full', logoPos: 'left', logoH: 44, label: true, labelText: '',
+  chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 96, hmax: 120, rule: false,
+  body: false, bodyText: '', pairs: false, pairsText: '', steps: false, stepsText: '', tools: false, toolsText: '',
+  list: false, listText: '', button: false, buttonText: '',
+  author: '', authorStyle: 'byline', aName: '', aRole: '', aPhoto: '',
+  meta: true, metaText: 'The B2B AI Standard · free, community-built', foot: 'plain',
+  art: { id: 'none', zoom: 1, x: 0, y: 0, t: 0, mono: false, animate: true, frame: 'bleed', photo: '' },
+  wave: { c1: '#3875f6', c2: '#fa8c16', c3: '#3875f6', ground: '#000000', k: 1.37, time: 0 },
+};
+type State = typeof DEFAULTS;
+const FORMATS: Record<string, [number, number]> = { square: [1080, 1080], portrait: [1080, 1350], story: [1080, 1920], wide: [1200, 628], header: [1200, 480], block: [1200, 240], cover: [1920, 1080] };
+const WAVES = {
+  brand: { c1: '#3875f6', c2: '#fa8c16', c3: '#3875f6', ground: '#000000' },
+  cta: { c1: '#4aa8ff', c2: '#8a7cff', c3: '#4aa8ff', ground: '#5a8bfb' }, // SiteFooter hover
+  mono: { c1: '#aaadb3', c2: '#ffffff', c3: '#767980', ground: '#000000' },
+};
+const SPEED = 0.6, FPS = 30; // IsoArt plays pieces at 0.6×
+
+const clone = <T,>(o: T): T => JSON.parse(JSON.stringify(o));
+const merge = (base: State, over: Partial<State> & { art?: Partial<State['art']>; wave?: Partial<State['wave']> }): State =>
+  ({ ...base, ...over, art: { ...base.art, ...over.art }, wave: { ...base.wave, ...over.wave } }) as State;
+const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+const lines = (s: string) => s.split('\n').map((l) => l.trim()).filter(Boolean);
+const initials = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
+const pieceOf = (id: string): Piece | undefined => (id.startsWith('alt:') ? alts[id.slice(4)]?.piece : pieces[id]);
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+
+let D: Data;
+const authorById = (id?: string) => D.authors.find((a) => a.id === id);
+
+// ---------- Colour ----------
+function isDark(s: State) {
+  if (s.bg === 'black') return true;
+  if (s.bg !== 'custom') return false;
+  const n = parseInt(s.bgCustom.slice(1), 16), [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255];
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b < 128;
+}
+const bgValue = (s: State) => (s.bg === 'black' ? 'var(--neutral-1000)' : s.bg === 'white' ? 'var(--neutral-0)' : s.bg === 'custom' ? s.bgCustom : `var(--${s.bg})`);
+function hueValue(s: State, dark = isDark(s)) {
+  if (s.hue === 'custom') return s.hueCustom;
+  const n = s.hue === 'auto' ? (s.bg.startsWith('pastel-') ? +s.bg.slice(7) : s.cover) : s.hue === 'primary' ? 0 : +s.hue;
+  return n ? `var(--pastel-${n}-${dark ? 200 : 450})` : `var(--primary-${dark ? 300 : 450})`;
+}
+// Panel behind framed art: the item's pastel on white, white on a pastel, a step up from black on black
+const panelValue = (s: State) => (isDark(s) ? 'var(--neutral-950)' : s.bg === 'white' || s.bg === 'custom' ? (s.cover ? `var(--pastel-${s.cover})` : 'var(--neutral-25)') : 'var(--neutral-0)');
+
+// ---------- Post markup ----------
+function logoPick(name: string) {
+  const n = name.toLowerCase();
+  const key = /claude/.test(n) ? 'claude' : /chatgpt|openai/.test(n) ? 'chatgpt' : /gemini/.test(n) ? 'gemini' : /perplexity/.test(n) ? 'perplexity'
+    : /linkedin/.test(n) ? 'linkedin' : /demandsense/.test(n) ? 'demandsense' : /crm|salesforce/.test(n) ? 'salesforce' : /hubspot/.test(n) ? 'hubspot'
+    : /google ads/.test(n) ? 'googleads' : /analytics/.test(n) ? 'googleanalytics' : /sheet/.test(n) ? 'googlesheets' : /slack/.test(n) ? 'slack' : /excel|csv/.test(n) ? 'excel' : 'list';
+  return D.logos[key] ?? '';
+}
+
+function authorBlock(s: State) {
+  let name = '', role = '', photo = '';
+  if (s.author === 'custom') ({ aName: name, aRole: role, aPhoto: photo } = s);
+  else { const a = authorById(s.author); if (!a) return ''; name = a.name; role = [a.role, a.company].filter(Boolean).join(', '); photo = a.photo; }
+  if (!name) return '';
+  return `<div class="p-author"><span class="p-av">${photo ? `<img src="${esc(photo)}" alt="" crossorigin="anonymous">` : esc(initials(name))}</span><span><span>${esc(name)}</span>${role ? `<span class="tone-2">${esc(role)}</span>` : ''}</span></div>`;
+}
+
+export function postHTML(s: State) {
+  const [W, H] = FORMATS[s.format], wide = W > H * 1.2, dark = isDark(s);
+  const sc = Math.min(W / 1080, H / (wide ? 600 : 1080));
+  const cls = ['post', dark ? 'surface-black' : s.bg.startsWith('pastel-') ? 'on-pastel' : '', wide ? 'wide' : '', s.lines ? 'lines' : '', `frame-${s.art.frame}`,
+    s.layout === 'over' && s.scrim ? 'scrim' : '', s.meta && s.foot === 'band' ? 'foot-band' : '', `al-${s.align}`, `logo-${s.logoPos}`].filter(Boolean).join(' ');
+  const style = `--w:${W}px; --h:${H}px; --s:${sc.toFixed(3)}; --pbg:${bgValue(s)}; --hue:${hueValue(s)}; --panel:${panelValue(s)}; --logo:${s.logoH}; --vpos:${s.vpos}; --hs:${s.hpx}; --ax:${s.art.x}%; --ay:${s.art.y}%; --scrim-to:${s.vpos === 'start' ? 'bottom' : 'top'}`;
+  const logo = s.logo ? `<img class="p-logo" src="/design-system/brand/${s.logoKind === 'mark' ? 'mark' : dark ? 'logo-b2b' : 'logo-b2b-light'}.svg" alt="">` : '';
+  const label = s.label && s.labelText ? `<p class="p-label">${esc(s.labelText)}</p>` : '';
+  const head = s.headline || s.context ? `<h1 class="p-head">${esc(s.headline)}${s.context ? ` <span class="tone-2">${esc(s.context)}</span>` : ''}</h1>` : '';
+  const pairs = lines(s.pairsText).map((l) => { const hl = l.startsWith('*'), [k, ...v] = l.replace(/^\*\s*/, '').split('|'); return `<div class="${hl ? 'hl' : ''}"><p class="p-k">${esc(k.trim())}</p><p>${esc(v.join('|').trim())}</p></div>`; });
+  const steps = lines(s.stepsText), list = lines(s.listText), tools = s.toolsText.split(',').map((t) => t.trim()).filter(Boolean);
+  const main = [
+    s.qmark ? '<svg class="p-q" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13L7 0h6L9 12h5v12zm18 0V13l7-13h6l-4 12h5v12z"/></svg>' : '',
+    s.chips && s.chipsText ? `<p class="p-chips">${s.chipsText.split(',').map((c) => c.trim()).filter(Boolean).map((c) => `<span class="chip">${esc(c)}</span>`).join('')}</p>` : '',
+    head,
+    s.rule ? '<div class="p-rule"></div>' : '',
+    s.body && s.bodyText ? `<p class="p-body">${esc(s.bodyText)}</p>` : '',
+    s.pairs && pairs.length ? `<div class="p-pairs">${pairs.join('')}</div>` : '',
+    s.steps && steps.length ? `<ol class="p-steps" style="--n:${Math.min(steps.length, wide ? 4 : steps.length > 4 ? Math.ceil(steps.length / 2) : steps.length)}">${steps.map((t) => `<li>${esc(t)}</li>`).join('')}</ol>` : '',
+    s.tools && tools.length ? `<p class="p-tools">${tools.map((t) => `<span class="p-tool">${logoPick(t)}${esc(t)}</span>`).join('')}</p>` : '',
+    s.list && list.length ? `<ul class="p-list">${list.map((l) => { const [k, ...v] = l.split('|'); return v.length ? `<li><b>${esc(k.trim())}</b><span>${esc(v.join('|').trim())}</span></li>` : `<li><b></b><span>${esc(k)}</span></li>`; }).join('')}</ul>` : '',
+    s.author && s.authorStyle === 'card' ? authorBlock(s) : '',
+    s.button && s.buttonText ? `<span class="p-btn">${esc(s.buttonText)}</span>` : '',
+  ].join('');
+  const foot = (s.author && s.authorStyle === 'byline' ? authorBlock(s) : '') + (s.meta && s.metaText ? `<p class="p-meta">${esc(s.metaText)}</p>` : '');
+  return `<div class="${cls}" style="${style}">
+    <div class="p-bg${s.pattern ? ` pattern pattern-fade` : ''}"></div>
+    <div class="p-grid lay-${s.art.id === 'none' ? 'none' : s.layout}">
+      ${s.art.id !== 'none' && s.layout !== 'none' ? '<div class="p-art"></div><div class="p-scrim"></div>' : ''}
+      ${logo || label ? `<div class="p-top">${logo}${label}</div>` : ''}
+      <div class="p-main">${main}</div>
+      ${foot ? `<div class="p-foot">${foot}</div>` : ''}
+    </div>
+    <div class="p-lines"></div>
+  </div>`;
+}
+
+// ---------- Art ----------
+// Figures clone the IsoArt markup rendered on the page, so they carry its scoped styles
+function figureEl(s: State, piece: Piece) {
+  const dark = isDark(s);
+  const fig = document.querySelector(dark ? '.pb-proto-d' : '.pb-proto-l')!.cloneNode(true) as HTMLElement;
+  fig.classList.remove('pb-proto-d', 'pb-proto-l');
+  const svg = fig.querySelector('svg')!;
+  svg.setAttribute('viewBox', piece.viewBox);
+  svg.classList.toggle('mono', !dark && s.art.mono);
+  const [fx, fy] = piece.focus ?? [.5, .5], hue = hueValue(s);
+  fig.style.cssText = `--field: transparent; --zoom: ${s.art.zoom}; --fx: ${fx * 100}%; --fy: ${fy * 100}%; --art-a: ${hue}; --art-b: ${hue}; --art-c: ${hue}; --lit: ${hue}`;
+  fig.querySelector('[data-frame]')!.innerHTML = piece.draw(piece.rest + s.art.t);
+  return fig;
+}
+
+type Wave = { canvas: HTMLCanvasElement; render: () => void; tint: (o: object, ms?: number) => void; seek: (s: number) => void; hold: (on: boolean) => void; reframe: (o: object) => void };
+let waveHost: HTMLElement & { wave?: Wave | null } | undefined, waveSnap = '';
+function loadWave(): Promise<void> {
+  if ((window as any).DSWave) return Promise.resolve();
+  return new Promise((ok) => { const sc = document.createElement('script'); sc.src = '/design-system/wave.js'; sc.onload = () => ok(); document.head.append(sc); });
+}
+const waveOpts = (s: State) => ({ gradientColor1: s.wave.c1, gradientColor2: s.wave.c2, gradientColor3: s.wave.c3, white: s.wave.ground });
+
+// The one live wave: its host moves into whichever post the editor shows
+async function liveWave(s: State) {
+  await loadWave();
+  if (!waveHost) {
+    waveHost = document.createElement('div');
+    waveHost.className = 'p-wave';
+    document.querySelector('.pb-protos')!.append(waveHost);
+    waveHost.style.cssText = 'position:absolute;inset:0;width:1080px;height:1080px';
+    waveHost.wave = (window as any).DSWave.mount(waveHost, { ...waveOpts(s), frame: { x: 0, y: 0, w: 1, h: 1, k: s.wave.k, t0: 0 } });
+    waveHost.style.cssText = '';
+  }
+  const w = waveHost.wave;
+  if (w) { w.tint(waveOpts(s), 1); w.reframe({ k: s.wave.k }); w.hold(!s.art.animate || reduced.matches); w.seek(s.wave.time); }
+  return waveHost;
+}
+
+function fillArt(post: HTMLElement, s: State, live: boolean) {
+  const box = post.querySelector<HTMLElement>('.p-art');
+  if (!box) return undefined;
+  if (s.art.id === 'wave') {
+    if (live) liveWave(s).then((h) => { if (box.isConnected) { box.replaceChildren(h); waveHost?.wave?.reframe({}); waveHost?.wave?.seek(s.wave.time); } });
+    else if (waveSnap) box.innerHTML = `<div class="p-wave"><img src="${waveSnap}" alt=""></div>`;
+    return undefined;
+  }
+  if (s.art.id === 'photo') {
+    const src = s.art.photo || (s.author === 'custom' ? s.aPhoto : authorById(s.author)?.photo) || '';
+    if (src) box.innerHTML = `<img class="p-photo" src="${esc(src)}" alt="" crossorigin="anonymous" style="transform: scale(${s.art.zoom})">`;
+    return undefined;
+  }
+  const piece = pieceOf(s.art.id);
+  if (!piece) return undefined;
+  box.replaceChildren(figureEl(s, piece));
+  return piece;
+}
+
+// Largest headline that keeps everything inside the post (auto), or the size asked for
+function fit(post: HTMLElement, s: State) {
+  const head = post.querySelector<HTMLElement>('.p-head'), grid = post.querySelector<HTMLElement>('.p-grid')!;
+  if (!head) return;
+  const sc = +post.style.getPropertyValue('--s');
+  if (s.hsize === 'fixed') { post.style.setProperty('--hs', String(s.hpx * sc)); return; }
+  const main = post.querySelector<HTMLElement>('.p-main')!;
+  // Height the main column's content takes, in post pixels (the preview is scaled; the quote mark is an SVG without offsetTop)
+  const used = () => { const k = [...main.children], r = post.getBoundingClientRect().width / post.offsetWidth; return (k[k.length - 1].getBoundingClientRect().bottom - k[0].getBoundingClientRect().top) / r; };
+  const ok = () => grid.scrollHeight <= grid.clientHeight + 1 && used() <= main.clientHeight + 1 && head.scrollWidth <= head.clientWidth + 1;
+  let lo = 16 * sc, hi = s.hmax * sc;
+  post.style.setProperty('--hs', String(hi));
+  if (ok()) return;
+  for (let i = 0; i < 10; i++) { const mid = (lo + hi) / 2; post.style.setProperty('--hs', String(mid)); if (ok()) lo = mid; else hi = mid; }
+  post.style.setProperty('--hs', String(Math.floor(lo)));
+}
+
+export function renderInto(host: HTMLElement, s: State, live = false) {
+  host.innerHTML = postHTML(s);
+  const post = host.firstElementChild as HTMLElement;
+  const piece = fillArt(post, s, live);
+  fit(post, s);
+  post.querySelectorAll('img').forEach((im) => im.complete || im.addEventListener('load', () => fit(post, s), { once: true }));
+  return { post, piece };
+}
+
+// ---------- Templates ----------
+type Tpl = { group: string; name: string; note?: string; s: State };
+function templates(): Tpl[] {
+  const T: Tpl[] = [], B = (o: Parameters<typeof merge>[1]) => merge(clone(DEFAULTS), o);
+  const nR = D.rules.length, nA = D.authors.filter((a) => a.id !== 'demandsense').length;
+  const promo = { headline: '', context: '', logoH: 64, label: false, meta: true, metaText: 'Rules, skills and scenarios · free, community-built', lines: true };
+  // Launch: the promo visual in every cut the kit asks for, plus a few headline posts
+  const G = 'Launch and promo';
+  T.push({ group: G, name: 'Promo · catalogue', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'b', art: { id: 'directory', zoom: 1.15, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: G, name: 'Promo · wave', note: 'Animated: MP4', s: B({ ...promo, format: 'portrait', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Free, community-built, maintained by DemandSense', hmax: 96, logo: false, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.6, time: 6 } as never }) });
+  T.push({ group: G, name: 'AI changed the game', s: B({ format: 'portrait', layout: 'a', headline: 'AI changed the game for LinkedIn Ads.', context: 'But nobody agreed on the rules.', art: { id: 'scenarios', zoom: 1.3, frame: 'bleed' } as never, hmax: 110 }) });
+  T.push({ group: G, name: `${nR} rules`, s: B({ format: 'square', bg: 'white', layout: 'b', label: true, labelText: 'The Standard', headline: `${nR} rules for running LinkedIn Ads with AI.`, context: 'Each one written by a named practitioner', art: { id: 'rules', zoom: 1.1, frame: 'panel' } as never, cover: 16, hue: '16' }) });
+  T.push({ group: G, name: 'Built with practitioners', s: B({ format: 'square', bg: 'pastel-14', layout: 'a', label: true, labelText: `${nA} practitioners`, headline: 'Written with the people who run the accounts.', context: 'One open standard, kept up to date', art: { id: 'skills', zoom: 1.2, frame: 'bleed' } as never }) });
+  T.push({ group: G, name: 'Don’t take its word for it', s: B({ format: 'portrait', layout: 'none', vpos: 'center', pattern: true, headline: 'A standard for making ads work with AI,', context: 'without taking its word for it.', button: true, buttonText: 'Read the Standard', hmax: 130 }) });
+  T.push({ group: G, name: 'Site preview · opening frame', note: '2 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', logoPos: 'left', logo: false, label: false, pattern: true, headline: 'The B2B AI Standard', context: 'for LinkedIn Ads', meta: false, hmax: 120 }) });
+  T.push({ group: G, name: 'Site preview · closing frame', note: '3 s, 1080', s: B({ format: 'square', layout: 'none', vpos: 'center', align: 'center', pattern: true, headline: 'Read it free.', context: 'the-ai-standard.com', button: true, buttonText: 'Open the Standard', meta: false, hmax: 120 }) });
+  T.push({ group: G, name: 'Newsletter cover 16:9', s: B({ ...promo, format: 'cover', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard for LinkedIn Ads.', context: 'Rules, skills and scenarios, each from a named practitioner', hmax: 110, art: { id: 'directory', zoom: 1.2, t: 2.5, frame: 'bleed' } as never }) });
+
+  const N = 'Newsletter (Demand Wire)';
+  T.push({ group: N, name: 'Launch header 1200×480', s: B({ ...promo, format: 'header', layout: 'a', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 90, meta: false, art: { id: 'directory', zoom: 1.4, t: 2.5, frame: 'bleed' } as never }) });
+  T.push({ group: N, name: 'Launch header · wave', s: B({ ...promo, format: 'header', layout: 'over', vpos: 'end', headline: 'The B2B AI Standard', context: 'is out', hmax: 90, meta: false, scrim: true, art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1.2, time: 4 } as never }) });
+  T.push({ group: N, name: 'Block · From the Standard', s: B({ format: 'block', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', context: '', hmax: 150, logoH: 110, meta: false, lines: false, vpos: 'center', art: { id: 'wave', frame: 'bleed' } as never, wave: { k: 1, time: 10 } as never }) });
+  T.push({ group: N, name: 'Block · light', s: B({ format: 'block', bg: 'white', layout: 'a', logoKind: 'mark', label: false, headline: 'From the Standard', hmax: 150, logoH: 110, meta: false, lines: false, vpos: 'center', art: { id: 'directory', zoom: 1.6, t: 2.5, frame: 'bleed' } as never }) });
+
+  const scenario = (x: Data['scenarios'][number]): Tpl => ({ group: 'Scenario cards', name: x.title, note: x.status === 'soon' ? 'Coming soon' : 'Animated: MP4', s: B({
+    format: 'portrait', layout: 'b', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Scenario · ${x.cadence}`, headline: x.title, context: '', body: false, bodyText: x.description, steps: x.steps.length > 0, stepsText: x.steps.slice(0, 7).join('\n'), tools: x.connectors.length > 0, toolsText: x.connectors.slice(0, 5).join(', '),
+    author: x.author ?? '', metaText: 'AI Standard', hmax: 84, art: { id: x.art?.piece ?? 'sorter', zoom: x.art?.zoom ?? 1, frame: 'bleed' } as never }) });
+  const skill = (x: Data['skills'][number]): Tpl => ({ group: 'Skill cards', name: x.title, s: B({
+    format: 'square', layout: 'b', bg: 'white', cover: x.cover, labelText: 'Skill', chips: true, chipsText: x.category, headline: x.title, context: x.description, hmax: 72,
+    pairs: x.connectors.length > 0, pairsText: `Runs on | ${x.connectors.filter((c) => !/claude|chatgpt|gemini|perplexity/i.test(c)).join(', ') || x.connectors.join(', ')}`,
+    author: x.author ?? 'demandsense', metaText: 'Open on GitHub', art: { id: x.icon, zoom: 1, frame: 'panel' } as never }) });
+  const rule = (x: Data['rules'][number]): Tpl => {
+    const pairs = [x.advises && `LinkedIn default | ${x.advises}`, x.adds && `*The Standard | ${x.adds}`].filter(Boolean).join('\n');
+    return { group: 'Rule cards', name: `${String(x.number).padStart(2, '0')} · ${x.title}`, s: B({
+      format: 'portrait', layout: 'a', bg: `pastel-${x.cover}`, cover: x.cover, labelText: `Rule ${String(x.number).padStart(2, '0')}`, headline: x.title, context: x.why, hmax: 84,
+      pairs: !!pairs, pairsText: pairs, author: x.author && x.author !== 'demandsense' ? x.author : '', metaText: 'AI Standard', art: { id: x.icon, zoom: 1, frame: 'bleed' } as never }) };
+  };
+  const quote = (text: string, name: string, role: string, photo: string, about: string, author?: string): Tpl => ({ group: 'Quote cards', name: `${name}: ${about}`, s: B({
+    format: 'portrait', layout: 'none', vpos: 'center', qmark: true, labelText: about, headline: text, hmax: 72, rule: false,
+    ...(author ? { author } : { author: 'custom', aName: name, aRole: role, aPhoto: photo }), metaText: 'AI Standard' }) });
+
+  D.scenarios.forEach((x) => T.push(scenario(x)));
+  D.skills.forEach((x) => T.push(skill(x)));
+  D.rules.forEach((x) => T.push(rule(x)));
+  D.quotes.forEach((q) => T.push(quote(q.text, q.name, q.company, q.photo, 'Why the Standard exists')));
+  D.rules.forEach((r) => r.voices.forEach((v) => {
+    const a = authorById(v.author);
+    T.push(quote(v.quote, v.name, v.company, a?.photo ?? '', `On rule ${String(r.number).padStart(2, '0')}`, a ? a.id : undefined));
+  }));
+
+  // Authors: what each one added, most first; one card per contributor
+  const adds = new Map<string, string[]>();
+  const add = (id: string | undefined, line: string) => { if (id && id !== 'demandsense') adds.set(id, [...(adds.get(id) ?? []), line]); };
+  D.scenarios.forEach((x) => add(x.author, `Scenario | ${x.title}`));
+  D.skills.forEach((x) => add(x.author, `Skill | ${x.title}`));
+  D.rules.forEach((x) => { add(x.author, `Rule ${String(x.number).padStart(2, '0')} | ${x.title}`); x.voices.forEach((v) => add(v.author, `On rule ${String(x.number).padStart(2, '0')} | ${x.title}`)); });
+  [...adds].sort((a, b) => b[1].length - a[1].length).forEach(([id, items]) => {
+    const a = authorById(id)!;
+    T.push({ group: 'Author cards', name: a.name, note: `${items.length} in the Standard`, s: B({
+      format: 'portrait', layout: 'b', bg: 'white', labelText: 'Author', headline: a.name, context: [a.role, a.company].filter(Boolean).join(', '), hmax: 84,
+      list: true, listText: [...new Set(items)].slice(0, 4).join('\n'), metaText: 'AI Standard', art: { id: 'photo', zoom: 1, frame: 'panel' } as never, author: id, authorStyle: 'card' }) });
+  });
+  // An author card shows the person as the art; the byline would repeat them
+  T.filter((t) => t.group === 'Author cards').forEach((t) => (t.s.author = '', t.s.art.photo = authorById(D.authors.find((a) => a.name === t.name)?.id)?.photo ?? ''));
+  return T;
+}
+
+// ---------- Export ----------
+let fontCSS: Promise<string> | undefined;
+const download = (blob: Blob, name: string) => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); };
+const slug = (s: State) => (s.headline || s.labelText || 'post').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48) + `-${s.format}`;
+
+async function layers(post: HTMLElement, R: number) {
+  const W = post.offsetWidth, H = post.offsetHeight;
+  fontCSS ??= getFontEmbedCSS(post);
+  const opts = { width: W, height: H, pixelRatio: R, fontEmbedCSS: await fontCSS, style: { transform: 'none' } };
+  post.classList.add('x-bg'); const bg = await toCanvas(post, opts); post.classList.remove('x-bg');
+  post.classList.add('x-copy'); const copy = await toCanvas(post, opts); post.classList.remove('x-copy');
+  return { bg, copy, W, H };
+}
+// Where the art box sits inside the post, in post pixels (the preview is scaled)
+function artRect(post: HTMLElement) {
+  const box = post.querySelector<HTMLElement>('.p-art');
+  if (!box) return undefined;
+  const p = post.getBoundingClientRect(), b = box.getBoundingClientRect(), k = p.width / post.offsetWidth;
+  return { box, x: (b.left - p.left) / k, y: (b.top - p.top) / k, w: box.offsetWidth, h: box.offsetHeight };
+}
+// A figure's SVG as an image: every part gets its computed paint inlined (the page CSS does not travel with it).
+// Strokes are non-scaling on the page, so their widths are multiplied by the export ratio to look the same
+const PAINT = ['fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'opacity', 'fill-opacity', 'stroke-opacity', 'filter', 'display', 'vector-effect'];
+function svgImage(svg: SVGSVGElement, w: number, h: number, R: number) {
+  const out = svg.cloneNode(true) as SVGSVGElement, src = [svg, ...svg.querySelectorAll('*')], dst = [out, ...out.querySelectorAll('*')];
+  src.forEach((el, i) => {
+    if (el.closest('defs')) return;
+    const cs = getComputedStyle(el);
+    dst[i].setAttribute('style', PAINT.map((p) => { const v = cs.getPropertyValue(p); return `${p}:${/^stroke-(width|dash)/.test(p) ? v.replace(/([\d.]+)px/g, (_, n) => `${+n * R}px`) : v}`; }).join(';'));
+  });
+  Object.entries({ xmlns: 'http://www.w3.org/2000/svg', width: String(w * R), height: String(h * R) }).forEach(([k, v]) => out.setAttribute(k, v));
+  const url = URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(out)], { type: 'image/svg+xml' }));
+  return new Promise<HTMLImageElement>((ok, no) => { const im = new Image(); im.onload = () => { URL.revokeObjectURL(url); ok(im); }; im.onerror = no; im.src = url; });
+}
+
+async function drawArt(ctx: CanvasRenderingContext2D, post: HTMLElement, R: number) {
+  const r = artRect(post);
+  if (!r || !r.w || !r.h) return;
+  const cs = getComputedStyle(r.box), k = post.getBoundingClientRect().width / post.offsetWidth, p = post.getBoundingClientRect();
+  ctx.save(); ctx.beginPath(); ctx.roundRect(r.x * R, r.y * R, r.w * R, r.h * R, (parseFloat(cs.borderRadius) || 0) * R); ctx.clip();
+  if (cs.backgroundColor !== 'rgba(0, 0, 0, 0)') { ctx.fillStyle = cs.backgroundColor; ctx.fillRect(r.x * R, r.y * R, r.w * R, r.h * R); }
+  const wave = r.box.querySelector<HTMLElement & { wave?: Wave }>('.p-wave'), svg = r.box.querySelector<SVGSVGElement>('svg.iso-art');
+  if (wave?.wave) ctx.drawImage(wave.wave.canvas, r.x * R, r.y * R, r.w * R, r.h * R);
+  else if (svg) {
+    const b = svg.getBoundingClientRect(), x = (b.left - p.left) / k, y = (b.top - p.top) / k, w = b.width / k, h = b.height / k;
+    ctx.drawImage(await svgImage(svg, w, h, R), x * R, y * R, w * R, h * R);
+  } else {
+    const c = await toCanvas(r.box, { width: r.w, height: r.h, pixelRatio: R, skipFonts: true, style: { margin: '0', position: 'static', gridArea: 'auto' } });
+    ctx.drawImage(c, r.x * R, r.y * R);
+  }
+  ctx.restore();
+}
+
+export async function exportPNG(post: HTMLElement, s: State, R = 2) {
+  const { bg, copy, W, H } = await layers(post, R);
+  const out = Object.assign(document.createElement('canvas'), { width: W * R, height: H * R }), ctx = out.getContext('2d')!;
+  ctx.drawImage(bg, 0, 0);
+  if (s.art.id === 'wave') waveHost?.wave?.seek(s.wave.time);
+  await drawArt(ctx, post, R);
+  ctx.drawImage(copy, 0, 0);
+  out.toBlob((b) => b && download(b, `${slug(s)}@${R}x.png`), 'image/png');
+}
+
+// One loop of the figure (or 8 s of wave) at 30 fps, encoded frame by frame, so the video is smooth however slow the drawing is
+export async function exportMP4(post: HTMLElement, s: State, piece: Piece | undefined, progress: (p: number) => void) {
+  if (!('VideoEncoder' in window)) throw new Error('This browser cannot encode video. Use Chrome, Edge or Safari 17+.');
+  let R = 2;
+  const W = post.offsetWidth, H = post.offsetHeight;
+  // H.264 at 2x where the browser can, else 1x; VP9 in MP4 only when H.264 is missing (e.g. open-source Chromium)
+  let codec = 'avc1.640034';
+  const config = (r: number) => ({ codec, width: W * r, height: H * r, bitrate: 14e6 * r / 2, framerate: FPS });
+  const can = async (r: number) => (await VideoEncoder.isConfigSupported(config(r))).supported;
+  if (!(await can(2))) { if (await can(1)) R = 1; else { codec = 'vp09.00.51.08'; if (!(await can(2))) R = 1; } }
+  const { bg, copy } = await layers(post, R);
+  const out = Object.assign(document.createElement('canvas'), { width: W * R, height: H * R }), ctx = out.getContext('2d')!;
+  const muxer = new Muxer({ target: new ArrayBufferTarget(), video: { codec: codec.startsWith('avc') ? 'avc' : 'vp9', width: W * R, height: H * R }, fastStart: 'in-memory' });
+  let err: unknown;
+  const enc = new VideoEncoder({ output: (chunk, meta) => muxer.addVideoChunk(chunk, meta), error: (e) => (err = e) });
+  enc.configure(config(R));
+  const wave = s.art.id === 'wave' ? waveHost?.wave : undefined;
+  const secs = piece ? Math.min(piece.period / SPEED, 20) : 8, n = Math.round(secs * FPS);
+  const frame = post.querySelector('[data-frame]');
+  wave?.hold(true);
+  try {
+    for (let i = 0; i < n; i++) {
+      if (err) throw err;
+      const t = i / FPS;
+      if (piece && frame) { const pt = piece.rest + s.art.t + t * SPEED; frame.innerHTML = piece.draw(pt); post.querySelector<HTMLElement>('.iso-panel')?.style.setProperty('--march', String(-(pt * 12) % 14)); }
+      if (wave) wave.seek(s.wave.time + t);
+      ctx.clearRect(0, 0, out.width, out.height);
+      ctx.drawImage(bg, 0, 0);
+      await drawArt(ctx, post, R);
+      ctx.drawImage(copy, 0, 0);
+      const vf = new VideoFrame(out, { timestamp: Math.round(i * 1e6 / FPS), duration: Math.round(1e6 / FPS) });
+      enc.encode(vf, { keyFrame: i % (FPS * 2) === 0 });
+      vf.close();
+      if (enc.encodeQueueSize > 8) await new Promise((r) => setTimeout(r, 0));
+      progress((i + 1) / n);
+    }
+    await enc.flush();
+    muxer.finalize();
+    download(new Blob([(muxer.target as ArrayBufferTarget).buffer], { type: 'video/mp4' }), `${slug(s)}.mp4`);
+  } finally { wave?.hold(!s.art.animate || reduced.matches); }
+}
+
+// ---------- Page ----------
+const get = (s: any, k: string) => k.split('.').reduce((o, p) => o?.[p], s);
+const set = (s: any, k: string, v: unknown) => { const ps = k.split('.'), last = ps.pop()!; ps.reduce((o, p) => o[p], s)[last] = v; };
+const encode = (s: State) => btoa(unescape(encodeURIComponent(JSON.stringify(s)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const decode = (h: string): State | undefined => { try { return merge(clone(DEFAULTS), JSON.parse(decodeURIComponent(escape(atob(h.replace(/-/g, '+').replace(/_/g, '/')))))); } catch { return undefined; } };
+
+export function boot() {
+  D = JSON.parse(document.getElementById('pb-data')!.textContent!);
+  const $ = <T extends Element = HTMLElement>(q: string) => document.querySelector<T>(q)!;
+  const panel = $('[data-panel]'), scaleBox = $('[data-scale]'), fitBox = $('[data-fit]'), toast = $('[data-toast]');
+  const TPL = templates();
+  let S: State = clone(DEFAULTS), tname = 'Blank', current: { post: HTMLElement; piece?: Piece } | undefined, raf = 0, t = 0, last = 0, busy = false;
+
+  const say = (msg: string) => { toast.textContent = msg; toast.classList.add('on'); clearTimeout((say as any).h); (say as any).h = setTimeout(() => toast.classList.remove('on'), 2600); };
+  const view = (v: string) => {
+    document.querySelectorAll<HTMLElement>('[data-view]').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.view === v)));
+    document.querySelectorAll<HTMLElement>('[data-pane]').forEach((p) => (p.hidden = p.dataset.pane !== v));
+    if (v === 'editor') draw(); else observeThumbs();
+  };
+  document.querySelectorAll<HTMLElement>('[data-view]').forEach((b) => b.addEventListener('click', () => view(b.dataset.view!)));
+
+  // Panel ← state
+  const sync = () => {
+    panel.querySelectorAll<HTMLInputElement>('[data-k]').forEach((el) => {
+      const v = get(S, el.dataset.k!);
+      if (el.type === 'checkbox') el.checked = !!v; else el.value = String(v ?? '');
+      if (el.type === 'color') (el.parentElement as HTMLElement).style.setProperty('--c', String(v));
+    });
+    panel.querySelectorAll<HTMLElement>('[data-seg]').forEach((g) => g.querySelectorAll<HTMLElement>('[data-v]').forEach((b) => b.setAttribute('aria-selected', String(String(get(S, g.dataset.seg!)) === b.dataset.v))));
+    panel.querySelectorAll<HTMLElement>('[data-swatch]').forEach((g) => g.querySelectorAll<HTMLElement>('[data-v]').forEach((b) => b.setAttribute('aria-pressed', String(String(get(S, g.dataset.swatch!)) === b.dataset.v))));
+    panel.querySelectorAll<HTMLElement>('[data-if]').forEach((el) => {
+      const [, k, op, v] = el.dataset.if!.match(/^([\w.]+)(!?=)(.*)$/)!;
+      const cur = String(get(S, k) ?? '');
+      el.hidden = op === '=' ? cur !== v : cur === v;
+    });
+    const wide = FORMATS[S.format][0] > FORMATS[S.format][1] * 1.2;
+    panel.querySelectorAll<HTMLElement>('[data-seg=layout] [data-wide]').forEach((b) => { b.dataset.tall ??= b.textContent!; b.textContent = wide ? b.dataset.wide! : b.dataset.tall; });
+    $('[data-tname]').textContent = tname;
+  };
+
+  const tick = (now: number) => {
+    raf = 0;
+    const p = current?.piece, frame = current?.post.querySelector('[data-frame]');
+    if (!p || !frame || !S.art.animate || reduced.matches || busy) return;
+    t += Math.min((now - last) / 1000, .05) * SPEED; last = now;
+    frame.innerHTML = p.draw(t);
+    current!.post.querySelector<HTMLElement>('.iso-panel')?.style.setProperty('--march', String(-(t * 12) % 14));
+    raf = requestAnimationFrame(tick);
+  };
+  const scale = () => {
+    if (!current) return;
+    const [W, H] = FORMATS[S.format], r = fitBox.getBoundingClientRect(), k = Math.min((r.width - 48) / W, (r.height - 48) / H, 1);
+    scaleBox.style.transform = `translate(-50%, -50%) scale(${k})`;
+    $('[data-size]').textContent = `${W} × ${H} · exports ${W * 2} × ${H * 2}`;
+  };
+  let pending = 0;
+  const draw = () => {
+    cancelAnimationFrame(pending);
+    pending = requestAnimationFrame(() => {
+      if ($('[data-pane=editor]').hidden) return;
+      current = renderInto(scaleBox, S, true);
+      t = (current.piece?.rest ?? 0) + S.art.t;
+      scale();
+      cancelAnimationFrame(raf); last = performance.now(); raf = requestAnimationFrame(tick);
+      history.replaceState(null, '', `#${encode(S)}`);
+    });
+  };
+  new ResizeObserver(scale).observe(fitBox);
+
+  const change = () => { sync(); draw(); };
+  panel.addEventListener('input', (e) => {
+    const el = e.target as HTMLInputElement;
+    if (!el.dataset.k) return;
+    set(S, el.dataset.k, el.type === 'checkbox' ? el.checked : el.type === 'range' ? +el.value : el.value);
+    if (el.dataset.k === 'bgCustom') S.bg = 'custom';
+    if (el.dataset.k === 'hueCustom') S.hue = 'custom';
+    if (el.dataset.k === 'art.id' && el.value === 'wave' && S.layout === 'none') S.layout = 'over';
+    change();
+  });
+  panel.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-v], [data-act], [data-wave-preset]');
+    if (!b) return;
+    const g = b.closest<HTMLElement>('[data-seg], [data-swatch]');
+    if (g && b.dataset.v) set(S, g.dataset.seg ?? g.dataset.swatch!, b.dataset.v);
+    if (b.dataset.wavePreset) Object.assign(S.wave, WAVES[b.dataset.wavePreset as keyof typeof WAVES]);
+    if (b.dataset.act === 'templates') return view('templates');
+    if (b.dataset.act === 'reset') { const tp = TPL.find((x) => x.name === tname); S = clone(tp ? tp.s : DEFAULTS); }
+    change();
+  });
+
+  const run = async (fn: () => Promise<void>) => {
+    if (busy || !current) return;
+    busy = true;
+    const bar = $('[data-progress]'), set = (p: number) => (bar.firstElementChild as HTMLElement).style.setProperty('--p', String(p));
+    bar.hidden = false; set(0);
+    document.querySelectorAll<HTMLButtonElement>('.pb-actions .btn').forEach((b) => (b.disabled = true));
+    try { await fn(); } catch (e) { say(e instanceof Error ? e.message : 'Export failed'); console.error(e); }
+    busy = false; bar.hidden = true;
+    document.querySelectorAll<HTMLButtonElement>('.pb-actions .btn').forEach((b) => (b.disabled = false));
+    draw();
+  };
+  document.querySelectorAll<HTMLElement>('.pb-actions [data-act]').forEach((b) => b.addEventListener('click', () => {
+    const a = b.dataset.act;
+    if (a === 'png') run(async () => { await exportPNG(current!.post, S); say('PNG saved'); });
+    if (a === 'mp4') {
+      if (!current?.piece && S.art.id !== 'wave') return say('MP4 needs a figure or the wave');
+      run(async () => { await exportMP4(current!.post, S, current!.piece, (p) => ($('[data-progress] > span') as HTMLElement).style.setProperty('--p', String(p))); say('MP4 saved'); });
+    }
+    if (a === 'link') navigator.clipboard.writeText(location.href).then(() => say('Link to this post copied'));
+  }));
+
+  // Gallery: groups of cards, each a live post drawn small once it scrolls near
+  const groups = $('[data-groups]');
+  const byGroup = TPL.reduce((m, tp, i) => m.set(tp.group, [...(m.get(tp.group) ?? []), i]), new Map<string, number[]>());
+  const NOTES: Record<string, string> = {
+    'Launch and promo': 'The promo visual in each cut (square, 4:5, 16:9), launch posts and the site-preview frames',
+    'Newsletter (Demand Wire)': 'Launch header 1200×480 and the recurring “From the Standard” block 1200×240',
+    'Scenario cards': 'Name, steps, tools, author. The figure moves: export MP4 for a moving post',
+    'Skill cards': 'Name, one line, what it runs on, author',
+    'Rule cards': 'Number, title, the rule in a line, LinkedIn’s default against the Standard',
+    'Quote cards': 'One line a contributor said, their photo, name and company, the rule it is about',
+    'Author cards': 'Contributors with what they added, most first',
+  };
+  groups.innerHTML = [...byGroup].map(([g, ids]) => `<section class="pb-group"><header><h2 class="marker">${esc(g)} · ${ids.length}</h2><p class="t-p2">${esc(NOTES[g] ?? '')}</p></header><div class="pb-cards">${ids.map((i) => `<button type="button" class="pb-card" data-tpl="${i}"><span class="pb-thumb"><div></div></span><span class="t-p2">${esc(TPL[i].name)}</span>${TPL[i].note ? `<span class="t-p3">${esc(TPL[i].note!)}</span>` : ''}</button>`).join('')}</div></section>`).join('');
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    io.unobserve(e.target);
+    const btn = e.target as HTMLElement, holder = btn.querySelector<HTMLElement>('.pb-thumb > div')!, s = TPL[+btn.dataset.tpl!].s;
+    const [W, H] = FORMATS[s.format], box = btn.querySelector('.pb-thumb')!.getBoundingClientRect().width;
+    renderInto(holder, s);
+    holder.style.transform = `translate(-50%, -50%) scale(${(box - 24) / Math.max(W, H)})`;
+  }), { rootMargin: '400px 0px' });
+  const observeThumbs = () => groups.querySelectorAll('.pb-card').forEach((c) => { if (!c.querySelector('.post')) io.observe(c); });
+  groups.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-tpl]');
+    if (!b) return;
+    const tp = TPL[+b.dataset.tpl!];
+    S = clone(tp.s); tname = `${tp.group}: ${tp.name}`;
+    sync(); view('editor'); scrollTo({ top: 0 });
+  });
+
+  // Wave thumbnails share one still frame of the brand wave
+  loadWave().then(() => {
+    const h = document.createElement('div');
+    h.style.cssText = 'position:fixed;left:-2000px;top:0;width:600px;height:600px';
+    document.body.append(h);
+    const w: Wave = (window as any).DSWave.mount(h, { frame: { x: 0, y: 0, w: 1, h: 1, k: 1.4, t0: 0 } });
+    if (w) { w.hold(true); w.seek(6); waveSnap = w.canvas.toDataURL('image/jpeg', .85); }
+    h.remove();
+    groups.querySelectorAll<HTMLElement>('.pb-card').forEach((c) => { if (TPL[+c.dataset.tpl!].s.art.id === 'wave' && c.querySelector('.post')) { c.querySelector('.post')!.remove(); io.observe(c); } });
+  });
+
+  const fromHash = location.hash.length > 1 ? decode(location.hash.slice(1)) : undefined;
+  if (fromHash) { S = fromHash; tname = 'From link'; sync(); view('editor'); } else { sync(); view('templates'); }
+}

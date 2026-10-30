@@ -10,15 +10,9 @@ import Problem from '../components/home/Problem.astro';
 import Meet from '../components/home/Meet.astro';
 import Why from '../components/home/Why.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { T } from '../site';
+import { T, QUOTES as quotes } from '../site';
 
 const nRules = (await getCollection('rules')).length;
-// Opening statements: client copy, 28 Oct 2026
-const quotes = [
-  { name: 'Iurii Znak', company: 'DemandSense', photo: '/authors/iurii-znak.jpg', text: 'There’s a trust problem with AI in LinkedIn Ads. The people we work with every day have tried it, and they still check every answer by hand. That’s why we built the Standard: one open set of rules for running LinkedIn Ads with AI, written with the experts and kept up to date.' },
-  { name: 'AJ Wilcox', company: 'B2Linked', photo: '/authors/aj-wilcox.jpg', text: 'AI in LinkedIn Ads needs rules because it was trained on recommendations from the platform itself, and advanced practitioners all agree that taking LinkedIn’s recommendations for setting up your ads is a first-class ticket to negative ROI.' },
-  { name: 'Justin Rowe', company: 'Impactable', photo: '/authors/justin-rowe.jpg', text: 'Pretty soon, everyone can “talk with your data”, but raw data needs to be interpreted with actual frameworks, doctrines, and a real point of view. That’s exactly what the Standard delivers.' },
-];
 // How the Standard is built: one card per library list, in build order. Rules and Skills side by side, Scenarios full width below (text left, art right)
 const hubs = [
   { type: 'rule', art: 'rules', label: T.rules, href: '/rules', count: nRules, title: 'Start with the judgement AI is missing.', context: `When frequency is too high for an audience, when a CTR drop means fatigue, when an audience is big enough to count as warm. ${nRules} rules to start` },

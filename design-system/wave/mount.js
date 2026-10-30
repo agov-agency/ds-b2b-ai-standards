@@ -96,7 +96,7 @@ export function mount(host, options = {}) {
   const render = () => renderer.render(scene, camera);
   canvas.style.position = 'absolute';
   const resize = () => {
-    const r = host.getBoundingClientRect();
+    const r = { width: host.offsetWidth, height: host.offsetHeight }; // layout size: a scaled parent (post builder preview) must not shrink it
     f = small.matches ? fSm : fLg;
     // frame.aspect: the view is the hero's (w / aspect tall, anchored at the top), scaled to the host width;
     // the canvas still fills the host height so the ribbon runs on instead of being cut
@@ -115,15 +115,17 @@ export function mount(host, options = {}) {
 
   // Runs only while on screen; reduced motion renders one still frame.
   let visible = false, raf = 0, last = 0, time = f.t0;
+  let held = false;
   const tick = now => {
     raf = 0;
+    if (held) return;
     time += Math.min((now - last) / 1000, .05);
     last = now;
     uniforms.uTime.value = p.timeOffset + time;
     render();
     if (visible && !reduced.matches) raf = requestAnimationFrame(tick);
   };
-  const start = () => { if (!raf && !reduced.matches) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+  const start = () => { if (!raf && !held && !reduced.matches) { last = performance.now(); raf = requestAnimationFrame(tick); } };
   new ResizeObserver(resize).observe(host);
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) start(); }).observe(host);
   uniforms.uTime.value = p.timeOffset + time;
@@ -150,5 +152,10 @@ export function mount(host, options = {}) {
     };
     tintRaf = requestAnimationFrame(step);
   };
-  return { canvas, render, tint };
+  // seek: jump to a moment (s from the start) and draw it; hold: stop or resume the clock (frame-by-frame export);
+  // reframe: change the frame keys (x, y, w, h, k) without a new WebGL context
+  const seek = s => { time = f.t0 + s; uniforms.uTime.value = p.timeOffset + time; render(); };
+  const hold = on => { held = on; if (!on && visible) start(); };
+  const reframe = o => { Object.assign(fLg, o); Object.assign(fSm, o); resize(); };
+  return { canvas, render, tint, seek, hold, reframe };
 }

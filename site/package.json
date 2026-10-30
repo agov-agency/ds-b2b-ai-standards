@@ -8,6 +8,8 @@
     "preview": "astro preview --port 4321 --host 127.0.0.1"
   },
   "dependencies": {
-    "astro": "^5.18.2"
+    "astro": "^5.18.2",
+    "html-to-image": "^1.11.13",
+    "mp4-muxer": "^5.2.2"
   }
 }
