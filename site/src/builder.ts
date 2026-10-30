@@ -323,16 +323,6 @@ function templates(): Tpl[] {
     ...(author ? { author } : { aCustom: true, aName: name, aRole: role, aPhoto: photo }) }) });
 
   D.scenarios.forEach((x) => T.push(scenario(x)));
-  // Demo: the warm-lead handoff run, one screenshot per post (public/post-builder), framed as a product shot
-  const wl = D.scenarios.find((x) => /warm/i.test(x.title)), WL = 'Scenario demo · Warm-lead handoff';
-  ([
-    ['Ask', 'Ask in one line.', 'Run the skill on last month’s LinkedIn Ads engagement', 1.7, 0],
-    ['Summary', 'A call list for this week.', '110 accounts to act on, the top ten first', 1, -50],
-    ['Call list', 'Every account comes with its reason.', 'Priority, CRM state, who takes it, the line a rep can say', 1, -50],
-    ['Hand-off', 'Hand it to your team.', 'Call list and exclusion list as CSV, ready for the CRM', 1, 0],
-  ] as const).forEach(([name, headline, context, zoom, x], i) => T.push({ group: WL, name: `${i + 1} · ${name}`, s: B({
-    about: wl ? `scenario:${wl.id}` : '', format: 'portrait', layout: 'a', bg: `pastel-${wl?.cover ?? 14}`, cover: wl?.cover ?? 14, labelText: `Scenario · ${wl?.title ?? 'Warm-lead handoff'}`, headline, context, hmax: 77,
-    author: wl?.author ?? '', art: { id: 'photo', photo: `/post-builder/warm-leads-${i + 1}.png`, zoom, x, y: 0, frame: 'panel' } as never }) }));
   D.skills.forEach((x) => T.push(skill(x)));
   D.rules.forEach((x) => T.push(rule(x)));
   D.quotes.forEach((q) => T.push(quote(q.text, q.name, q.company, q.photo, 'Why the Standard exists')));
@@ -667,7 +657,6 @@ export function boot() {
   // Gallery: groups of cards, each a live post drawn small once it scrolls near
   const groups = $('[data-groups]');
   const byGroup = TPL.reduce((m, tp, i) => m.set(tp.group, [...(m.get(tp.group) ?? []), i]), new Map<string, number[]>());
-  const WL_GROUP = 'Scenario demo · Warm-lead handoff';
   const NOTES: Record<string, string> = {
     'Launch and promo': 'The promo visual in each cut (square, 4:5, 16:9), launch posts and the site-preview frames',
     'Newsletter (Demand Wire)': 'Launch header 1200×480 and the recurring “From the Standard” block 1200×240',
@@ -676,7 +665,6 @@ export function boot() {
     'Rule cards': 'Number, title, the rule in a line, LinkedIn’s default against the Standard',
     'Quote cards': 'One line a contributor said, their photo, name and company, the rule it is about',
     'Author cards': 'Contributors with what they added, most first',
-    [WL_GROUP]: 'The warm-lead handoff run in four screenshots: the ask, the summary, the call list, the hand-off',
     'Email (1200 wide)': 'One of each card at 1200 wide for email. Switch the item under Content → About, then Fill the text from it',
   };
   groups.innerHTML = [...byGroup].map(([g, ids]) => `<section class="pb-group"><header><h2 class="marker">${esc(g)} · ${ids.length}</h2><p class="t-p2">${esc(NOTES[g] ?? '')}</p></header><div class="pb-cards">${ids.map((i) => `<button type="button" class="pb-card" data-tpl="${i}"><span class="pb-thumb"><div></div></span><span class="t-p2">${esc(TPL[i].name)}</span>${TPL[i].note ? `<span class="t-p3">${esc(TPL[i].note!)}</span>` : ''}</button>`).join('')}</div></section>`).join('');
