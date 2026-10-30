@@ -25,7 +25,7 @@ function louvre(cx: number, cy: number, s: number, z: number, h: number, a: numb
   const faces = [0, 1, 2].map((i) => { const p = pts[i], q = pts[(i + 1) % 3], nx = q[1] - p[1], ny = p[0] - q[0]; return { i, p, q, d: nx + ny, m: p[0] + q[0] + p[1] + q[1] }; })
     .filter((w) => w.d > 0).sort((u, v) => u.m - v.m); // faces turned towards the viewer, back to front
   return faces.map(({ i, p, q }) => poly([[p[0], p[1], z], [q[0], q[1], z], [q[0], q[1], z + h], [p[0], p[1], z + h]], `f ${FILL[i]}`) +
-    `<g transform="${planeAt(K, [q[0], q[1], z + h], [(p[0] - q[0]) / s, (p[1] - q[1]) / s, 0], [0, 0, -1])}"><svg width="${s}" height="${h}" overflow="hidden">${art[i]}</svg></g>`).join('') +
+    `<g transform="${planeAt(K, [q[0], q[1], z + h], [(p[0] - q[0]) / s, (p[1] - q[1]) / s, 0], [0, 0, -1])}"><clipPath id="tv-${s}-${j}-${i}"><rect width="${s}" height="${h}"/></clipPath><g clip-path="url(#tv-${s}-${j}-${i})">${art[i]}</g></g>`).join('') +
     poly(pts.map(([x, y]) => [x, y, z + h] as V3), 'f paper');
 }
 
@@ -57,15 +57,11 @@ function draw(t: number) {
   const c = centre(0), up = Math.atan2(c[2] - z, Math.hypot(c[0] - x, c[1] - y)) * .8, dx = Math.cos(yaw) * Math.cos(up), dy = Math.sin(yaw) * Math.cos(up), dz = Math.sin(up);
   const at = (u: number): V3 => [x + dx * u, y + dy * u, z + 6 + dz * u];
   const legs = [-.5, 1.6, 3.7].map((a) => rope(K, [[x, y, z - 2], foot(a)], 3.2, 'f paper')).join('');
-  const sight = line([at(36), onBoards(at(36), [dx, dy, dz])], 'det dashed');
-  s += sight + legs + cyl(x, y, z - 6, 6, 6, 'paper', 'body') + cyl(x, y, z, 2.4, 6, 'paper', 'body');
+  s += legs + cyl(x, y, z - 6, 6, 6, 'paper', 'body') + cyl(x, y, z, 2.4, 6, 'paper', 'body');
   // Tube: eyepiece, body with its focus ring, the wide objective at the far end
   s += rope(K, [at(-24), at(-14)], 5, 'f body') + rope(K, [at(-15), at(24)], 10, 'f paper') + rope(K, [at(2), at(7)], 11, 'f tint') + rope(K, [at(22), at(36)], 14, 'f paper') + rope(K, [at(33), at(36)], 14, 'f body');
   return hue('a', s);
 }
-
-// Where the sight line from p along d meets the billboards' face (y = BY + 4)
-const onBoards = (p: V3, d: V3): V3 => { const u = (BY + 4 - p[1]) / d[1]; return [p[0] + d[0] * u, p[1] + d[1] * u, p[2] + d[2] * u]; };
 
 export const trivision: Piece = {
   aria: 'A row of tri-vision billboards, one per competitor and sized by priority, with a spotting scope on a tripod in front. Each week the scope pans the row and settles on the main rival as its louvres turn to a new message.',

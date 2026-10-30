@@ -19,7 +19,7 @@ const pathOf = (ps: P2[]) => `M${ps.map((p) => p.map(f).join(' ')).join('L')}Z`;
 const shishi = (() => {
   const PERIOD = 8, N = 3, ROW = 52, PX = 46, PZ = 50, LB = 34, LM = 32, R = 5.5, A0 = .9, A1 = -.6, MX = 72, D = 166, YE = D + 26;
   const K = kernel([[0, 0, 0], [104, 0, 0], [0, D, 0], [104, D, 0], [MX, YE, 0], [92, 10, 96], [10, 10, 60]], 22);
-  const { P, poly, line, box, cyl, cylX, cylY, prism, plinth, on, TOP, arrow } = K;
+  const { P, poly, line, box, cyl, cylX, cylY, prism, plinth, on, TOP } = K;
   const plate = (pts: P2[], y0: number, y1: number, face = 'paper', side = 'body') => {
     let s = '';
     pts.forEach((a, i) => {
@@ -70,7 +70,7 @@ const shishi = (() => {
     main = Math.max(...rows.map((r) => r.pour));
     if (main > .01) s += `<g style="opacity:${f(main)}">${line([[MX, 20, 19], [MX, YE, 19]], 'flow')}</g>`;
     rows.forEach((r, i) => { const [dx, dy] = K.D(0, 24 + i * ROW, 0); s += `<g transform="translate(${f(dx)} ${f(dy)})">${r.s}</g>`; });
-    return hue('a', s) + arrow([[MX, YE - 8, 30], [MX, YE + 22, 30]], { dot: true });
+    return hue('a', s);
   }
   const piece: Piece = {
     aria: 'Three bamboo rockers each fill from their own spout; a full one tips, pours into the shared channel along the side and swings back onto its stone.',
@@ -84,7 +84,7 @@ const shishi = (() => {
 const ropewalk = (() => {
   const PERIOD = 8, BY = [20, 43, 66, 89], HX = 74, HY = 52, HZ = 40, DX = 120, DZ = 36, DR = 12;
   const K = kernel([[0, 0, 0], [140, 0, 0], [0, 100, 0], [140, 100, 0], [DX, 30, DZ + DR + 30], [18, 20, 50]], 22);
-  const { P, line, box, cyl, cylY, plinth, on, SIDE, FRONT, TOP, arrow } = K;
+  const { P, line, box, cyl, cylY, plinth, on, SIDE, FRONT, TOP } = K;
   function bobbin(y: number, a: number) {
     let s = cyl(18, y, 18, 8, 2, 'paper', 'body') + cyl(18, y, 20, 6.2, 15, 'tint', 'tint');
     for (const z of [23, 26.5, 30, 33.5]) s += line(K.ring(18, y, z, 6.2, -Math.PI / 4, 3 * Math.PI / 4, 12), 'det');
@@ -125,7 +125,7 @@ const ropewalk = (() => {
     const [kx, ky] = [c[0] + 10 * Math.cos(ca) * .87, c[1] + 10 * Math.sin(ca) - 10 * Math.cos(ca) * .5];
     s += `<circle class="f paper" cx="${f(kx)}" cy="${f(ky)}" r="2.2"/>`;
     s += on(TOP(8, 6, 18), '<path class="det" d="M3 4H17M3 86H17"/>');
-    return hue('a', s) + arrow(K.curve([HX + 4, HY, HZ + 16], [96, HY, HZ + 34], [DX - 6, HY, DZ + DR + 14]), { dot: true });
+    return hue('a', s);
   }
   const piece: Piece = {
     aria: 'A rope-making twister. Four bobbins pay out strands into a spinning head that twists them into one rope, wound onto a drum.',
@@ -139,7 +139,7 @@ const ropewalk = (() => {
 const duplicator = (() => {
   const PERIOD = 8, CYC = 4, KZ = 44.6, KY = 18, YC = KY + 36, MX0 = 40, BX0 = 72, TRAVEL = 30, OUT = 112;
   const K = kernel([[10, 0, 0], [120, 0, 0], [10, 162, 0], [120, 162, 0], [94, 24, 94], [24, 54, 66]], 22);
-  const { P, poly, box, cyl, cylY, plinth, on, TOP, FRONT, arrow } = K;
+  const { P, poly, box, cyl, cylY, plinth, on, TOP, FRONT } = K;
   const NOTCH: [number, number][] = [[4, 2.6], [10, 1.2], [16, 3], [22, 1.6], [27, 2.4]];
   const depth = (v: number) => (v < 0 || v > 30 ? 0 : Math.max(0, ...NOTCH.map(([c, d]) => Math.min(d, 1.2 * d - Math.abs(v - c) * .9))));
   // A flat key in its own top plane, bow at the origin, teeth on its +x edge, cut to the master profile from v0 to the tip
@@ -185,7 +185,7 @@ const duplicator = (() => {
     // The bin's front walls
     s += poly([[62, 156, 12], [84, 156, 12], [84, 156, 26], [81.5, 153.5, 26], [64.5, 153.5, 26], [62, 156, 26]], 'f tint') +
       poly([[84, 102, 12], [84, 156, 12], [84, 156, 26], [81.5, 153.5, 26], [81.5, 104.5, 26], [84, 102, 26]], 'f body');
-    return hue('a', s) + arrow(K.curve([MX0 + 2, 74, 54], [56, 76, 70], [BX0 - 2, 74, 54]), { dot: true });
+    return hue('a', s);
   }
   const piece: Piece = {
     aria: 'A key duplicator. The best key is clamped on the left; a tracer follows its teeth while the cutter cuts each new blank to the same profile, and the copies drop into the bin.',
@@ -200,7 +200,7 @@ const duplicator = (() => {
 const capsules = (() => {
   const PERIOD = 8, MX = [30, 78, 126], GY = 60, TZ = 36, CR = 4.5, V = 70, X0 = 16, DUD = 1, BEST = 2, TY = 78, BX = 152;
   const K = kernel([[0, 0, 0], [178, 0, 0], [0, 96, 0], [178, 96, 0], [30, 40, 82], [126, 40, 82]], 22);
-  const { P, poly, box, cyl, plinth, on, TOP, FRONT, arrow } = K;
+  const { P, poly, box, cyl, plinth, on, TOP, FRONT } = K;
   const COINS = Array.from({ length: 8 }, (_, j) => ({ t0: .2 + j, to: j % 3 === DUD && j > 4 ? BEST : j % 3 }));
   const dropAt = (c: { t0: number; to: number }) => c.t0 + (MX[c.to] - X0) / V;
   const shut = (t: number) => (t < 1 ? 1 - k(t, .2, .7) : k(t, 5.1, 5.6));
@@ -267,7 +267,7 @@ const capsules = (() => {
     s += poly([[6, TY + 6, 12], [BX, TY + 6, 12], [BX, TY + 6, 20], [6, TY + 6, 20]], 'f body');
     s += poly([[BX, TY + 12, 0], [BX + 22, TY + 12, 0], [BX + 22, TY + 12, 22], [BX + 19.5, TY + 9.5, 22], [BX + 2.5, TY + 9.5, 22], [BX, TY + 12, 22]], 'f tint') +
       poly([[BX + 22, TY - 12, 0], [BX + 22, TY + 12, 0], [BX + 22, TY + 12, 22], [BX + 19.5, TY + 9.5, 22], [BX + 19.5, TY - 9.5, 22], [BX + 22, TY - 12, 22]], 'f body');
-    return hue('a', s) + arrow(K.curve([MX[DUD] + 9, GY, TZ + 12], [102, GY, TZ + 30], [MX[BEST] - 8, GY, TZ + 14]), { dot: true });
+    return hue('a', s);
   }
   const piece: Piece = {
     aria: 'Three capsule machines on a counter. Coins roll along a groove into each; the empty machine eats two coins and gets its slot shuttered, so its coins roll on to the best machine. Capsules roll off to a basket.',

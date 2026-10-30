@@ -67,7 +67,7 @@ function draw(t: number) {
   s += line(eye, 'tube-o') + line(eye, 'tube-i') + cyl(hx, PY + 8, TZ + 64, 3.6, 5, 'paper', 'body');
   const a = TAU * 6 * t / PERIOD;
   s += cyl(hx, PY - 8, TZ + 59, 1.4, 3, 'paper', 'body') + on(TOP(hx, PY - 8, TZ + 62), `<circle class="f paper" r="7"/><path class="f blk" d="M0 0L${f(7 * Math.cos(a))} ${f(7 * Math.sin(a))}A7 7 0 0 1 ${f(-7 * Math.cos(a))} ${f(-7 * Math.sin(a))}Z"/><circle class="f paper" r="1.4"/>`);
-  return hue('a', s) + K.arrow([[SX(3) + PW / 2, PY + PD + 6, TZ + .5], [SX(0) + PW / 2 + 8, PY + PD + 6, TZ + .5]], { dot: true });
+  return hue('a', s);
 }
 
 export const blink: Piece = {

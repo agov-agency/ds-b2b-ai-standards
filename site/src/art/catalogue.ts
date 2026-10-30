@@ -5,7 +5,7 @@ import { kernel, hue, k, f, type Piece } from './iso';
 const CW = 210, CD = 110, Z0 = 24, CH = 190, FY = CD, TOPZ = Z0 + CH;
 const XS = [10, 77, 144], DW = 56, DH = 36, ROWS = [166, 122, 78, 34], HUES = ['a', 'b', 'c'] as const, SLIDE = 56;
 const K = kernel([[0, 0, 0], [0, FY + SLIDE + 12, 0], [CW, FY + SLIDE, 0], [-6, -6, TOPZ + 24], [CW + 6, -6, TOPZ + 8], [CW + 70, 40, 0], [CW + 44, -36, TOPZ + 40]], 14);
-const { on, poly, box, arrow, FRONT, SIDE, TOP } = K;
+const { on, poly, box, FRONT, SIDE, TOP } = K;
 
 // Label holder and pull, on a drawer front (local x right, y down).
 const furniture = (x: number, y: number) =>
@@ -58,7 +58,6 @@ function drawer({ col, row, s, lift }: Open) {
   return hue(HUES[col], g);
 }
 
-const rise = K.curve([CW + 44, 52, 0], [CW + 84, -8, 110], [CW + 34, -26, TOPZ + 34]);
 
 export const directory: Piece = {
   aria: 'A card catalogue with three banks of drawers. One drawer at a time slides open and an index card lifts out.',
@@ -67,6 +66,6 @@ export const directory: Piece = {
     // One bank after another, 2.4 s each: slide out, lift the card as the drawer settles, lower it, slide back
     const i = Math.floor((t % 7.2) / 2.4), u = (t % 7.2) - i * 2.4;
     const s = SLIDE * (k(u, 0, .6) - k(u, 1.75, 2.35)), lift = 40 * (k(u, .5, 1.05) - k(u, 1.3, 1.85));
-    return cabinet({ col: i, row: [1, 2, 0][i], s, lift }, arrow(rise, { dot: true }));
+    return cabinet({ col: i, row: [1, 2, 0][i], s, lift });
   },
 };
