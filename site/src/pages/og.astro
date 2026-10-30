@@ -1,0 +1,37 @@
+---
+// The site-wide share card (og:image), 1200×630: the Home hero without header or buttons, logo kept, the hero piece playing.
+// Not linked anywhere; `npm run og` screenshots it frame by frame into public/og.webp (animated) and public/og.png (still).
+import Base from '../layouts/Base.astro';
+import IsoArt from '../components/IsoArt.astro';
+---
+<Base title="The B2B AI Standard for LinkedIn Ads">
+  <meta slot="head" name="robots" content="noindex">
+  <div class="og surface-black">
+    <img class="logo" src="/design-system/brand/logo-b2b.svg" alt="" width="345" height="40">
+    <h1 class="headline t-h1">AI changed the game for LinkedIn Ads. <span class="tone-2">But nobody agreed on the rules.</span></h1>
+    <p class="t-p1 body lead">A standard for making ads work with AI, without taking its word for it.</p>
+    <IsoArt name="scenarios" dark accent="scenario" zoom={1.5} still class="art" />
+  </div>
+</Base>
+
+<script>
+  import { figures } from '../art/figures';
+  // The capture script steps time itself (no rAF), so every frame is exact and the loop closes on `period`
+  const piece = figures.scenarios, frame = document.querySelector('.og [data-frame]')!;
+  Object.assign(window, { og: { period: piece.period, rest: piece.rest, draw: (t: number) => { frame.innerHTML = piece.draw(t); } } });
+</script>
+
+<style>
+  :global(html), :global(body) { margin: 0; background: var(--neutral-1000); }
+  :global(.skip-link) { display: none; }
+  /* Edge lines at 40px like the site; copy 64px in from them */
+  .og { position: relative; width: 1200px; height: 630px; overflow: hidden; background: var(--bg); color: var(--text);
+    display: grid; grid-template-columns: 560px; align-content: start; gap: 24px; padding: 64px 0 0 104px; box-sizing: border-box; }
+  .og::before, .og::after { content: ''; position: absolute; z-index: 2; top: 0; bottom: 0; width: 1px; background: var(--line); }
+  .og::before { left: 40px; } .og::after { right: 40px; }
+  .logo { width: 276px; height: auto; margin-bottom: 88px; }
+  .headline { position: relative; z-index: 1; font-size: 60px; }
+  .lead { position: relative; z-index: 1; max-width: 26em; }
+  .og :global(.art) { position: absolute; top: 0; right: 0; width: 640px; height: 630px; background: none; border-radius: 0; overflow: visible;
+    --fade: linear-gradient(transparent, #000 120px, #000 calc(100% - 120px), transparent); -webkit-mask-image: var(--fade); mask-image: var(--fade); }
+</style>
