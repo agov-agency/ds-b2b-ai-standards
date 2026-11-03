@@ -70,7 +70,7 @@ import { arrow } from '../arrows';
   .copy { position: relative; z-index: 1; display: grid; grid-template-rows: auto 1fr auto; gap: 16px; max-width: 60%; }
   .desc { color: var(--text-2); max-width: 30em; transition: color var(--t); }
   /* Logos instead of set names; Agov swaps to its black logo on the white hover fill */
-  .name { display: grid; justify-self: start; }
+  .name { display: grid; align-items: center; justify-self: start; height: 32px; } /* same box for both logos: the copy below starts at the same line */
   .name img { grid-area: 1 / 1; display: block; width: auto; transition: opacity var(--t); }
   .ds .name img { height: 32px; }
   .agov .name img { height: 18px; }
