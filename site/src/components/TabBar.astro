@@ -1,6 +1,6 @@
 ---
 // Library tabs (Collection, Scenarios, Skills, Rules), on the Collection and the three hubs only, never on detail pages. Page links, not ARIA tabs: each tab is its own page.
-// Sits in the black hero; sticks under the fixed site header only once scrolled to it, stays black.
+// Sits in the dark hero; sticks under the fixed site header once scrolled to it and then follows the header's surface (SiteHeader sets it).
 import { getCollection } from 'astro:content';
 import { LIB_NAV } from '../site';
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -43,19 +43,20 @@ const isCurrent = (href: string) => (href === '/collection' ? path === '/collect
 
 <style>
   .tab-sentinel { height: 0; }
-  .tabbar { position: sticky; top: var(--site-bar); z-index: var(--z-sticky); background: var(--bg); padding-block: 0 24px; transition: padding 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
+  .tabbar { position: sticky; top: var(--site-bar); z-index: var(--z-sticky); background: var(--bg); padding-block: 0 24px; transition: padding 200ms var(--ease-out), box-shadow 200ms var(--ease-out), background-color 200ms var(--ease-out); }
   .tabs { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
   .tabs::-webkit-scrollbar { display: none; }
   /* Pill tab (DESIGN §8.4): index + label, l1 */
   .tab { display: inline-flex; align-items: center; gap: 12px; height: 36px; padding: 0 16px; border-radius: var(--radius-pill); background: var(--bg-muted); color: var(--text); font: 600 12px/1.4 var(--font-mono); text-transform: uppercase; white-space: nowrap; transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out); }
   .tab .n { color: var(--text-2); font-variant-numeric: tabular-nums; }
-  .tab[aria-current] { background: var(--neutral-0); color: var(--neutral-950); }
+  .tab[aria-current] { background: var(--action); color: var(--action-text); }
   .tab[aria-current] .n { color: var(--neutral-500); }
   .tab:active { transform: scale(.97); }
-  /* Stuck: same black strip as the site header, tighter, one line under the whole nav stack */
+  /* Stuck: same strip as the site header (navy or white), tighter, one line under the whole nav stack */
   .tabbar.stuck { padding-block: 0 12px; box-shadow: inset 0 -1px 0 var(--line); }
   @media (hover: hover) and (pointer: fine) {
-    .tab:not([aria-current]):hover { background: var(--neutral-800); }
+    .tab:not([aria-current]):hover { background: var(--hover-on-50); }
+    .surface-black .tab:not([aria-current]):hover { background: var(--neutral-800); }
   }
   @media (max-width: 699px) { .tabbar { padding-block: 0 16px; } }
 </style>

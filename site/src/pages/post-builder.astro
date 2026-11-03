@@ -311,7 +311,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   @keyframes pb-in { from { opacity: 0; transform: translateY(6px); } }
   .seg { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 2px; padding: 3px; border-radius: var(--radius-pill); background: var(--bg-muted); }
   .seg > button { min-height: 30px; padding: 0 10px; border: 0; border-radius: var(--radius-pill); background: none; color: var(--text-2); font: 600 11px/1.2 var(--font-mono); text-transform: uppercase; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out); }
-  .seg > button[aria-selected=true] { background: var(--neutral-0); color: var(--neutral-950); box-shadow: 0 1px 3px #0000001f, inset 0 0 0 1px var(--line-card); }
+  .seg > button[aria-selected=true] { background: var(--neutral-0); color: var(--neutral-950); box-shadow: 0 1px 3px #00031a1f, inset 0 0 0 1px var(--line-card); }
   .surface-black .seg > button[aria-selected=true] { box-shadow: none; }
   .seg > button[hidden] { display: none; }
   @media (hover: hover) and (pointer: fine) { .seg > button:not([aria-selected=true]):hover { color: var(--text); } }
@@ -422,7 +422,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .pb-actions .lbl { margin-right: auto; color: var(--text-2); }
   .pb-progress { height: 2px; background: var(--line); overflow: hidden; }
   .pb-progress > span { display: block; height: 100%; background: var(--neutral-950); transform-origin: left; transform: scaleX(var(--p, 0)); transition: transform 120ms linear; }
-  .pb-fit { position: relative; display: grid; place-items: center; min-height: 0; height: calc(100vh - 57px - 140px); border-radius: var(--radius-4); background: var(--bg-subtle); background-image: radial-gradient(circle, #0b0c0d26 1px, transparent 1.5px); background-size: 12px 12px; overflow: hidden; }
+  .pb-fit { position: relative; display: grid; place-items: center; min-height: 0; height: calc(100vh - 57px - 140px); border-radius: var(--radius-4); background: var(--bg-subtle); background-image: radial-gradient(circle, #030a2026 1px, transparent 1.5px); background-size: 12px 12px; overflow: hidden; }
   .pb-scale { position: absolute; left: 50%; top: 50%; transform-origin: center; box-shadow: var(--shadow-pop); }
   .pb-protos { position: absolute; width: 0; height: 0; overflow: hidden; visibility: hidden; pointer-events: none; }
   .toast.on { opacity: 1; transform: translate(-50%, 0); }
@@ -444,7 +444,7 @@ const PASTELS = Array.from({ length: 20 }, (_, i) => i + 1);
   .post { --s: var(--s0); --pad: calc(72px * var(--s)); --e: calc(40px * var(--s)); --gap: calc(36px * var(--s)); --hue: var(--primary-450); position: relative; width: var(--w); height: var(--h); overflow: hidden; background: var(--pbg); color: var(--text); font: 500 calc(28px * var(--s))/1.35 var(--font-sans); letter-spacing: -.04em; text-align: left; -webkit-font-smoothing: antialiased; }
   .post.on-pastel { --line: color-mix(in srgb, var(--neutral-950) 14%, transparent); --line-card: color-mix(in srgb, var(--neutral-950) 10%, transparent); --bg-muted: color-mix(in srgb, var(--neutral-0) 70%, transparent); --text-2: var(--neutral-500); }
   .post .p-bg, .post .p-lines { position: absolute; inset: 0; pointer-events: none; }
-  .post .p-bg.pattern { --pitch: calc(12px * var(--s)); --dot: #0b0c0d24; }
+  .post .p-bg.pattern { --pitch: calc(12px * var(--s)); --dot: #030a2024; }
   .post.surface-black .p-bg.pattern { --dot: var(--neutral-850); }
   /* Top and foot rows hold their element with the same space above and below it: edge → element = element → divider */
   .post .p-grid { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--gap) calc(56px * var(--s)); padding: 0 var(--pad); overflow: hidden; }

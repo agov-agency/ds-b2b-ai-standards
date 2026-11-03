@@ -1,7 +1,7 @@
 ---
 // Footer on every page: the two maintainers as cards, then the legal lines. Home has no submit band, so this is its whole close;
-// elsewhere it follows SubmitBand. Hover fills: DemandSense primary 400 (the wave retints), Agov white (its art crossfades to the inverted
-// render). Figma: DS Report 1125:25361; the Agov art is rendered from there with the card ground baked in, so no blend modes.
+// elsewhere it follows SubmitBand. Hover fills: DemandSense primary 400 (the wave retints), Agov white (its art and logo crossfade to the inverted
+// render). Each card shows the partner's logo; the site button sits in the partner's colour at rest. Figma: DS Report 1125:25361; the Agov art is rendered from there with the card ground baked in, so no blend modes.
 import { arrow } from '../arrows';
 ---
 <footer class="foot surface-black ruled">
@@ -10,17 +10,17 @@ import { arrow } from '../arrows';
     <ul class="cards" role="list" data-reveal>
       <li><a class="card ds" href="https://demandsense.com" target="_blank" rel="noopener">
         <span class="copy">
-          <span class="t-h2 name">DemandSense</span>
+          <span class="name"><img src="/illustrations/partners/ds-white.svg" alt="DemandSense" width="204" height="24"></span>
           <span class="t-p1 desc">The LinkedIn Ads platform for B2B teams, and the people who keep this Standard running</span>
-          <span class="go btn outlined">DemandSense.com <Fragment set:html={arrow('right')} /></span>
+          <span class="go btn">DemandSense.com <Fragment set:html={arrow('right')} /></span>
         </span>
         <span class="art card-wave" aria-hidden="true" data-wave='{"frame":{"x":0.1296,"y":-0.0219,"w":0.8705,"h":1.2,"aspect":1.288,"k":1.507},"fiberScale":0.5}'></span>
       </a></li>
       <li><a class="card agov" href="https://agov.agency" target="_blank" rel="noopener">
         <span class="copy">
-          <span class="t-h2 name">Agov Agency</span>
+          <span class="name"><img src="/illustrations/partners/agov-white.svg" alt="Agov Agency" width="377" height="28"><img class="on" src="/illustrations/partners/agov-black.svg" alt="" width="377" height="28"></span>
           <span class="t-p1 desc">AI-driven design partner for B2B products and companies with ambitious marketing and business objectives</span>
-          <span class="go btn outlined">agov.agency <Fragment set:html={arrow('right')} /></span>
+          <span class="go btn">agov.agency <Fragment set:html={arrow('right')} /></span>
         </span>
         <span class="art" aria-hidden="true"><img src="/illustrations/partners/agov.webp" alt="" width="1336" height="560" loading="lazy"><img class="on" src="/illustrations/partners/agov-hover.webp" alt="" width="1336" height="560" loading="lazy"></span>
       </a></li>
@@ -69,7 +69,16 @@ import { arrow } from '../arrows';
   .card::after { content: ''; position: absolute; z-index: 2; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line-card); pointer-events: none; transition: box-shadow var(--t); }
   .copy { position: relative; z-index: 1; display: grid; grid-template-rows: auto 1fr auto; gap: 16px; max-width: 60%; }
   .desc { color: var(--text-2); max-width: 30em; transition: color var(--t); }
-  .go { justify-self: start; color: var(--text); transition: background-color var(--t), color var(--t), box-shadow var(--t); }
+  /* Logos instead of set names; Agov swaps to its black logo on the white hover fill */
+  .name { display: grid; justify-self: start; }
+  .name img { grid-area: 1 / 1; display: block; width: auto; transition: opacity var(--t); }
+  .ds .name img { height: 32px; }
+  .agov .name img { height: 24px; }
+  .name .on { opacity: 0; }
+  /* Site links in each partner's colour at rest: DemandSense blue, Agov lime */
+  .go { justify-self: start; transition: background-color var(--t), color var(--t), box-shadow var(--t); }
+  .ds .go { background: var(--primary-450); color: var(--neutral-0); }
+  .agov .go { background: var(--partner-agov); color: var(--neutral-1000); }
   .go :global(svg) { transition: transform var(--t); }
   .art { position: absolute; z-index: 0; top: 0; right: 0; bottom: 0; width: 50%; pointer-events: none; }
   /* Wave: the canvas ground is black, so screen blend drops it and leaves the ribbon over whatever fill the card has */
@@ -83,13 +92,14 @@ import { arrow } from '../arrows';
 
   @media (hover: hover) {
     .card:hover .go :global(svg) { transform: translateX(4px); }
-    .card:hover .go { box-shadow: none; } /* filled on hover: white on blue, black on white */
+    /* hover: white on blue, navy on white */
     .ds:hover .go { background: var(--neutral-0); color: var(--neutral-950); }
     .agov:hover .go { background: var(--neutral-950); color: var(--neutral-0); }
     .ds:hover .art { opacity: 1; mix-blend-mode: normal; } /* the wave paints its own primary 400 ground on hover */
     .ds:hover { --text: var(--neutral-0); --text-2: var(--neutral-0); background: var(--primary-400); --line-card: var(--primary-400); }
     .agov:hover { --text: var(--neutral-950); --text-2: var(--neutral-500); background: var(--neutral-0); --line-card: var(--neutral-0); }
-    .agov:hover .art .on { opacity: 1; }
+    .agov:hover .art .on, .agov:hover .name .on { opacity: 1; }
+    .agov:hover .name img:not(.on) { opacity: 0; }
   }
   .card:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 

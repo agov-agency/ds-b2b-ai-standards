@@ -1,12 +1,12 @@
 ---
-// Site-level header on every page (black, never flips to white; transparent at the very top over black): logo, Collection, Authors, actions. The library tab bar is a second level, hubs only.
+// Site-level header on every page. Takes the surface of the section under it: navy over a dark (.surface-black) section, white over a light one; transparent at the very top over dark: logo, Collection, Authors, actions. The library tab bar is a second level, hubs only.
 import { SITE_NAV, T, CONTRIBUTE_URL } from '../site';
 const path = Astro.url.pathname;
 ---
 <header class="site-header surface-black" data-site-header>
   <div class="wrap bar">
     <a class="logo" href="/" aria-label="The B2B AI Standard for LinkedIn Ads, home">
-      <img src="/design-system/brand/logo-b2b.svg" alt="" width="345" height="40">
+      <img class="on-dark" src="/design-system/brand/logo-b2b.svg" alt="" width="345" height="40"><img class="on-light" src="/design-system/brand/logo-b2b-light.svg" alt="" width="345" height="40">
     </a>
     <nav class="nav" aria-label="Site">
       {SITE_NAV.map((n) => {
@@ -24,27 +24,38 @@ const path = Astro.url.pathname;
 <div class="site-spacer" aria-hidden="true"></div>
 
 <script>
-  // At the very top and over a black section: transparent, no line. Fill and line appear once the page scrolls; over a light top (detail pages) it stays filled (DESIGN.md §8.16)
+  // The header (and the library tabs while they stick under it) take the surface of the section right below the nav stack, so the bar is navy
+  // over a dark section and white over a light one. At the very top over dark: transparent, no line (DESIGN.md §8.16)
   const h = document.querySelector<HTMLElement>('[data-site-header]');
+  const tabs = document.querySelector<HTMLElement>('[data-tabbar]');
   const sync = () => {
     if (!h) return;
-    const under = document.elementsFromPoint(innerWidth / 2, h.offsetHeight + 1).find((el) => !h.contains(el));
-    h.classList.toggle('at-top', scrollY <= 0 && !!under?.closest('.surface-black'));
+    const sentinel = document.querySelector('.tab-sentinel');
+    const stuck = !!tabs && !!sentinel && sentinel.getBoundingClientRect().top < h.offsetHeight;
+    const bottom = stuck ? tabs!.getBoundingClientRect().bottom : h.offsetHeight;
+    const under = document.elementsFromPoint(innerWidth / 2, bottom + 1).find((el) => !h.contains(el) && !tabs?.contains(el));
+    const dark = !!under?.closest('.surface-black');
+    h.classList.toggle('surface-black', dark);
+    h.classList.toggle('surface-white', !dark);
+    if (tabs) { tabs.classList.toggle('surface-black', dark || !stuck); tabs.classList.toggle('surface-white', !dark && stuck); }
+    h.classList.toggle('at-top', scrollY <= 0 && dark);
   };
   addEventListener('scroll', sync, { passive: true });
   addEventListener('resize', sync);
+  addEventListener('load', sync);
   sync();
 </script>
 
 <style>
-  /* Always fixed and black (never flips to white); transparent with no line only at the very top. The spacer keeps its place in the flow */
+  /* Always fixed; navy or white by the section under it (the tokens flip with .surface-black), transparent with no line only at the very top. The spacer keeps its place in the flow */
   .site-header { position: fixed; inset: 0 0 auto; z-index: var(--z-sticky); background: var(--bg); color: var(--text); box-shadow: inset 0 -1px 0 var(--line); transition: background-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
   .site-header.tabs-stuck, .site-header.at-top { box-shadow: none; }
   .site-header.at-top { background-color: transparent; }
   .site-spacer { height: var(--site-bar); }
   .bar { display: flex; align-items: center; gap: 32px; height: var(--site-bar); }
-  .logo { display: flex; margin-right: auto; }
-  .logo img { display: block; height: 40px; width: auto; }
+  .logo { display: grid; margin-right: auto; }
+  .logo img { grid-area: 1 / 1; display: block; height: 40px; width: auto; transition: opacity 200ms var(--ease-out); }
+  .site-header.surface-black .on-light, .site-header:not(.surface-black) .on-dark { opacity: 0; }
   .nav { display: flex; gap: 24px; }
   .nav a { font: 600 12px/1.4 var(--font-mono); text-transform: uppercase; color: var(--text-2); transition: color var(--t-fast) ease; }
   .nav a[aria-current] { color: var(--text); }

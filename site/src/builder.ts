@@ -18,7 +18,7 @@ type Data = {
 
 const DEFAULTS = {
   format: 'square', layout: 'a', vpos: 'end', align: 'left',
-  bg: 'black', bgCustom: '#0b0c0d', hue: 'auto', hueCustom: '#3875f6', cover: 0,
+  bg: 'black', bgCustom: '#00031a', hue: 'auto', hueCustom: '#3875f6', cover: 0,
   about: '', lines: true, pattern: false, fade: true,
   logo: true, logoKind: 'mark', logoPos: 'left', logoH: 48, label: true, labelText: '',
   avatar: false, chips: false, chipsText: '', qmark: false, headline: '', context: '', hsize: 'auto', hpx: 80, hmax: 88, tsize: 24, rule: false,
@@ -26,14 +26,14 @@ const DEFAULTS = {
   list: false, listText: '', button: false, buttonText: '',
   author: '', authorStyle: 'byline', aCustom: false, aName: '', aRole: '', aPhoto: '',
   art: { id: 'none', zoom: 1, x: 0, y: 0, t: 0, mono: false, animate: true, frame: 'bleed', photo: '' },
-  wave: { c1: '#3875f6', c2: '#fa8c16', c3: '#3875f6', ground: '#000000', k: 1.37, time: 0 },
+  wave: { c1: '#3875f6', c2: '#fa8c16', c3: '#3875f6', ground: '#00031a', k: 1.37, time: 0 },
 };
 type State = typeof DEFAULTS;
 const FORMATS: Record<string, [number, number]> = { square: [1080, 1080], portrait: [1080, 1350], story: [1080, 1920], wide: [1200, 628], header: [1200, 480], block: [1200, 240], cover: [1920, 1080] };
 const WAVES = {
-  brand: { c1: '#3875f6', c2: '#fa8c16', c3: '#3875f6', ground: '#000000' },
+  brand: { c1: '#3875f6', c2: '#fa8c16', c3: '#3875f6', ground: '#00031a' },
   cta: { c1: '#4aa8ff', c2: '#8a7cff', c3: '#4aa8ff', ground: '#5a8bfb' }, // SiteFooter hover
-  mono: { c1: '#aaadb3', c2: '#ffffff', c3: '#767980', ground: '#000000' },
+  mono: { c1: '#aaadb3', c2: '#ffffff', c3: '#767980', ground: '#00031a' },
 };
 const SPEED = 0.6, FPS = 30; // IsoArt plays pieces at 0.6×
 
