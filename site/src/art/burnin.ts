@@ -50,7 +50,9 @@ function lift(q: number, t: number) {
   const t0 = 3.9 + q * .4, d0 = 6.9 + q * .25;  // down empty at t0, back up with the lamp; down again at d0
   const z = BZ + keys(t, [[t0, 0, IN], [t0 + .45, DOWN, OUT], [t0 + 1.1, 0], [d0, 0, IN], [d0 + .4, DOWN, OUT], [d0 + .85, 0]]);
   const has = t > t0 + .45 && t < d0 + .4, glow = glowAt(q, t);
-  let g = box(-LH, -LH, z - 2, 2 * LH, 2 * LH, 2, 'paper', 'body', 'tint') + socket(z);
+  // The shaft's two far walls show above a lowered pad
+  const walls = z < BZ - .01 ? K.poly([[-LH, -LH, BZ], [-LH, LH, BZ], [-LH, LH, z - 2], [-LH, -LH, z - 2]], 'f body') + K.poly([[-LH, -LH, BZ], [LH, -LH, BZ], [LH, -LH, z - 2], [-LH, -LH, z - 2]], 'f tint') : '';
+  let g = walls + box(-LH, -LH, z - 2, 2 * LH, 2 * LH, 2, 'paper', 'body', 'tint') + socket(z);
   if (has) g += lamp(0, z + 9, glow > .5 ? 'body' : 'paper') + lit(lamp(0, z + 9, 'body'), glow);
   const hole = on(TOP(-LH, -LH, BZ), `<rect class="f blk" width="${2 * LH}" height="${2 * LH}"/>`);
   return { glow, g: hole + (z < BZ - .01 ? `<clipPath id="bi-lift-${q}"><path d="M${shaft}Z"/></clipPath><g clip-path="url(#bi-lift-${q})">${g}</g>` : g) };
@@ -75,8 +77,7 @@ function draw(t: number) {
     else c += lifts[q].g;
     s += at(i, c);
   }
-  const [bx, by] = CELL(BEST), [nx, ny] = CELL(NEW[0]);
-  return hue('a', s) + K.arrow(K.curve([bx, by, BZ + 58], [(bx + nx) / 2 - 10, (by + ny) / 2, BZ + 100], [nx - 4, ny, BZ + 62]), { dot: true });
+  return hue('a', s);
 }
 
 export const burnin: Piece = {

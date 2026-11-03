@@ -97,17 +97,6 @@ export function kernel(extremes: V3[], pad = 16) {
   const curve = (a: V3, c: V3, b: V3, n = 32): V3[] => Array.from({ length: n + 1 }, (_, i) => {
     const u = i / n, v = 1 - u; return [0, 1, 2].map((j) => v * v * a[j] + 2 * v * u * c[j] + u * u * b[j]) as V3;
   });
-  // Dashed motion path ending in a solid triangle head; optional dot at the start (DESIGN §8.17).
-  const arrow = (ps: V3[], { dot = false, head = 11, march = true } = {}) => {
-    const a = P(...ps[ps.length - 2]), b = P(...ps[ps.length - 1]);
-    const len = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1, ux = (b[0] - a[0]) / len, uy = (b[1] - a[1]) / len;
-    const tip = [b[0] + ux * head * .6, b[1] + uy * head * .6], base = [b[0] - ux * head * .4, b[1] - uy * head * .4];
-    const h = [tip, [base[0] - uy * head * .5, base[1] + ux * head * .5], [base[0] + uy * head * .5, base[1] - ux * head * .5]];
-    const s = P(...ps[0]);
-    return `<path class="dash${march ? ' march' : ''}" d="M${pts(ps)}"/>` +
-      `<path class="head" d="M${h.map((p) => p.map(f).join(' ')).join('L')}Z"/>` +
-      (dot ? `<circle class="head" cx="${f(s[0])}" cy="${f(s[1])}" r="4"/>` : '');
-  };
   // Upright prism over any convex plan (a box turned to any angle, a hexagonal post): the walls facing the viewer
   // back to front, then the top. Walls facing +y more than +x take the `front` fill, like box().
   const prism = (plan: [number, number][], z: number, h: number, top = 'paper', side = 'body', front = side) => {
@@ -130,7 +119,7 @@ export function kernel(extremes: V3[], pad = 16) {
     return box(x, y, 0, w, d, 8, 'paper', 'body') + box(x + 4, y + 4, 8, w - 8, d - 8, 4, 'paper', 'tint') +
       `<g transform="${TOP(x + 4, y + 4, 12)}">${ticks}<rect class="det" x="7" y="7" width="${w - 22}" height="${d - 22}"/></g>`;
   };
-  return { P, D, TOP, FRONT, SIDE, on, poly, line, box, prism, plinth, cyl, cylX, cylY, ring, curve, arrow, viewBox: `0 0 ${f(W)} ${f(H)}` };
+  return { P, D, TOP, FRONT, SIDE, on, poly, line, box, prism, plinth, cyl, cylX, cylY, ring, curve, viewBox: `0 0 ${f(W)} ${f(H)}` };
 }
 
 // Hue groups: wrap a part in hue('b', svg) and its body / tint fills take that hue (DESIGN §8.17, coloured slots).

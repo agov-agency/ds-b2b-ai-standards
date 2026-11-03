@@ -18,7 +18,7 @@ const zc = (x: number) => ZA + (ZB - ZA) * (x - XA) / (XB - XA);         // chut
 const TARGET = [1, -1, 3];                                               // per step: column the letter goes to (-1 = owned, rejected)
 
 const K = kernel([[XA - 44, CD + 2, 0], [XA - 44, CD + LD, ZA + 80], [CW + 4, 0, 0], [CW + 4, CD + LD, 0], [0, -4, CH + 8], [CW, -4, CH + 8], [BIN[0], BIN[3], 0], [CW, CD + LD, SILL]], 24);
-const { on, poly, line, box, cyl, cylX, FRONT, TOP, arrow, curve } = K;
+const { on, poly, line, box, cyl, cylX, FRONT, TOP } = K;
 
 const lit = (s: string, a: number) => (a > .01 ? `<g class="lit" style="opacity:${f(Math.min(1, a))}">${s}</g>` : '');
 
@@ -109,7 +109,8 @@ function chute(open: number) {
   // flap, turned down by open about the hinge line at xh
   const a = open * 1.1, L = Math.hypot(FLAP, zc(xh) - zc(XB)), a0 = Math.atan2(zc(XB) - zc(xh), FLAP) - a;
   const fx = xh + L * Math.cos(a0), fz = zc(xh) + L * Math.sin(a0);
-  s += poly([[xh, y0, zc(xh)], [fx, y0, fz], [fx, y1, fz], [xh, y1, zc(xh)]], 'f paper') + cylY2(xh, y0, y1, zc(xh));
+  s += poly([[xh, y1, zc(xh)], [fx, y1, fz], [fx, y1, fz - 1.5], [xh, y1, zc(xh) - 1.5]], 'f body') + poly([[fx, y0, fz], [fx, y1, fz], [fx, y1, fz - 1.5], [fx, y0, fz - 1.5]], 'f body') +
+    poly([[xh, y0, zc(xh)], [fx, y0, fz], [fx, y1, fz], [xh, y1, zc(xh)]], 'f paper') + cylY2(xh, y0, y1, zc(xh));
   return { back: s, front: wall(y1, XA, xh) + poly([[XA, y1, zc(XA)], [xh, y1, zc(xh)], [xh, y1, zc(xh) - 3], [XA, y1, zc(XA) - 3]], 'f blk') };
 }
 const cylY2 = (x: number, y0: number, y1: number, z: number) => line([[x, y0 - 1, z], [x, y1 + 1, z]], 'f');
@@ -190,8 +191,7 @@ function draw(t: number) {
     on(FRONT(MX0 + 2, LY + LD - 2, ZA + LT + 41.4), `<rect class="det" x="6" y="8" width="${MW - 16}" height="22" rx=".8"/>`);
   return FRONT_CLIP + hue('a',
     bin(pile + fall) + plinth() + cubbies() + filed() + inside + near + cabinet() + frame() + ledge() + `<g clip-path="url(#so-front)">${near}</g>` + ch.back +
-    (owned ? moving : moving + lit(moving, 1)) + ch.front + drop + mag) +
-    arrow(curve([MX0 - 30, LY + LD / 2, ZA + 70], [MX0 - 6, LY + LD / 2, ZA + 84], [MX0 + MW / 2, LY + LD / 2, ZA + 52]), { dot: true });
+    (owned ? moving : moving + lit(moving, 1)) + ch.front + drop + mag);
 }
 
 export const sorter: Piece = {

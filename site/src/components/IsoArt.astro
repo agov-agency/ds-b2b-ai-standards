@@ -71,7 +71,7 @@ const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]
   .iso-art :global(.paper) { fill: #fff; }
   .iso-art :global(.tint) { fill: color-mix(in srgb, var(--h) 30%, #fff); }
   .iso-art :global(.body) { fill: color-mix(in srgb, var(--h) 60%, #fff); }
-  .iso-art :global(.blk), .iso-art :global(.head) { fill: var(--ink); }
+  .iso-art :global(.blk) { fill: var(--ink); }
   .iso-art :global(.det) { fill: none; stroke: var(--ink); stroke-width: var(--art-detail); }
   .iso-art :global(.hl) { fill: none; stroke: var(--h); stroke-width: var(--art-line); }
   .iso-art :global(.dashed) { stroke-dasharray: 4 3; }
@@ -81,7 +81,6 @@ const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]
   .iso-art :global(.tube-o) { fill: none; stroke: var(--ink); stroke-width: calc(3px + 2 * var(--art-line)); }
   .iso-art :global(.tube-i) { fill: none; stroke: #fff; stroke-width: 3px; }
   .iso-art :global(.flow) { fill: none; stroke: var(--lit, var(--h)); stroke-width: calc(2 * var(--art-dash)); stroke-dasharray: 3 4; stroke-linecap: butt; stroke-dashoffset: var(--march, 0); }
-  .iso-art :global(.march) { stroke-dashoffset: var(--march, 0); }
   /* `mono` on a light surface: grey and white like the heroes, colour only on the live part */
   .iso-art.mono, .mono :global(:is(.ha, .hb, .hc)) { --h: var(--neutral-300); }
   .mono :global(.lit), .mono :global(.lit :is(.ha, .hb, .hc)) { --h: var(--lit, var(--primary-450)); }
@@ -95,7 +94,6 @@ const at = place ? `; --pr: ${place[0]}px; --pt: ${place[1]}px; --pw: ${place[2]
   .on-dark :global(.body) { fill: var(--neutral-1000); }
   .on-dark :global(.blk) { fill: var(--neutral-1000); }
   .on-dark :global(.dash) { stroke: var(--line); }
-  .on-dark :global(.head) { fill: var(--line); }
   .on-dark :global(.lit) { filter: url(#iso-glow); }
   .on-dark :global(.lit .f) { stroke: var(--lit, var(--h)); }
   .on-dark :global(.lit .det) { stroke: color-mix(in srgb, var(--lit, var(--h)) 60%, var(--neutral-900)); }

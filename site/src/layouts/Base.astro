@@ -5,6 +5,9 @@ await checked;
 // type: scenario/skill/rule pages take that item's colour as the accent (DESIGN §4.6)
 interface Props { title: string; description?: string; type?: 'scenario' | 'skill' | 'rule' }
 const { title, type, description = 'Rules, skills and scenarios for running LinkedIn Ads with AI, each written by a named practitioner' } = Astro.props;
+// One share card for the whole site (src/pages/og.astro, rendered by `npm run og`). The animated WebP goes first; crawlers that skip
+// WebP or animation take the PNG (X reads twitter:image)
+const abs = (p: string) => new URL(p, Astro.site ?? Astro.url).href;
 ---
 <!doctype html>
 <html lang="en">
@@ -13,6 +16,22 @@ const { title, type, description = 'Rules, skills and scenarios for running Link
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content={description}>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The B2B AI Standard for LinkedIn Ads">
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={abs(Astro.url.pathname)}>
+<meta property="og:image" content={abs('/og.webp')}>
+<meta property="og:image:type" content="image/webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image" content={abs('/og.png')}>
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AI changed the game for LinkedIn Ads. But nobody agreed on the rules.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content={abs('/og.png')}>
 <link rel="icon" href="/design-system/brand/mark.svg" type="image/svg+xml">
 <link rel="preload" href="/design-system/fonts/InterVariable.ttf" as="font" type="font/ttf" crossorigin>
 <script is:inline>document.documentElement.classList.add('motion-ready')</script>

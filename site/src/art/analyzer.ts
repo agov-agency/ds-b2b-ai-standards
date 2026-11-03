@@ -9,7 +9,7 @@ const CY = 26, CW = 66, CD = 14, TR = 3.6, TH = 28, CZ = 36;                  //
 const XL = -46, XR = AX1 + 6, BX1 = 256;                                      // cassette rises at XL, sinks at XR; bench end
 const HIT = [1, 3];                                                           // the tubes that react
 const K = kernel([[-52, -14, 0], [BX1, -14, 0], [-52, AD + 22, 0], [BX1, AD + 22, 0], [AX0, 0, BZ + AH + 6], [-46, 0, BZ + TH + 14]], 20);
-const { P, on, line, box, cyl, cylY, FRONT, SIDE, TOP, arrow, curve } = K;
+const { P, on, line, box, cyl, cylY, FRONT, SIDE, TOP } = K;
 
 // Parts of the cassette below the bench top are inside the bench: cut boxes and upright cylinders at z = BZ
 const cbox = (x: number, y: number, z: number, w: number, d: number, h: number, ...c: string[]) => z + h <= BZ + .05 ? '' : box(x, y, Math.max(z, BZ), w, d, z + h - Math.max(z, BZ), ...c);
@@ -63,9 +63,7 @@ function draw(t: number) {
   if (leaving) s += `<clipPath id="an-exit"><path d="M${exitWin}Z"/></clipPath><g clip-path="url(#an-exit)">${cassette(x, dz)}</g>`;
   // Control tube: sealed, in its own stand beside the lane, never goes in
   s += box(AX0 - 34, AD - 6, BZ, 18, 18, 8, 'paper', 'body', 'tint') + tube(AX0 - 25, AD + 3, BZ + 4, .55, 'tint', 'body') + cyl(AX0 - 25, AD + 3, BZ + TH + 8, TR + .6, 2, 'body', 'body') + line([[AX0 - 28.6, AD + 3, BZ + TH + 6], [AX0 - 21.4, AD + 3, BZ + TH + 6]], 'det');
-  // From the hits to the knob
-  const go = curve([AX1 + 40, CY + CD / 2, BZ + TH + 14], [AX1 + 30, AD + 40, BZ + AH], [AX1 - 16, AD + 16, BZ + AH - 14]);
-  return hue('a', s) + arrow(go, { dot: true });
+  return hue('a', s);
 }
 
 export const analyzer: Piece = {

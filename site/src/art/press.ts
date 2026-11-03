@@ -8,7 +8,7 @@ const MX = 28, BX = 112, OX = 198, WALL = BED - 5.5 * SH, STROKE = 16; // sheet 
 const FX = 116, FW = 52, CH = 110, HUB = 166, ARM = 62, BALL = 8, RS = 1.2247; // RS: screen radius of a unit sphere
 const sweep = Array.from({ length: 16 }, (_, i) => [SX + 72 * Math.cos(i * Math.PI / 8), SC + 72 * Math.sin(i * Math.PI / 8), HUB + 26] as V3);
 const K = kernel([[16, 4, 0], [276, 4, 0], [16, 100, 0], [276, 100, 0], ...sweep], 24);
-const { P, on, line, box, cyl, ring, arrow, TOP, FRONT, SIDE } = K;
+const { P, on, line, box, cyl, ring, TOP, FRONT, SIDE } = K;
 const pt = (p: number[]) => `${f(p[0])} ${f(p[1])}`;
 
 // Raw export: header band, ruled rows and columns. Finding: two text bars and a stamp with a check.
@@ -90,7 +90,7 @@ function press(u: number) {
   g += cyl(SX, SC, CH + 18, 13, 6, 'paper', 'body') + cyl(SX, SC, CH + 24, 5, hb - CH - 24, 'tint', 'tint');
   for (let z = hb - 4; z > CH + 23; z -= 4) g += thread(z, CH + 24);
   // The arm swings 60° and only through angles where neither ball crosses in front of the head or column
-  return hue('b', g) + arm(hb, -.49 - 1.05 * down) + `<g style="opacity:${(1 - gone + k(u, 1.7, 2.2)).toFixed(2)}">${arrow([[192, SC, BED + 40], [254, SC, BED + 40]], { dot: true })}</g>`;
+  return hue('b', g) + arm(hb, -.49 - 1.05 * down);
 }
 
 export const skills: Piece = {

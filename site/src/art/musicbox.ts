@@ -16,7 +16,7 @@ const BX = X1 + 30, BY = 22, BR = 20, BH = 32, KZ = ZP + BH + 9;             // 
 const GX = X1 + 34, GY = 120, GZ = ZP + 32;                                  // governor bracket top
 const PY0 = -8, PX = X1 + 64, PY = BASE + 14;
 const K = kernel([[0, PY0, 0], [PX, PY0, 0], [0, PY, 0], [PX, PY, 0], [0, PY0, ZP], [X0, CY, CZ + R + PIN + 4], [X0 - 6, CY, CZ + R + 22], [BX, BY, KZ + 26], [GX, GY, GZ + 28]], 60);
-const { P, D, TOP, SIDE, on, poly, line, box, cyl, cylX, ring, arrow } = K;
+const { P, D, TOP, SIDE, on, poly, line, box, cyl, cylX, ring } = K;
 
 const tx = (i: number) => X0 + 2 + i * PITCH;                                // left edge of tooth / track i
 const arc = (x: number, r: number, a0: number, a1: number, n = 24): V3[] =>
@@ -114,7 +114,6 @@ function draw(t: number) {
     ratchet(ZP + BH, phi, 'body') + ratchet(ZP + BH + 3, phi, 'paper') + cyl(BX, BY, ZP + BH + 3, 3.5, 6, 'paper', 'body')) +
     on(vplane(BX, BY, KZ, phi - 1.24), `<path class="f blk" d="M-3 0V-5C-3-9-16-9-16-17C-16-25-6-26 0-19C6-26 16-25 16-17C16-9 3-9 3-5V0Z"/>` + circ('f paper', -8.5, -17, 2.6) + circ('f paper', 8.5, -17, 2.6));
   svg += hue('a', block(X1 + 8, true) + governor(TAU * 4 * t / PERIOD + 1.86));
-  svg += arrow(arc(X0 - 6, R + 18, 2.3, .35, 24));
   return svg;
 }
 

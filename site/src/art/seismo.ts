@@ -42,8 +42,8 @@ function draw(t: number) {
     s += `<path class="det" d="M${pts.join('L')}"/>`;
     if (j === KICK) {
       const seg: V3[] = [];
-      for (let y = PY; y <= Y1 - 2; y += .75) if (bump(m(y)) !== 0) seg.push([ln.x + val(j, m(y)), y, TZ]);
-      if (seg.length > 1) kick = rope(K, seg, 1.8, 'f body');
+      for (let y = PY; y <= Y1 - 2; y += .25) if (bump(m(y)) !== 0) seg.push([ln.x + val(j, m(y)), y, TZ]);
+      if (seg.length > 1) kick = rope(K, seg, 1.1, 'f body');
     }
   });
   s += lit(kick);
@@ -51,14 +51,14 @@ function draw(t: number) {
   s += box(X0 - 8, PY - 40, TZ, 6, 6, 18, 'paper', 'body') + box(X1 + 2, PY - 40, TZ, 6, 6, 18, 'paper', 'body', 'tint') + K.cylX(X0 - 8, X1 + 8, PY - 37, TZ + 18, 2.6);
   LANES.forEach((ln, j) => {
     const tip: V3 = [ln.x + val(j, m(PY)), PY, TZ], pv: V3 = [ln.x, PY - 37, TZ + 18], hot = j === KICK && bump(m(PY)) !== 0;
-    const arm = line([pv, [tip[0], tip[1] - 4, TZ + 6]], 'tube-o') + line([pv, [tip[0], tip[1] - 4, TZ + 6]], 'tube-i') + cyl(ln.x, PY - 37, TZ + 14, 3.4, 8, 'paper', 'body');
+    const end: V3 = [tip[0], tip[1] - ln.tip * .4, TZ + 6], arm = line([pv, end], 'tube-o') + line([pv, end], 'tube-i') + cyl(ln.x, PY - 37, TZ + 14, 3.4, 8, 'paper', 'body');
     const pen = cyl(tip[0], tip[1], TZ + .5, ln.tip, 8, 'paper', 'body') + cyl(tip[0], tip[1], TZ + 8.5, ln.tip * .55, 3, 'paper', 'tint');
     s += arm + (hot ? lit(pen) : pen);
   });
   s += roll(Y1, R1, off / R1);
   // Drive: a motor box beside the take-up roll
   s += box(X1 + 14, Y1 - 14, BZ, 14, 22, 20, 'paper', 'body', 'tint') + cyl(X1 + 21, Y1 - 3, BZ + 20, 4, 3, 'paper', 'body');
-  return hue('a', s) + K.arrow([[X1 + 18, Y0 + 14, TZ + 2], [X1 + 18, Y1 - 30, TZ + 2]], { dot: true });
+  return hue('a', s);
 }
 
 export const seismo: Piece = {

@@ -48,8 +48,8 @@ Values marked *(derived)* have no Figma comp yet and were set from the shipped r
 
 | Surface | Background | Used for | Text | Lines |
 |---|---|---|---|---|
-| **Black** (`.surface-black`) | `neutral/1000` #000 | Hero (always), CTA sections (always), strategic summary in report | white / `neutral/300` | `neutral/800` #2d2f33 |
-| **White** (default) | `neutral/0` #fff | Every other section | `neutral/950` / `neutral/500` | `neutral/100` #e2e3e6 |
+| **Black** (`.surface-black`) | `neutral/1000` #00031a (navy) | Hero (always), CTA sections (always), strategic summary in report | white / `neutral/300` | `neutral/800` #252f42 |
+| **White** (default) | `neutral/0` #fff | Every other section | `neutral/950` / `neutral/500` | `neutral/100` #e1e3e7 |
 Rules
 - Hero is black, always. CTA sections are black, always. The rest is white. Never alternate white/gray section backgrounds.
 - Figma still shows a navy CTA card (`primary/900`) on the landing and a blue `#004ebf` CTA band in the report. Both are superseded: CTAs are black.
@@ -69,8 +69,8 @@ The headline is one continuous text block with two color spans. Same size, same 
 
 | Surface | Tone 1 | Tone 2 |
 |---|---|---|
-| White | `neutral/950` #0b0c0d | `neutral/500` #767980 |
-| Black | `neutral/0` #fff | `neutral/300` #aaadb3 (report uses #767980 on large sizes) |
+| White | `neutral/950` #030a20 | `neutral/500` #737985 |
+| Black | `neutral/0` #fff | `neutral/300` #a9adb4 (report uses `neutral/500` on large sizes) |
 
 - Sizes in use: hero 48 (landing) / 56 (report), section 40, report section 28, feature block 24, quote 28/1.4.
 - **Page title (h1) = `display`** (`.t-display`, 48 / 1.05, mobile 36) on every page of the landing and the tool: Directory, hubs and detail pages alike (Agov, 22 Oct). One h1 per page; no other size for page titles.
@@ -98,7 +98,7 @@ Every section's main header (the top-level headline and its body) divides the co
 
 ### 4.1 Primitives (Figma `Colors` collection, all 66 variables)
 
-**Neutral**: 0 `#ffffff` · 25 `#f8f8f9` · 50 `#f0f1f2` · 75 `#e9eaec` · 100 `#e2e3e6` · 200 `#c6c8cc` · 300 `#aaadb3` · 500 `#767980` · 800 `#2d2f33` · 850 `#212326` · 900 `#161719` · 950 `#0b0c0d` · 1000 `#000000`. Alpha: `0-10` `#ffffff1a`, `1000-10` `#0000001a`. Transparent stops for fade gradients: `25-0` `#f8f8f900`, `800-0` `#2d2f3300`, `1000-0` `#00000000` (in the Figma file, not in the earlier 66-variable count).
+**Neutral** (navy-tinted since 2026-11-03: "black" is dark navy `#00031a`; every step keeps its old lightness on the navy hue, chroma fading toward white): 0 `#ffffff` · 25 `#f7f8fb` · 50 `#eff1f4` · 75 `#e8eaed` · 100 `#e1e3e7` · 200 `#c5c8cd` · 300 `#a9adb4` · 500 `#737985` · 800 `#252f42` · 850 `#182337` · 900 `#0c162b` · 950 `#030a20` · 1000 `#00031a`. Never a pure `#000` on screen. Alpha: `0-10` `#ffffff1a`, `1000-10` `#00031a1a`. Transparent stops for fade gradients: `25-0` `#f7f8fb00`, `800-0` `#252f4200`, `1000-0` `#00031a00` (in the Figma file, not in the earlier 66-variable count).
 
 **Primary (blue)**: 200 `#a4bcff` · 300 `#7ba0ff` · 450 `#3875f6` · 850 `#001a4c` · 900 `#00113a` · side `#78d7ff`.
 
@@ -617,11 +617,11 @@ Code: `tokens.css` (section "Figures and infographics"), `word-reveal.js`. Visua
 
 The site's own two nav bars (the main site header, and the Directory / Scenarios / Skills / Rules pill tabs on the hub pages). Not the demandsense.com chrome in §8.8.
 
-- **Always black.** Both bars stay on the black surface on every page and at every scroll position. They never flip to white, whatever section is under them.
+- **Follows the section under it** (since 2026-11-03). The nav stack takes the surface of the section right below it: navy (`.surface-black`) over a dark section, white (`.surface-white`) over a light one, with a 200ms colour crossfade and the logo swapping between its dark and light versions.
 - **At the very top (page not scrolled), over a black hero** (Directory, hubs, Authors): the site header is transparent (the hero and its wave show through) and has no bottom line.
 - **Over a white or light top** (detail pages with a tinted or white hero): the header stays filled black with its line even at the very top. A transparent header over a light surface is never used.
 - **Once the page scrolls:** the site header fills black and gets its 1px bottom line (`--line` on black). Fill and line fade in together, 200ms `--ease-out`; nothing else changes.
-- **Tab bar:** sits in the black hero; once it sticks under the site header it stays black, tightens its bottom padding (24 → 12) and takes over the single bottom line for the whole stack (the header drops its own while the tabs are stuck).
+- **Tab bar:** sits in the black hero; once it sticks under the site header it follows the header's surface, tightens its bottom padding (24 → 12) and takes over the single bottom line for the whole stack (the header drops its own while the tabs are stuck).
 - Hub heroes reserve four headline lines (`min-height: 4lh` on the h1) so the tabs sit at the same height on all four hubs.
 
 ### 8.17 Illustration style *(AI Resource site, extracted 2026-10-23 from 7 reference images in `docs/illustration-refs/`)*
@@ -638,7 +638,7 @@ Applies to every illustration on the site: hub heroes, footer CTA, scenario cove
 |---|---|---|---|
 | Outline | `--art-line` | 0.6px | Outer contour of each part, the live part too |
 | Detail | `--art-detail` | 0.45px | Inner edges, ribs, rings, ticks, glyphs, text-stand-in bars |
-| Dash | `--art-dash` | 0.9px | Dashed motion paths; flow inside a tube at 2× |
+| Dash | `--art-dash` | 0.9px | Static dashed detail lines; flow inside a tube at 2× |
 
 Round joins and caps. Lines close cleanly at corners; no sketchy overshoot except on figures.
 
@@ -655,10 +655,10 @@ Top faces read lightest (paper), sides darker (body). That is the only "lighting
 
 **Black accents.** Solid `--neutral-950` fills, used sparingly as punctuation, never as a large area:
 - *Thickness slab:* one visible edge of a thin object (laptop base, phone, calendar spine, the front sheet of a stack) is a solid black extrusion 3–5 px deep.
-- *Arrowheads and pins:* solid filled triangles at the end of every dashed path; solid dots at origins.
+- *No arrowheads, pins or dashed motion paths* (decided 2026-10-30): the moving part shows the motion itself.
 - *One dark part:* at most one solid black element per piece (a screen, a visor, a slot, a ring binding).
 
-**Dashed paths.** The motion vocabulary. Ink, 1.5–2.5 wide, dash about 2× gap (e.g. 8 / 5), butt caps. Curved, straight or zigzag, they show direction or flow, start from a dot or from behind the object and end in a solid triangle head. They may pass behind the object (break at the occluding edge). At most three per piece; one is typical.
+**No dashed motion paths.** Dropped 2026-10-30: dashed arrows with triangle heads and origin dots read as annotations stuck on top of the drawing. Motion is shown by the parts moving; flow inside a tube (`.flow`) stays.
 
 **Glyphs and details.** Outline glyphs (currency, check, plus, percent) drawn as shapes, not type. **No words or numbers inside a drawing** (the "Send" button in ref-3 is the one thing we don't take). Text stand-ins are rounded bars in tint. Motion marks: three short parallel strokes for speed, scalloped arcs for puffs. Repeated identical slices (coin stacks, sheets, keys) give rhythm.
 
@@ -673,13 +673,13 @@ Top faces read lightest (paper), sides darker (body). That is the only "lighting
 | Skill | Small | Monochrome from the skill's area cover | Static |
 | Rule | Small | Monochrome from the rule's area cover | Static |
 
-Small slots drop detail-weight lines under ~1px rendered and keep at most one dashed path.
+Small slots drop detail-weight lines under ~1px rendered.
 
-**Motion (auto only).** No hover, press, focus or key triggers. The part that does the work moves along iso axes or along its dashed path; dashed paths march (`stroke-dashoffset`). Loops of 3–8 s with a rest beat. Every move eases with Figma's "Slow" spring (mass 1, stiffness 80, damping 20: no overshoot, long soft settle), about a second per move; only steady rotations and marching dashes run linear. Each frame is redrawn from the piece's pure `draw(t)`, so moving parts stay in correct depth order. Pause when off-screen. `prefers-reduced-motion`: show the rest frame, no loop. Every animated piece ships its rest frame as a static SVG, which is also the card/static variant.
+**Motion (auto only).** No hover, press, focus or key triggers. The part that does the work moves along iso axes; flow inside tubes marches (`stroke-dashoffset`). Loops of 3–8 s with a rest beat. Every move eases with Figma's "Slow" spring (mass 1, stiffness 80, damping 20: no overshoot, long soft settle), about a second per move; only steady rotations and marching flow run linear. Each frame is redrawn from the piece's pure `draw(t)`, so moving parts stay in correct depth order. Pause when off-screen. `prefers-reduced-motion`: show the rest frame, no loop. Every animated piece ships its rest frame as a static SVG, which is also the card/static variant.
 
-**Heroes and footer CTA: no panel, big, cropped** (decided 2026-10-23). The art sits straight on the section: on the black hub hero and on the white CTA card, with no pastel field behind it. It is scaled up around the piece's `focus` (the part that matters) and bleeds off the hero's right and bottom edges, or the CTA card's edges; the section crops it. On black heroes the art switches to the iso-glow look (`dark`): faces `--neutral-950` (tops) and `--neutral-1000` (sides), hairlines a 55/45 mix of `--neutral-500` and `--neutral-800` at 0.6px (detail `--neutral-800` at 0.45px, dashes 0.9px), dashed paths and heads in the hairline grey; only the live part (`.lit`: the open drawer, the plucked teeth and pins, the die and finding card, the parts that pass the gauge) is primary blue with a soft, wide glow (SVG blur 10, 70% opacity). The art fills the right of the hero from under the header to the hero's bottom edge, starts where the headline ends and bleeds off the right; hidden below 1000px. The footer CTA keeps the coloured light version. Pastel fields stay for cards (scenario covers, skill and rule art).
+**Heroes and footer CTA: no panel, big, cropped** (decided 2026-10-23). The art sits straight on the section: on the black hub hero and on the white CTA card, with no pastel field behind it. It is scaled up around the piece's `focus` (the part that matters) and bleeds off the hero's right and bottom edges, or the CTA card's edges; the section crops it. On black heroes the art switches to the iso-glow look (`dark`): faces `--neutral-950` (tops) and `--neutral-1000` (sides), hairlines a 55/45 mix of `--neutral-500` and `--neutral-800` at 0.6px (detail `--neutral-800` at 0.45px); only the live part (`.lit`: the open drawer, the plucked teeth and pins, the die and finding card, the parts that pass the gauge) is primary blue with a soft, wide glow (SVG blur 10, 70% opacity). The art fills the right of the hero from under the header to the hero's bottom edge, starts where the headline ends and bleeds off the right; hidden below 1000px. The footer CTA keeps the coloured light version. Pastel fields stay for cards (scenario covers, skill and rule art).
 
-**Build.** Kernel `site/src/art/iso.ts` (projection, `box`, `cyl`, `cylX/Y`, `curve`, `arrow`, `hue`). Each piece is a module exporting a `Piece` with a pure `draw(t)`; register it in `site/src/art/index.ts` and place it with `<IsoArt name="…" field="var(--pastel-N)" />`, which renders the rest frame at build time and replays `draw(t)` every frame while on screen, at 0.6× speed. Hub heroes add `has-art` to `.hero` (`<IsoArt … dark place={[right, top, w, h]} clip={w} class="hero-art" />`): copy then tally stack on the left on every hub (the directory shows entries and practitioners) so all four heroes are one height. Each piece's size and position come from the designer's layout in Figma `962:39212` ("Section 2", at 1512 wide): `place` pins the SVG to the hero's right edge and the top of the black band, `clip` is how far the visible box reaches in from the right. The art runs from under the header to the bottom of the black hero, with 160px fades into the black at the top and the bottom, and never changes the hero's size. The footer CTA art is pinned the same way inside the card, behind the copy; below 1000px it falls back to a fitted 4:3 box above the copy. The footer CTA uses `zoom={1.45}` and bleeds to the card's edges. Hues follow the item type colours (2026-10-23): a = scenario `#FA8C16`, b = skill `#02BCFD`, c = rule `#1764FF` (`--scenario-300`, `--skill-300`, `--rule-300`, set once on `.iso-panel` in `IsoArt.astro`). On a black hero the glow takes the hero's own type (`accent="scenario|skill|rule"`); the directory's open drawer takes its bank's colour. Pieces: directory = card-catalogue cabinet (`catalogue.ts`), footer CTA = card tray with a blank card filing itself (`tray.ts`).
+**Build.** Kernel `site/src/art/iso.ts` (projection, `box`, `cyl`, `cylX/Y`, `curve`, `hue`). Each piece is a module exporting a `Piece` with a pure `draw(t)`; register it in `site/src/art/index.ts` and place it with `<IsoArt name="…" field="var(--pastel-N)" />`, which renders the rest frame at build time and replays `draw(t)` every frame while on screen, at 0.6× speed. Hub heroes add `has-art` to `.hero` (`<IsoArt … dark place={[right, top, w, h]} clip={w} class="hero-art" />`): copy then tally stack on the left on every hub (the directory shows entries and practitioners) so all four heroes are one height. Each piece's size and position come from the designer's layout in Figma `962:39212` ("Section 2", at 1512 wide): `place` pins the SVG to the hero's right edge and the top of the black band, `clip` is how far the visible box reaches in from the right. The art runs from under the header to the bottom of the black hero, with 160px fades into the black at the top and the bottom, and never changes the hero's size. The footer CTA art is pinned the same way inside the card, behind the copy; below 1000px it falls back to a fitted 4:3 box above the copy. The footer CTA uses `zoom={1.45}` and bleeds to the card's edges. Hues follow the item type colours (2026-10-23): a = scenario `#FA8C16`, b = skill `#02BCFD`, c = rule `#1764FF` (`--scenario-300`, `--skill-300`, `--rule-300`, set once on `.iso-panel` in `IsoArt.astro`). On a black hero the glow takes the hero's own type (`accent="scenario|skill|rule"`); the directory's open drawer takes its bank's colour. Pieces: directory = card-catalogue cabinet (`catalogue.ts`), footer CTA = card tray with a blank card filing itself (`tray.ts`).
 
 ## 9. Page patterns
 

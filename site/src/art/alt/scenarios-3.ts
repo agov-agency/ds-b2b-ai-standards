@@ -55,7 +55,7 @@ const sorter = (() => {
     s += box(164, 4, BZ, 32, 32, 16, 'tint', 'body', 'tint') + on(TOP(164, 4, BZ + 16), `<rect class="f paper" x="2.5" y="2.5" width="27" height="27"/><rect class="f tint" x="4" y="4" width="24" height="24"/>`);
     s += poly([[150, 10, ZT + 6], [176, 10, BZ + 22], [176, 30, BZ + 22], [150, 30, ZT + 6]], 'f tint') + poly([[150, 30, ZT + 6], [176, 30, BZ + 22], [176, 30, BZ + 26], [150, 30, ZT + 10]], 'f body');
     s += box(166, 26, BZ + 16, 3, 3, 4, 'paper', 'body');
-    return hue('a', s) + K.arrow([[XH + 14, CY, ZT + 22], [XO - 12, CY, ZT + 22]], { dot: true });
+    return hue('a', s);
   }
   return { aria: 'A shape sorter. Blocks of three shapes rise onto its lid and slide over a triangular cut-out; only the triangle drops through, the others ride on into the return hopper.', period: PERIOD, rest: 1.6 + 1.9, viewBox: K.viewBox, focus: [0.45, 0.5], draw } as Piece;
 })();
@@ -110,7 +110,7 @@ const rails = (() => {
     s += rail(1) + posts(1);
     // End box: the balls that fit all the way roll in through its back
     s += box(XE, CY - 17, BZ, 30, 34, ZR + 24 - BZ, 'paper', 'body', 'tint') + on(FRONT(XE, CY + 17, ZR + 24), `<rect class="det" x="5" y="6" width="20" height="14" rx="1"/>`) + on(TOP(XE, CY - 17, ZR + 24), `<rect class="det" x="4" y="4" width="22" height="26" rx="1"/>`);
-    return hue('a', s) + K.arrow([[16, CY, ZR + 22], [XB - 24, CY, ZR + 22]], { dot: true });
+    return hue('a', s);
   }
   return { aria: 'Two grading rails spread apart over a bench. Balls roll out of a hopper and each drops through the gap where it stops fitting; only the biggest rolls the whole way into the end box.', period: PERIOD, rest: 4.6, viewBox: K.viewBox, focus: [0.5, 0.5], draw } as Piece;
 })();
@@ -160,8 +160,7 @@ const dishes = (() => {
       const q = [0, 2, 4].indexOf(i), turn = keys(t, [[3.1 + q * .35, 0, EASY], [5.9 + q * .35, TAU]]);
       return dish(i, AZ[i] + turn, EL, 0);
     }).join('');
-    const into = (i: number) => { const n = nrm(AZ[i], EL), [x, y] = POS[i], h: V3 = [x + 16 * n[0], y + 16 * n[1], ZP + 16 * n[2]], s0 = SRC(i); return K.arrow([s0, add(s0, [h[0] - s0[0], h[1] - s0[1], h[2] - s0[2]], .5), add(h, n, 5)], { dot: true }); };
-    return hue('a', s) + into(1) + into(3);
+    return hue('a', s);
   }
   return { aria: 'A field of six dish antennas. Five listen to different patches of sky and one stays under its cover; two catch the signal and hold, the other three swing round to try somewhere new.', period: PERIOD, rest: 2.4, viewBox: K.viewBox, focus: [0.45, 0.55], draw } as Piece;
 })();
@@ -213,7 +212,7 @@ const forks = (() => {
     // Rail and the mallet carriage in front of the box
     s += box(-8, 30, BZ, 186, 4, 3, 'paper', 'body');
     s += box(cx - 7, 28, BZ + 3, 14, 8, 6, 'paper', 'body', 'tint') + cyl(cx, 32, BZ + 9, 1.6, 27, 'paper', 'body') + cylY(FY + 6, 31, cx, BZ + 38, 1, 'paper', 'body') + cylY(FY + 1.4, FY + 6, cx, BZ + 38, 3, 'paper', 'body');
-    return hue('a', s) + K.arrow([[4, 42, BZ], [150, 42, BZ]], { dot: true });
+    return hue('a', s);
   }
   return { aria: 'Six tuning forks on a sounding box. A mallet runs along and taps five while the sixth wears a damper; two ring, the three that stayed silent sink into the box and fresh ones rise in their slots.', period: PERIOD, rest: 4.4, viewBox: K.viewBox, focus: [0.5, 0.5], draw } as Piece;
 })();

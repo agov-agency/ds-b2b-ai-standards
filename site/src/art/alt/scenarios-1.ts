@@ -23,7 +23,7 @@ const Y = (() => {
   const QX0 = 196, QX1 = 240, QY0 = 34, QY1 = 66, QH = 34;                  // depot the wagons come out of
   const WL = 34, WW = 16, ROUTE = [1, 2, 0], STAMP = 0;                     // wagon length / width; siding per step; the owned one
   const K = kernel([[-50, -6, 0], [250, -6, 0], [-50, 102, 0], [250, 102, 0], [SX0, SY0, BZ + SH + 6], [QX0, QY0, BZ + QH + 40]], 22);
-  const { P, on, poly, line, box, prism, SIDE, FRONT, TOP, arrow, curve } = K;
+  const { P, on, poly, line, box, prism, SIDE, FRONT, TOP } = K;
   const sm = (u: number) => u * u * (3 - 2 * u);
   const yAt = (x: number, i: number) => { const u = Math.min(1, Math.max(0, (XS - x) / (XS - XE))); return LEAD + (LANE[i] - LEAD) * sm(u); };
   const slope = (x: number, i: number) => { const u = (XS - x) / (XS - XE); return u <= 0 || u >= 1 ? 0 : -(LANE[i] - LEAD) * 6 * u * (1 - u) / (XS - XE); };
@@ -81,7 +81,7 @@ const Y = (() => {
     let s = K.plinth(-50, -6, 300, 108) + rails + shedBack + (inSink ? w : '') + shed();
     if (outSink) s += inSink ? `<clipPath id="a-yard"><path d="M${slab(K, SX1, SX1 + 300, LANE[i] - WW / 2 - 1, LANE[i] + WW / 2 + 1, BZ, BZ + 24)}Z"/></clipPath><g clip-path="url(#a-yard)">${w}</g>` : w;
     s += lever(pos) + depot();
-    return hue('a', s) + arrow(curve([QX0 + 30, LEAD, BZ + QH + 44], [QX0 - 4, LEAD, BZ + QH + 40], [QX0 - 14, LEAD, BZ + 26]), { dot: true });
+    return hue('a', s);
   }
   return {
     aria: 'A shunting yard. Box wagons roll out of a depot; a lever throws the points so each runs down its own siding into a shed, and the stamped wagon goes to the far siding.',
@@ -98,7 +98,7 @@ const T = (() => {
   const LOAD = -Math.PI / 2, DEST = [1, 2, 3], STAMP = 3;                       // load at the back; quarter turns to each parcel's hatch
   const MZ = TZ + 18, MY = -PR;                                                 // magazine bottom, its centre y
   const K = kernel([[-86, -86, 0], [86, -86, 0], [-86, 86, 0], [86, 86, 0], [0, MY, MZ + 54], [0, -78, MZ + 60]], 22);
-  const { P, on, poly, line, box, prism, cyl, TOP, arrow, curve } = K;
+  const { P, on, poly, line, box, prism, cyl, TOP } = K;
   const at = (a: number, r: number): P2 => [r * Math.cos(a), r * Math.sin(a)];
 
   // A parcel: a square box turned with the table (sides along radial / tangential), tape across the top, a tag or the
@@ -158,7 +158,7 @@ const T = (() => {
     s += back.sort((p, q) => p[0] - q[0]).map((p) => p[1]).join('');
     s += cyl(0, 0, BZ, 18, TZ - 5 - BZ, 'paper', 'body') + table(th);
     s += front.sort((p, q) => p[0] - q[0]).map((p) => p[1]).join('');
-    return hue('a', s) + arrow(curve([-40, MY, MZ + 72], [-16, MY, MZ + 84], [0, MY, MZ + 56]), { dot: true });
+    return hue('a', s);
   }
   return {
     aria: 'A rotary indexing table. Parcels drop from a magazine onto it; each quarter turn brings a parcel to its owner\'s ram, which pushes it into a hatch, and the stamped parcel rides round to the last hatch.',
@@ -172,7 +172,7 @@ const W = (() => {
   const PERIOD = 8, BZ = 12, TZ = 168, A = .42, FW = 176;                      // beam height, swing amplitude (rad), frame width
   const PEND = [{ x: 34, L: 46, n: 4, r: 6 }, { x: 70, L: 70, n: 3, r: 7 }, { x: 106, L: 96, n: 2, r: 8 }, { x: 142, L: 124, n: 1, r: 9 }];
   const K = kernel([[-14, -66, 0], [FW + 14, -66, 0], [-14, 72, 0], [FW + 14, 72, 0], [-10, 0, TZ + 14], [FW + 10, 0, TZ + 14]], 22);
-  const { P, on, line, box, cyl, cylX, FRONT, TOP, arrow, curve } = K;
+  const { P, on, line, box, cyl, cylX, FRONT, TOP } = K;
   const ball = (x: number, y: number, z: number, r: number, cls = 'paper') => {
     const [sx, sy] = P(x, y, z);
     return `<circle class="f ${cls}" cx="${f(sx)}" cy="${f(sy)}" r="${r}"/><path class="det" d="M${f(sx - r * .62)} ${f(sy - r * .1)}A${r * .7} ${r * .7} 0 0 1 ${f(sx + r * .1)} ${f(sy - r * .62)}"/>`;
@@ -218,7 +218,7 @@ const M = (() => {
   const ST = [{ x: 44, n: 4, ph: 0 }, { x: 86, n: 3, ph: .5 }, { x: 128, n: 2, ph: 1.1 }, { x: 170, n: 1, ph: 2.3 }];
   const MZ = BZ + 16, SHOE = 9, STEM = ZS + RC - (MZ + SHOE);                   // mortar top, shoe height, stem length to the tappet
   const K = kernel([[-6, -16, 0], [W + 30, -16, 0], [-6, 44, 0], [W + 30, 44, 0], [0, -10, ZS + 50], [W, 0, ZS + 50], [W + 26, 0, ZS + 22]], 22);
-  const { on, poly, line, box, cyl, cylX, SIDE, FRONT, TOP, arrow, curve } = K;
+  const { on, poly, line, box, cyl, cylX, SIDE, FRONT, TOP } = K;
   // Cam profile: each lobe rises slowly over RISE radians, then drops off a cliff; the stamp falls with it
   const RISE = .95;
   const rad = (psi: number, n: number) => { const q = TAU / n, u = ((psi % q) + q) % q; return RC + (u < RISE ? LIFT * (1 - Math.cos(u / RISE * Math.PI)) / 2 : u < RISE + .3 ? LIFT * (1 + Math.cos((u - RISE) / .3 * Math.PI)) / 2 : 0); };

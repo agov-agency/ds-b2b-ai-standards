@@ -18,7 +18,7 @@ import DetailCta from '../../components/detail/DetailCta.astro';
 import RuleRow from '../../components/RuleRow.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { arrow } from '../../arrows';
-import { T } from '../../site';
+import { T, COMMUNITY_URL, INSTALL } from '../../site';
 import { area } from '../../areas';
 
 export async function getStaticPaths() {
@@ -45,11 +45,12 @@ const cta = {
 };
 ---
 <Base type="scenario" title={`${d.title} · ${T.scenarios} · The B2B AI Standard for LinkedIn Ads`} description={d.description}>
-  <DetailHero cover={d.cover} crumbs={[{ label: 'Collection', href: '/collection' }, { label: T.scenarios, href: '/scenarios' }, { label: d.title }]}
+  <DetailHero cover={d.cover} crumbs={[{ label: 'Collection', href: '/' }, { label: T.scenarios, href: '/scenarios' }, { label: d.title }]}
     chips={[{ label: area(d.category).title }, { label: d.cadence, out: true }]} author={author} title={d.title} lead={d.description} facts={facts}>
     <Fragment slot="actions">
       {p.get && <a class="btn filled" href="#h-get">Get the install command</a>}
       {p.get?.source && <a class="btn outlined" href={p.get.source} rel="noopener">Source on GitHub <Fragment set:html={arrow('up', 'ext')} /></a>}
+      <p class="join t-p2">Using it? <a href={COMMUNITY_URL}>Join the community <Fragment set:html={arrow('right')} /></a></p>
     </Fragment>
     {d.connectors.length > 0 && <div slot="facts"><dt class="lbl">Runs with</dt><dd><Connectors items={d.connectors} /></dd></div>}
     <ItemArt slot="art" data={d}><ScenarioCover /></ItemArt>
@@ -58,7 +59,7 @@ const cta = {
   <DetailFrame toc={toc}>
     {p.catches && <Catches {...p.catches} />}
     {p.comesBack && <OutputGallery title={p.comesBack.headline} context={p.comesBack.context} items={p.comesBack.items} />}
-    {p.get && <GetIt {...p.get} />}
+    {p.get && <GetIt {...p.get} install={INSTALL} />}
     {p.using.length > 0 && <UsingTiles headline={p.usingHead?.headline} context={p.usingHead?.context} items={p.using} />}
     {p.steps.length > 0 && <StepFlow steps={p.steps} />}
     {rules.length > 0 && (

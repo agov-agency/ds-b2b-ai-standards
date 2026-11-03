@@ -6,9 +6,12 @@ const PERIOD = 8, TAU = 2 * Math.PI, N = 3, ROW = 74, MX = 178;           // row
 const JY = 0, JD = 14, PZ = 58, TR = 17, TH = 56, ZM = 9;                     // jack depth; beam pivot height; tank radius / height; main line z
 const YE = (N - 1) * ROW + 30;
 const K = kernel([[-10, -24, 0], [MX + 8, -24, 0], [-10, YE + 30, 0], [MX + 8, YE + 30, 0], [-40, 0, PZ + 30], [140, 8, TH + 12]], 22);
-const { P, poly, line, box, cyl, cylX, cylY, arrow } = K;
+const { P, poly, line, box, cyl, cylX, cylY } = K;
 
 type P2 = [number, number];
+const FY = -18;                                                               // flow line from the wellhead to the tank, y
+// A square fitting where two pipes meet at a right angle
+const elbow = (x: number, y: number, z = 8, r = 3.6) => box(x - r, y - r, z - r, 2 * r, 2 * r, 2 * r, 'paper', 'body', 'tint');
 // A flat part lying in the x-z plane between y0 and y1: back face, the side walls that face the viewer, front face
 function plate(pts: P2[], y0: number, y1: number, face = 'paper', side = 'body') {
   let s = '';
@@ -29,8 +32,8 @@ function jack(x0: number, th: number) {
   for (let q = 0; q < 24; q++) { const m = (lo + hi) / 2; if (Math.hypot(px + 38 * Math.cos(m) - pin[0], PZ + 38 * Math.sin(m) - pin[1]) < PL) lo = m; else hi = m; }
   const phi = (lo + hi) / 2;
   let s = box(x0, JY, 0, 92, JD, 4, 'paper', 'body', 'tint');
-  // Wellhead and its flow line out the back
-  s += cylY(-24, JY + 4, x0 + 8, 8, 2.6) + cyl(x0 + 8, JY + JD / 2, 4, 5, 6, 'paper', 'body') + cyl(x0 + 8, JY + JD / 2, 10, 2.6, 8, 'paper', 'body');
+  // Wellhead and its flow line out the back, turning at an elbow towards the tank
+  s += cylY(FY, JY + 4, x0 + 8, 8, 2.6) + elbow(x0 + 8, FY) + cyl(x0 + 8, JY + JD / 2, 4, 5, 6, 'paper', 'body') + cyl(x0 + 8, JY + JD / 2, 10, 2.6, 8, 'paper', 'body');
   // Samson post: two legs to the pivot
   s += plate([[px - 16, 4], [px - 12, 4], [px + 1, PZ - 2], [px - 1, PZ - 2]], JY + 2, JY + 5) + plate([[px + 12, 4], [px + 16, 4], [px + 1, PZ - 2], [px - 1, PZ - 2]], JY + 2, JY + 5);
   // Gearbox and crank with its counterweight, turning
@@ -57,7 +60,7 @@ function tank(x: number, y: number, lvl: number, open: number) {
   // Outlet to the main line with its valve and handwheel
   const wx = x + TR + 13, a = open * TAU;
   const flowing = Math.min(1, open * 3);
-  s += cylX(x + TR - 2, MX - 4, y, ZM, 2.8) + (flowing > .01 ? `<g style="opacity:${f(flowing)}">${line([[x + TR, y, ZM + 2.8], [MX - 4, y, ZM + 2.8]], 'flow')}</g>` : '') + box(wx - 4, y - 5, ZM - 5, 8, 10, 10, 'paper', 'body', 'tint') + cyl(wx, y, ZM + 5, 1.4, 8, 'paper', 'body');
+  s += cylX(x + TR, MX, y, ZM, 2.8) + cylX(x + TR - .5, x + TR + 1.5, y, ZM, 4.2) + (flowing > .01 ? `<g style="opacity:${f(flowing)}">${line([[x + TR, y, ZM + 2.8], [MX - 4, y, ZM + 2.8]], 'flow')}</g>` : '') + box(wx - 4, y - 5, ZM - 5, 8, 10, 10, 'paper', 'body', 'tint') + cyl(wx, y, ZM + 5, 1.4, 8, 'paper', 'body');
   const [sx, sy] = P(wx, y, ZM + 13);
   const spokes = [0, 1, 2].map((q) => { const b = a + q * TAU / 3; return `<path class="det" d="M${f(sx)} ${f(sy)}L${f(sx + 7 * Math.cos(b))} ${f(sy + 3.5 * Math.sin(b))}"/>`; }).join('');
   s += `<ellipse class="f body" cx="${f(sx)}" cy="${f(sy)}" rx="8" ry="4"/><g class="lit" style="opacity:${f(flowing)}"><ellipse class="f body" cx="${f(sx)}" cy="${f(sy)}" rx="8" ry="4"/></g><ellipse class="f paper" cx="${f(sx)}" cy="${f(sy - 1)}" rx="6" ry="3"/>${spokes}`;
@@ -74,12 +77,12 @@ function draw(t: number) {
     const open = k(u, 5.4, 5.9) - k(u, 7.3, 7.9), lvl = lerp(.12, 1, Math.min(1, u / 5.4)) - .88 * k(u, 5.8, 7.2);
     const [dx, dy] = K.D(0, i * ROW, 0);
     main = Math.max(main, Math.min(1, open * 3));
-    s += `<g transform="translate(${f(dx)} ${f(dy)})">${cylX(8, 120 - TR, -18, 8, 2.6) + jack(0, th) + tank(122, 6, lvl, open)}</g>`;
+    s += `<g transform="translate(${f(dx)} ${f(dy)})">${cylY(FY, 0, 122, 8, 2.6) + cylX(8, 122, FY, 8, 2.6) + elbow(122, FY) + jack(0, th) + tank(122, 6, lvl, open)}</g>`;
   }
   // Main line along the side on low supports
-  const ml = [-10, 60, 130].map((y) => box(MX - 5, y, 0, 10, 6, ZM - 4, 'paper', 'body')).join('') + cylY(-24, YE, MX, ZM, 4, 'paper', 'tint') +
+  const ml = [-10, 60, 130].map((y) => box(MX - 2.5, y, 0, 5, 5, ZM - 3.5, 'paper', 'body')).join('') + cylY(-26, -24, MX, ZM, 5.4, 'paper', 'body') + cylY(-24, YE, MX, ZM, 4, 'paper', 'tint') +
     (main > .01 ? `<g style="opacity:${f(main)}">${line([[MX, 6, ZM + 4], [MX, YE, ZM + 4]], 'flow')}</g>` : '');
-  return hue('a', s + ml) + arrow([[MX, YE - 6, ZM + 12], [MX, YE + 26, ZM + 12]], { dot: true });
+  return hue('a', s + ml);
 }
 
 export const pumpjack: Piece = {

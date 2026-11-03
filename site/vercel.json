@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/sanity-img/:path*", "destination": "https://cdn.sanity.io/images/:path*" }
+  ]
+}

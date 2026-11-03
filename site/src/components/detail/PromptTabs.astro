@@ -22,7 +22,7 @@ const { headline, context, tabs, install = [] } = Astro.props;
     {install.length > 0 && (
       <div class="inst">
         <p class="t-h6 ihead">Rather not paste it? <span class="tone-2">Install it instead</span></p>
-        <p class="t-p2 body">Add it to Claude Code once and call it by name on any export</p>
+        <p class="t-p2 body sub">Add it to Claude Code once and call it by name on any export</p>
         {install.map((o, i) => (
           <div class="code">
             <div class="bar"><span class="lbl">{o.label}</span><CopyButton data-copy-inst={`pi-${i}`} /></div>
@@ -88,6 +88,7 @@ const { headline, context, tabs, install = [] } = Astro.props;
   /* Install instead: a smaller two-tone headline and one body line over the install block(s) */
   .inst { display: grid; gap: 16px; margin-top: 24px; }
   .inst .body { color: var(--text-body); }
+  .inst .sub { margin-top: -8px; }
   .inst .bar .lbl { color: var(--text-2); }
   @media (prefers-reduced-motion: reduce) { .panel:not([hidden]) { animation: none; } .tab::after { transition: none; } }
 </style>

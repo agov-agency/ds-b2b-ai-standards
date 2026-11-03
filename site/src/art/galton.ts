@@ -11,7 +11,7 @@ const PIV = [BW / 2, 46], FL = 36, SW = 1.2;                                 // 
 const SERVE = 1.15, YC = BT + 6, ZW = (x: number) => 30 - (XD - x) * .034, ZP = (x: number) => 30 - (x - XD) * .06;  // trough floor
 const WX = -22, PX = BW + 14, RIM = 24;                                       // where the trough drops into each box; box rim
 const K = kernel([[-44, -26, 0], [BW + 34, BT + 20, 0], [-44, BT + 20, 0], [BW + 26, -26, TOP + 6], [-6, -6, TOP + 6]], 22);
-const { P, on, box, cylX, poly, SIDE, FRONT, TOP: TOPF, arrow } = K;
+const { P, on, box, cylX, poly, SIDE, FRONT, TOP: TOPF } = K;
 const circ = (cls: string, x: number, y: number, r = BALL) => `<circle class="f ${cls}" cx="${f(x)}" cy="${f(y)}" r="${r}"/>`;
 const sphere = (p: V3, cls: string) => { const [sx, sy] = P(...p); return circ(cls, sx, sy); };
 
@@ -125,7 +125,7 @@ function draw(t: number) {
   s += cylX(BW + 4, BW + 12, BT / 2 - 2, zk, 2.2) + cylX(BW + 12, BW + 22, BT / 2 - 2, zk, 7, 'paper', 'tint') +
     on(SIDE(BW + 22, BT / 2 - 2, zk), `<g class="lit"><path class="f body" d="M${f(-5 * Math.sin(turn))} ${f(-5 * Math.cos(turn))}L${f(5 * Math.sin(turn))} ${f(5 * Math.cos(turn))}"/></g><circle class="det" r="2"/>`);
   s += on(TOPF(-4, -4, TOP + 4), `<rect class="det" x="${BW / 2 - 20}" y="3" width="40" height="${BT - 2}" rx="1"/>`);
-  return hue('a', s) + arrow(K.curve([BW + 34, BT / 2, zk + 22], [BW + 40, BT / 2 + 6, zk], [BW + 30, BT / 2 + 8, zk - 16]), { dot: true });
+  return hue('a', s);
 }
 
 export const galton: Piece = {

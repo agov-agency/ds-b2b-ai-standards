@@ -4,23 +4,23 @@
   Semantic layer, grid and motion = this design system (see ../DESIGN.md).
 */
 :root {
-  /* ---------- Primitives: neutral ---------- */
+  /* ---------- Primitives: neutral. Navy-tinted (2026-11-03): 1000 is #00031a, the rest keep their old lightness on the same hue, chroma fading toward white ---------- */
   --neutral-0: #ffffff;
-  --neutral-25: #f8f8f9;
-  --neutral-50: #f0f1f2;
-  --neutral-75: #e9eaec;
-  --neutral-100: #e2e3e6;
-  --neutral-200: #c6c8cc;
-  --neutral-300: #aaadb3;
-  --neutral-500: #767980;
-  --neutral-800: #2d2f33;
-  --neutral-850: #212326;
-  --neutral-900: #161719;
-  --neutral-950: #0b0c0d;
-  --neutral-1000: #000000;
+  --neutral-25: #f7f8fb;
+  --neutral-50: #eff1f4;
+  --neutral-75: #e8eaed;
+  --neutral-100: #e1e3e7;
+  --neutral-200: #c5c8cd;
+  --neutral-300: #a9adb4;
+  --neutral-500: #737985;
+  --neutral-800: #252f42;
+  --neutral-850: #182337;
+  --neutral-900: #0c162b;
+  --neutral-950: #030a20;
+  --neutral-1000: #00031a;
   --neutral-0-10: #ffffff1a;
-  --neutral-1000-10: #0000001a;
-  --neutral-25-0: #f8f8f900; --neutral-800-0: #2d2f3300; --neutral-1000-0: #00000000; /* transparent stops for fades */
+  --neutral-1000-10: #00031a1a;
+  --neutral-25-0: #f7f8fb00; --neutral-800-0: #252f4200; --neutral-1000-0: #00031a00; /* transparent stops for fades */
 
   /* ---------- Primitives: primary (blue) ---------- */
   --primary-200: #a4bcff;
@@ -33,6 +33,7 @@
   --primary-850: #001a4c;
   --primary-900: #00113a;
   --primary-side: #78d7ff;
+  --partner-agov: #03df02;  /* Agov Agency lime: footer partner card button */
 
   /* ---------- Primitives: secondary (orange), status ---------- */
   --secondary-300: #fa8c16;
@@ -88,7 +89,7 @@
   --pressed: var(--neutral-500);           /* any solid fill pressed */
   --hover-on-1000: var(--neutral-800);     /* loading tab hovered (same as 950) */
   --hover-0-10: #ffffff40;  --pressed-0-10: #ffffff59;
-  --hover-1000-10: #00000040; --pressed-1000-10: #00000066;
+  --hover-1000-10: #00031a40; --pressed-1000-10: #00031a66;
 
   /* ---------- Semantic: white surface (default) ---------- */
   --bg: var(--neutral-0);
@@ -154,10 +155,10 @@
   --t-build: 700ms;  /* chart build-in */
 
   /* ---------- Elevation (floating layers only) ---------- */
-  --shadow-pop: 0 8px 28px #0003;
-  --shadow-dialog: 0 20px 80px #0003;
+  --shadow-pop: 0 8px 28px #00031a33;
+  --shadow-dialog: 0 20px 80px #00031a33;
   --blur-glass: 24px;  /* blur button backdrop */
-  --shadow-lift: 0 8px 24px #0000000f;                                   /* rail card hover */
+  --shadow-lift: 0 8px 24px #00031a0f;                                   /* rail card hover */
   --shadow-halo: 0 0 0 4px #76798026, 0 0 0 8px #7679801a;               /* pinned chart avatar */
 
   /* ---------- Layers (fixed scale; no 9999) ---------- */
@@ -203,6 +204,16 @@
   color: var(--text);
 }
 
+/* White surface as a class: for something that sits inside a black section but shows white (the site header over a light section) */
+.surface-white {
+  --bg: var(--neutral-0); --bg-subtle: var(--neutral-25); --bg-muted: var(--neutral-50);
+  --text: var(--neutral-950); --text-2: var(--neutral-500); --text-body: var(--neutral-800); --text-meta: var(--neutral-300);
+  --line: var(--neutral-100); --line-card: var(--neutral-75); --line-field: var(--neutral-1000-10);
+  --action: var(--neutral-950); --action-text: var(--neutral-0);
+  background: var(--bg);
+  color: var(--text);
+}
+
 /* Item-type scope (DESIGN §4.6): a scenario, skill or rule page (on body) and every card or row of that type re-point the accent */
 [data-type="scenario"] { --accent: var(--scenario-300); --accent-on: var(--neutral-950); }
 [data-type="skill"] { --accent: var(--skill-300); --accent-on: var(--neutral-950); }
@@ -216,7 +227,7 @@
                      Put it on a pattern-only layer; it masks the element's own background too. */
 .pattern, .pattern-on-black {
   --pitch: 6px;
-  --dot: #0b0c0d40;
+  --dot: #030a2040;
   --r: calc(var(--pitch) / 6);
   background-image: radial-gradient(circle, var(--dot) var(--r), transparent calc(var(--r) + .5px));
   background-size: var(--pitch) var(--pitch);

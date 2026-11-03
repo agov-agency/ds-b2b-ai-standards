@@ -10,7 +10,7 @@ const PITCH = 50, YS = G + 13, MOVE = .7;                          // slot spaci
 const GO = .9, REJ = 1.75, PERIOD = 2 * GO + REJ, SHUT = 2.1;      // two go steps, the reject step; lid shut (s into it)
 const TX = BW + 1, TW = 54, TY = G, TD = 30, TZ = 14;               // reject bin hung on the bench side, lid clear of the knob
 const K = kernel([[0, BD, 0], [BW, BD, 0], [TX + TW, TY + TD, TZ], [TX + TW + 9, TY, RT + TW], [RX, HB, RT + 26], [CX, -56, RT + 38], [BW, 0, ZT]], 64);
-const { on, poly, line, box, cylX, cylY, arrow, curve, FRONT, TOP, SIDE } = K;
+const { on, poly, line, box, cylX, cylY, FRONT, TOP, SIDE } = K;
 const m3 = (a: number) => ((a % 3) + 3) % 3;
 const sm = (x: number) => { const c = Math.min(1, Math.max(0, x)); return c * c * (3 - 2 * c); };
 const screw = (x: number, y: number) => `<circle class="f paper" cx="${x}" cy="${y}" r="3.2"/><path class="det" d="M${x - 2} ${y + 2}L${x + 2} ${y - 2}"/>`;
@@ -38,7 +38,6 @@ const BENCH = hue('c',
   on(TOP(0, 0, ZT), screw(20, 14) + screw(20, BD - 14)) +
   box(RX, HB, ZT, RW, FF - HB, RT - ZT, 'paper', 'body', 'body') + on(SIDE(BW, FF, RT), `<path class="det" d="${ticks}"/>`) +
   line([[CX - 27, HB, RT], [CX - 27, FF, RT]], 'det') + line([[CX + 27, HB, RT], [CX + 27, FF, RT]], 'det'));
-const PASS = arrow(curve([CX, HF - 24, RT + 10], [CX, -40, RT + 10], [CX, -56, RT + 38]));
 const MOUTH = on(FRONT(NX, HF, RT + NH), `<rect class="f blk" width="${NW}" height="${NH}"/>`);
 const OUTLET = hue('c', block(HB, HF, 26, screw(8, 3) + screw(RW - 8, 3)) +
   on(TOP(RX, HB, RT + 26), [14, 22].map((y) => `<line class="det" x1="14" y1="${y}" x2="${RW - 14}" y2="${y}"/>`).join('')));
@@ -104,6 +103,6 @@ export const rules: Piece = {
       // Colour rides the move: it glows up over the slide out of the feed hood (slot 2 to 1), dims over the slide into the outlet.
       L[y < HF ? 0 : y < G ? 1 : y < G + 3 ? 2 : 3] += part(CX, y, RT, big, big ? 0 : sm(2 + s) * sm(2 - s));
     }
-    return BENCH + PASS + MOUTH + L[0] + OUTLET + NOTCH + L[1] + GATE + L[2] + INSERT + pusher(e) + L[3] + FEED + bin(L[4], phi);
+    return BENCH + MOUTH + L[0] + OUTLET + NOTCH + L[1] + GATE + L[2] + INSERT + pusher(e) + L[3] + FEED + bin(L[4], phi);
   },
 };

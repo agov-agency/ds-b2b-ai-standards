@@ -46,7 +46,8 @@ function machine(dx: number, typed: string[], fade: number, key: number, press: 
   s += box(cx(-20), 18, HZ, BW + 40, 40, 10, 'paper', 'body', 'tint');
   s += on(FRONT(cx(-20), 58, HZ + 10), Array.from({ length: 37 }, (_, i) => `<line class="det" x1="${10 + i * 8}" y1="${i % 5 ? 3 : 1}" x2="${10 + i * 8}" y2="7"/>`).join(''));
   for (const x of [40, BW - 48]) s += box(cx(x), 22, HZ + 10, 8, 10, 6, 'paper', 'body', 'tint');
-  s += line([[cx(-30), PLY, PLZ + 8], [cx(-36), PLY + 10, PLZ + 22], [cx(-40), PLY + 22, PLZ + 30]], 'f nofill');
+  const arm: [number, number, number][] = [[cx(-30), PLY, PLZ + 8], [cx(-36), PLY + 10, PLZ + 22], [cx(-40), PLY + 22, PLZ + 30]];
+  s += line(arm, 'tube-o') + line(arm, 'tube-i');
   s += cyl(cx(-40), PLY + 22, PLZ + 27, 3.5, 5, 'paper', 'body');
   s += cylX(cx(-36), cx(-20), PLY, PLZ, 12, 'paper', 'body') + cylX(cx(-20), cx(-14), PLY, PLZ, 7, 'paper', 'body');
   // Paper rest: a tall plate behind the sheet with ruled guides

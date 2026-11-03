@@ -41,7 +41,7 @@ const boom = ((): Piece => {
   const RZ = 98, SZ = 88, NZ = 66, ZS = 12 + PH, G = 320, DT = .1;                 // boom pipe, screw, nozzle tip, soil heights; drop gravity, spacing
   const XA = PX0 + PS * 1.5, XB = PX0 + PS * 6.5, XL = -14, XR = PX0 + PS * (N - 1) + 18;  // bar stops (between two pots); posts
   const K = kernel([[-54, 0, 0], [XR + 26, 0, 0], [-54, 52, 0], [XR + 26, 52, 0], [-34, PY, RZ + 6], [XR + 14, PY, SZ + 12]], 22);
-  const { P, on, line, box, cyl, cylX, FRONT, SIDE, TOP, arrow, curve } = K;
+  const { P, on, line, box, cyl, cylX, FRONT, SIDE, TOP } = K;
   const pot = (i: number) => PX0 + i * PS;
   const bar = (t: number) => keys(wrap(t, PERIOD), [[0, XA], [3.2, XA, EASY], [4.6, XB], [8.4, XB, EASY], [9.8, XA]]);
   const floor = (x: number) => { const i = Math.round((x - PX0) / PS); return i >= 0 && i < N && Math.abs(x - pot(i)) < PR - 1 ? ZS : 12; };
@@ -85,7 +85,7 @@ const boom = ((): Piece => {
     // Handwheel on the end of the screw
     s += cylX(XR + 3, XR + 8, PY, SZ, 1.4) + cylX(XR + 8, XR + 11, PY, SZ, 9, 'paper', 'tint') +
       on(SIDE(XR + 11, PY, SZ), `<circle class="det" r="7"/>${spokes(4, turn, 2, 7)}<circle class="f blk" r="1.4"/><circle class="f paper" cx="${f(7 * Math.cos(turn))}" cy="${f(7 * Math.sin(turn))}" r="1.8"/>`);
-    return hue('a', s) + arrow(curve([XR + 22, PY, SZ + 22], [XR + 30, PY + 6, SZ], [XR + 20, PY + 8, SZ - 16]), { dot: true });
+    return hue('a', s);
   }
   return {
     aria: 'An irrigation boom over a row of pots. Water from a tank rains from two nozzles onto bare soil until a handwheel walks the spray bar over the two pots that have sprouts.',
@@ -103,7 +103,7 @@ const launcher = ((): Piece => {
   const PV: P2 = [32, 58], BL = 34, AH = 30 * Math.PI / 180, AL = 0;            // barrel pivot (x, z), length to the muzzle; high and low aim
   const BX0 = 104, BX1 = 136, WX1 = 186, CD = 30, BH = 16, CH = 30, CY = PY - CD / 2;  // basket x range, bin far end; depth, basket and bin height
   const K = kernel([[-10, -2, 0], [WX1 + 8, -2, 0], [-10, 54, 0], [WX1 + 8, 54, 0], [20, PY, 80], [90, PY, 108]], 22);
-  const { P, on, box, cylY, FRONT, SIDE, TOP, arrow, curve } = K;
+  const { P, on, box, cylY, FRONT, SIDE, TOP } = K;
   const aim = (t: number) => keys(wrap(t, PERIOD), [[0, AH], [3.2, AH, EASY], [4.6, AL], [8.4, AL, EASY], [9.8, AH]]);
   const muzzle = (a: number): P2 => [PV[0] + BL * Math.cos(a), PV[1] + BL * Math.sin(a)];
   const sphere = (x: number, y: number, z: number, cls: string) => { const [sx, sy] = P(x, y, z); return `<circle class="f ${cls}" cx="${f(sx)}" cy="${f(sy)}" r="${BALL}"/>`; };
@@ -139,7 +139,7 @@ const launcher = ((): Piece => {
     }
     const weave = on(FRONT(BX0, CY + CD, 12 + BH), [6, 12, 18, 24].map((x) => `<line class="det" x1="${x}" y1="2" x2="${x}" y2="${BH - 2}"/>`).join('') + `<line class="det" x1="2" y1="${BH / 2}" x2="${BX1 - BX0 - 2}" y2="${BH / 2}"/>`);
     s += lit(crateOut(K, BX0, CY, BX1 - BX0, CD, BH) + weave) + crateOut(K, BX1, CY, WX1 - BX1, CD, CH);
-    return hue('a', s) + arrow(curve([4, PY + 22, 52], [-6, PY + 28, 34], [6, PY + 26, 16]), { dot: true });
+    return hue('a', s);
   }
   return {
     aria: 'A ball-pitching machine. Aimed high, its balls fly over a small basket into a big bin; the elevation wheel lowers the barrel and the balls land in the basket.',
@@ -156,7 +156,7 @@ const millrace = ((): Piece => {
   const PERIOD = 8, FZ = 96, FY0 = -12, FY1 = 4, WY = 20, XE = 214, TY0 = 8, TY1 = 32;  // flume floor, its y; wheel plane; flume end; tailrace y
   const W = [{ x: 40, r: 28 }, { x: 116, r: 28 }, { x: 186, r: 16 }], GX = 186, SYM = TAU / 8;
   const K = kernel([[-48, -18, 0], [252, -18, 0], [-48, 44, 0], [252, 44, 0], [-48, -18, 112], [GX, WY, FZ + 34]], 22);
-  const { on, line, box, cylY, FRONT, SIDE, TOP, arrow, curve } = K;
+  const { on, line, box, cylY, FRONT, SIDE, TOP } = K;
   const gate = (t: number) => k(t, 1.4, 2.2) - k(t, 6, 6.8);
   const drive = (s: number) => k(s, 2, 3.2) - k(s, 6.4, 7.6);
   // The small wheel's angle is the integral of its water, scaled so the loop ends on a whole bucket step
@@ -195,7 +195,7 @@ const millrace = ((): Piece => {
     s += box(GX - 5, WY - 5.5, FZ + 2 + lift, 10, 2, 12, 'paper', 'tint', 'tint') + box(GX - 1, WY - 5.5, FZ + 14 + lift, 2, 2, 20, 'paper', 'body') + box(GX - 7, WY - 6, FZ + 33, 14, 3, 2, 'paper', 'body');
     // Culvert at the end of the tailrace
     s += box(XE + 20, TY0 - 6, 12, 24, TY1 - TY0 + 12, 30, 'paper', 'body', 'tint') + on(SIDE(XE + 44, TY1 + 6, 42), `<rect class="det" x="4" y="4" width="${TY1 - TY0 + 4}" height="22"/>`);
-    return hue('a', s) + arrow(curve([GX + 20, WY, FZ + 16], [GX + 24, WY + 4, FZ + 30], [GX + 10, WY + 4, FZ + 40]), { dot: true });
+    return hue('a', s);
   }
   return {
     aria: 'A mill race. A raised flume drops water onto three waterwheels; the two big ones spin, the small one stays dry until its sluice gate lifts and it spins up.',
@@ -213,7 +213,7 @@ const coupling = ((): Piece => {
   const XP = -14, XB = 10, XM = 80, XS = 176, XS1 = 268, X1 = 150, RUN = 100;     // tunnel mouths, curves start / end, shed x range; front wagon stop; run into the shed
   const TR = [-30, 30, 0];                                                       // tracks in the order the wagons come out
   const K = kernel([[-44, -50, 0], [XS1 + 4, -50, 0], [-44, 50, 0], [XS1 + 4, 50, 0], [XS + 20, 0, 70]], 22);
-  const { P, on, line, box, prism, FRONT, SIDE, TOP, arrow, curve } = K;
+  const { P, on, line, box, prism, FRONT, SIDE, TOP } = K;
   // Each track as a polyline with arc lengths: straight out of its tunnel, an S-curve into the main line, on to the shed
   const path = TR.map((y) => {
     const pts: P2[] = [[-40, y], [XB, y]];
@@ -293,7 +293,7 @@ const coupling = ((): Piece => {
     s += box(XS, y0, ZR, XS1 - XS, SW, SH, 'paper', 'body', 'tint') + on(FRONT(XS, y0 + SW, ZR + SH), [1, 2, 3, 4, 5, 6, 7].map((q) => `<rect class="det" x="${q * 12 - 4}" y="10" width="6" height="8" rx=".5"/>`).join(''));
     s += K.poly([[XS1, y0, ZR + SH], [XS1, y0 + SW, ZR + SH], [XS1, 0, ZR + SH + 14]], 'f body') + K.poly([[XS, y0 + SW, ZR + SH], [XS1, y0 + SW, ZR + SH], [XS1, 0, ZR + SH + 14], [XS, 0, ZR + SH + 14]], 'f paper');
     s += box(XS + 30, -4, ZR + SH + 12, 10, 8, 8, 'paper', 'body', 'tint');
-    return hue('a', s) + arrow(curve([X1 - 50, 0, ZR + 40], [X1, 0, ZR + 56], [XS - 4, 0, ZR + 36]), { dot: true });
+    return hue('a', s);
   }
   return {
     aria: 'A rail yard. Three wagons with the same company mark come out of three tunnels, run onto one line, couple into one train and go into one shed together.',
