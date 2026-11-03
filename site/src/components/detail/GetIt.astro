@@ -19,7 +19,7 @@ const { intro, context, options, note, source, sourceNote, install = [] } = Astr
     {install.length > 0 && (
       <div class="inst">
         <p class="t-h6">Rather not paste it? <span class="tone-2">Install it instead</span></p>
-        <p class="t-p2 body">Add it to Claude Code once and call it by name on any export</p>
+        <p class="t-p2 body sub">Add it to Claude Code once and call it by name on any export</p>
         {install.map((o, i) => (
           <div class="code">
             <div class="code-bar"><span class="lbl">{o.label}</span><CopyButton data-copy={`inst-${i}`} /></div>
@@ -61,6 +61,7 @@ const { intro, context, options, note, source, sourceNote, install = [] } = Astr
   pre { margin: 0; padding: 20px; overflow-x: auto; font: 500 14px/1.7 var(--font-mono); letter-spacing: 0; color: var(--text); }
   .inst { display: grid; gap: 16px; margin-top: 24px; }
   .inst .body { color: var(--text-body); }
+  .inst .sub { margin-top: -8px; }
   .ul { color: var(--text); border-bottom: 1px solid transparent; transition: border-color var(--t-fast) var(--ease-out); }
   @media (hover: hover) and (pointer: fine) { .ul:hover { border-color: var(--text); } }
 </style>

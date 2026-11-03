@@ -59,8 +59,8 @@ const hasFacts = facts.length > 0 || Astro.slots.has('facts');
   .lead { max-width: 56ch; margin-top: var(--gap-body); color: var(--text-body); }
   .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
   /* Community line under the buttons: a quiet second call, so the install button stays the one action */
-  .actions :global(.join) { flex-basis: 100%; margin: 12px 0 0; color: var(--text-2); }
-  .actions :global(.join a) { display: inline-flex; align-items: center; gap: 6px; padding: 10px 0; white-space: nowrap; color: var(--text); text-decoration: underline 1px var(--line-card); text-underline-offset: 6px; transition: text-decoration-color var(--t-fast) ease; }
+  .actions :global(.join) { flex-basis: 100%; margin: 0; color: var(--text-2); }
+  .actions :global(.join a) { display: inline-flex; align-items: center; gap: 6px; padding: 8px 0; white-space: nowrap; color: var(--text); text-decoration: underline 1px var(--line-card); text-underline-offset: 6px; transition: text-decoration-color var(--t-fast) ease; }
   .actions :global(.join svg) { width: 14px; height: 14px; flex: none; transition: transform var(--t-fast) var(--ease-out); }
   @media (hover: hover) and (pointer: fine) { .actions :global(.join a:hover) { text-decoration-color: var(--text); } .actions :global(.join a:hover svg) { transform: translateX(2px); } }
   @media (prefers-reduced-motion: reduce) { .actions :global(.join svg) { transition: none; } }
