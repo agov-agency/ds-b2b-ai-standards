@@ -1,0 +1,191 @@
+---
+// Why we exist (/why-we-exist, the home page until 3 Nov 2026): the Standard's landing. Copy from the live site (the-ai-standard-site.netlify.app); structure from the brief of 26 Oct 2026.
+// Black from the hero through the problem scene, white for the why-AI-fails block and the collection, black again for authors + form.
+import { getCollection } from 'astro:content';
+import { arrow } from '../arrows';
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import IsoArt from '../components/IsoArt.astro';
+import Problem from '../components/home/Problem.astro';
+import Meet from '../components/home/Meet.astro';
+import Why from '../components/home/Why.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { T, QUOTES as quotes } from '../site';
+
+const nRules = (await getCollection('rules')).length;
+// How the Standard is built: one card per library list, in build order. Rules and Skills side by side, Scenarios full width below (text left, art right)
+const hubs = [
+  { type: 'rule', art: 'rules', label: T.rules, href: '/rules', count: nRules, title: 'Start with the judgement AI is missing.', context: `When frequency is too high for an audience, when a CTR drop means fatigue, when an audience is big enough to count as warm. ${nRules} rules to start` },
+  { type: 'skill', art: 'skills', label: T.skills, href: '/skills', count: (await getCollection('skills')).length, title: 'Let AI apply the rules to your data.', context: 'A skill pulls your numbers, reads them the way the rules say, and tells you what to change' },
+  { type: 'scenario', art: 'scenarios', label: T.scenarios, href: '/scenarios', count: (await getCollection('scenarios')).length, title: 'Turn routine work into one run.', context: 'The Monday review across accounts, or the list of warm accounts for sales, done in one go. Each step is a skill, and each skill rests on a rule' },
+] as const;
+const go = arrow('right', 'go');
+const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
+---
+<Base title="Why we exist · The B2B AI Standard for LinkedIn Ads">
+
+  <div class="top surface-black ruled">
+    <SiteHeader />
+    <section class="wrap hero" aria-labelledby="h-hero">
+      <div class="copy">
+        <h1 id="h-hero" class="headline t-h1">AI changed the game for LinkedIn Ads. <span class="tone-2">But nobody agreed on the rules.</span></h1>
+        <p class="t-p1 body lead">A standard for making ads work with AI, without taking its word for it.</p>
+        <div class="ctas">
+          <a class="btn brand lg" href="/scenarios">See the scenarios <Fragment set:html={go} /></a>
+          <a class="btn outlined lg" href="/rules">Read the {nRules} rules</a>
+        </div>
+      </div>
+      <!-- Stand-in: the Scenarios hero piece until the home illustration is drawn -->
+      <IsoArt name="scenarios" dark accent="scenario" zoom={1.5} class="hero-art" />
+    </section>
+
+    <section class="wrap quotes-sec" aria-labelledby="h-quotes">
+      <div class="quotes-head">
+        <p class="marker">Why we wrote it</p>
+        <h2 id="h-quotes" class="headline t-h3">Why the Standard had to exist. <span class="tone-2">In the words of the people who run the accounts</span></h2>
+      </div>
+      <ul class="quotes scroll-snap-x to-edges" data-quotes data-reveal>
+        {quotes.map((q) => (
+          <li class="quote">
+            <svg class="qmark" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13L7 0h6L9 12h5v12zm18 0V13l7-13h6l-4 12h5v12z" /></svg>
+            <blockquote>
+              <p class="t-h6">{q.text}</p>
+            </blockquote>
+            <p class="by">{q.photo ? <img class="ini" src={q.photo} alt="" width="40" height="40" loading="lazy" /> : <span class="ini" aria-hidden="true">{ini(q.name)}</span>}<span><span class="t-p2">{q.name}</span><span class="t-p2 tone-2">{q.company}</span></span></p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+
+  <main id="main">
+    <Problem />
+
+    <div class="ruled">
+      <Why />
+
+      <section class="blk wrap bleed dir" aria-labelledby="h-dir">
+        <div class="dir-head">
+          <p class="marker">Collection</p>
+          <h2 id="h-dir" class="headline t-h3">How the Standard is built. <span class="tone-2">Each part builds on the one before it, and it all starts with the rules</span></h2>
+        </div>
+        <ul class="picks" data-reveal>
+          {hubs.map((h) => (
+            <li class:list={{ wide: h.type === 'scenario' }}><a class="pick" data-type={h.type} href={h.href}>
+              <span class="cover" aria-hidden="true"><IsoArt name={h.art} accent={h.type} mono zoom={1.3} /></span>
+              <span class="txt">
+                <span class="marker">{h.label}<span class="cnt">{String(h.count).padStart(2, '0')}</span></span>
+                <span class="t-h6">{h.title} <span class="tone-2">{h.context}</span></span>
+                <span class="more lbl">Explore all {h.count} {h.label.toLowerCase()} <Fragment set:html={arrow('right')} /></span>
+              </span>
+            </a></li>
+          ))}
+        </ul>
+        <div class="below"><a class="btn brand lg" href="/">Explore full collection <Fragment set:html={go} /></a></div>
+      </section>
+    </div>
+
+    <Meet />
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<script>
+  import { wheelX } from '../rail';
+  // Quotes: same scroll lock as the Collection's scenario rail: the wheel runs the cards sideways, then the page carries on
+  document.querySelectorAll<HTMLElement>('[data-quotes]').forEach(wheelX);
+</script>
+
+<style>
+  .top { position: relative; background: var(--bg); color: var(--text); }
+
+  /* Hero: copy on 6 columns; the art fills the other half from the header down and bleeds off the right */
+  .hero { position: relative; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gutter); align-items: center; min-height: min(760px, calc(100svh - var(--site-bar))); padding-block: 64px; }
+  .copy { position: relative; z-index: 1; grid-column: 1 / span 6; display: grid; gap: 24px; justify-items: start; }
+  .copy .headline { max-width: 14em; }
+  .lead { max-width: 30em; }
+  .ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+  .hero :global(.hero-art) { grid-column: 7 / -1; align-self: stretch; margin: calc(-1 * var(--site-bar) - 64px) calc(-1 * var(--margin)) -64px 0; background: none; border-radius: 0; overflow: visible; pointer-events: none;
+    --fade: linear-gradient(transparent, #000 160px, #000 calc(100% - 160px), transparent); -webkit-mask-image: var(--fade); mask-image: var(--fade); }
+  /* Text arrives once: fade + 14px rise, staggered */
+  :global(.motion-ready) .copy > * { animation: rise 600ms var(--ease-out) both; animation-delay: calc(var(--n) * 90ms + 100ms); }
+  .copy > :nth-child(1) { --n: 0; } .copy > :nth-child(2) { --n: 1; } .copy > :nth-child(3) { --n: 2; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+
+  /* Quotes: Neutral 950 cards in a rail, two and a half in view so the third reads as "more to the right".
+     Quote text at h6 in the body grey: full white at h5 on black was tiring to read */
+  .quotes-sec { display: grid; gap: var(--header-gap); padding-block: var(--section-ruled-top) var(--section-ruled-bottom); }
+  .quotes-head { display: grid; gap: var(--gap-overline); }
+  .quotes { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 2 * var(--gutter)) / 2.5); gap: var(--gutter); }
+  .quote { display: grid; grid-template-rows: auto 1fr auto; gap: 32px; min-width: 0; min-height: 400px; padding: 40px; border-radius: var(--radius-4); background: var(--neutral-950); box-shadow: inset 0 0 0 1px var(--line-card); }
+  .qmark { width: 28px; height: 21px; fill: var(--accent); } /* same orange as the section marker */
+  blockquote { margin: 0; }
+  blockquote p { color: var(--neutral-200); line-height: 1.4; text-wrap: pretty; }
+  .by { display: flex; align-items: center; gap: 12px; }
+  .by > span:last-child { display: grid; }
+  .ini { object-fit: cover; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--bg-muted); font: 600 12px/1 var(--font-mono); flex: none; }
+
+  .blk { padding-block: var(--section-ruled-top) var(--section-ruled-bottom); }
+
+
+  .dir-head { display: grid; gap: var(--gap-overline); justify-items: center; text-align: center; margin-bottom: var(--header-gap); }
+  .dir-head .headline { max-width: 22em; }
+  /* Big cards, one per library list: its hub art on top, marker + count, two-tone title, link label.
+     Rules and Skills share a row; Scenarios spans it below as a horizontal card, its art on the same column as the Skills art (subgrid) */
+  .picks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter); }
+  .picks > li { min-width: 0; }
+  .picks > .wide { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
+  .wide .pick { grid-column: 1 / -1; grid-template-columns: subgrid; grid-template-rows: none; }
+  /* The panel grows with the text; the art keeps its 16:9 frame in flow, centred */
+  .wide .cover { grid-area: 1 / 2; aspect-ratio: auto; display: grid; align-content: center; }
+  .wide .txt { grid-area: 1 / 1; }
+  .wide .cover > :global(.iso-panel) { position: relative; inset: auto; aspect-ratio: 16 / 9; }
+  .pick { position: relative; display: grid; grid-template-rows: auto 1fr; height: 100%; border-radius: var(--radius-4); overflow: hidden; transition: background-color var(--t-fast) var(--ease-out); }
+  .pick::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--line-card); pointer-events: none; }
+  .cover { position: relative; display: block; aspect-ratio: 16 / 9; background: var(--bg-subtle); }
+  .cover > :global(.iso-panel) { position: absolute; inset: 0; background: none; border-radius: 0; }
+  /* Pale: the black heroes' look inverted for white. Light faces, pale grey hairlines, colour only on the live part */
+  .pick .cover :global(.iso-art) { --line: color-mix(in srgb, var(--neutral-300) 60%, var(--neutral-200)); }
+  .pick .cover :global(.iso-art .f) { stroke: var(--line); stroke-width: .8; }
+  .pick .cover :global(.iso-art .det) { stroke: var(--neutral-100); stroke-width: .6; }
+  .pick .cover :global(.iso-art :is(.paper, .body)) { fill: var(--neutral-0); }
+  .pick .cover :global(.iso-art .tint) { fill: var(--neutral-25); }
+  .pick .cover :global(.iso-art .blk) { fill: var(--neutral-50); }
+  .pick .cover :global(.iso-art .head) { fill: var(--line); }
+  .pick .cover :global(.iso-art .dash) { stroke: var(--line); stroke-width: 1.2; }
+  .pick .cover :global(.iso-art .lit .f) { stroke: var(--lit, var(--h)); }
+  .pick .cover :global(.iso-art .lit .det) { stroke: color-mix(in srgb, var(--lit, var(--h)) 45%, #fff); }
+  .pick .cover :global(.iso-art .lit .paper) { fill: color-mix(in srgb, var(--lit, var(--h)) 12%, #fff); }
+  .pick .cover :global(.iso-art .lit .tint) { fill: color-mix(in srgb, var(--lit, var(--h)) 25%, #fff); }
+  .pick .cover :global(.iso-art .lit .body) { fill: color-mix(in srgb, var(--lit, var(--h)) 55%, #fff); }
+  .txt { display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 32px; }
+  .cnt { margin-left: 6px; padding: 0 6px; border-radius: var(--radius-2); background: var(--bg-muted); color: var(--text-body); font-variant-numeric: tabular-nums; }
+  .txt .t-h6 { text-wrap: balance; }
+  .pick[data-type="skill"] .txt .t-h6 { max-width: 21em; } /* shorter copy: narrower so all three cards read as three lines */
+  .more { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; color: var(--text); }
+  .more :global(svg) { width: 16px; height: 16px; transition: translate var(--t-fast) var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) { .pick:hover { background: var(--bg-subtle); } .pick:hover .more :global(svg) { translate: 4px 0; } }
+  .below { display: flex; justify-content: center; margin-top: 48px; }
+
+  @media (max-width: 999px) {
+    .hero { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+    .copy { grid-column: 1; }
+    .hero :global(.hero-art) { display: none; }
+    .quotes { grid-auto-columns: calc((100% - var(--gutter)) / 1.5); }
+  }
+  @media (max-width: 699px) {
+    .hero { padding-block: 40px; }
+    .ctas > .btn { flex: 1 1 100%; }
+    .quotes { grid-auto-columns: 88%; }
+    .quote { min-height: 380px; padding: 24px; gap: 24px; }
+    .picks, .wide .pick { grid-template-columns: minmax(0, 1fr); }
+    .wide .pick { grid-template-rows: auto 1fr; }
+    .wide .cover, .wide .txt { grid-area: auto; }
+    .txt { padding: 24px; }
+    .below > .btn { flex: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    @keyframes rise { from { opacity: 0; } }
+  }
+</style>

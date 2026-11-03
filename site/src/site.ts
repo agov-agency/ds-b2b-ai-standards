@@ -10,11 +10,12 @@ export const T = {
 
 // Two levels of navigation: the site header (every page) and the library tab bar (Collection and the three hubs only)
 export const SITE_NAV = [
-  { href: '/collection', label: 'Collection', match: ['/collection', '/scenarios', '/skills', '/rules'], badge: 'New' }, // badge hardcoded for now
+  { href: '/', label: 'Collection', match: ['/', '/scenarios', '/skills', '/rules'], badge: 'New' }, // badge hardcoded for now; '/' matches only itself
   { href: '/authors', label: T.authors, match: ['/authors'] },
+  { href: '/why-we-exist', label: 'Why we exist', match: ['/why-we-exist'] },
 ];
 export const LIB_NAV = [
-  { href: '/collection', label: 'Collection' },
+  { href: '/', label: 'Collection' },
   { href: '/scenarios', label: T.scenarios },
   { href: '/skills', label: T.skills },
   { href: '/rules', label: T.rules },

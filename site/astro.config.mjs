@@ -7,7 +7,7 @@ const host = process.env.VERCEL_ENV === 'production' ? process.env.VERCEL_PROJEC
 export default defineConfig({
   site: `https://${host ?? 'ds-b2b-ai-standards.vercel.app'}`,
   trailingSlash: 'ignore',
-  redirects: { '/directory': '/collection' }, // old address, renamed 29 Oct 2026
+  redirects: { '/collection': '/', '/directory': '/' }, // Collection became the home page on 3 Nov 2026 (was /directory until 29 Oct)
   devToolbar: { enabled: false },
   // shortcut: polling, because the native file watcher missed edits here (dev server kept serving stale CSS); drop it if HMR works without
   vite: { server: { watch: { usePolling: true, interval: 300, ignored: ['**/public/**', '**/dist/**'] } } },

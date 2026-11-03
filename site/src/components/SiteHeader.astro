@@ -10,7 +10,7 @@ const path = Astro.url.pathname;
     </a>
     <nav class="nav" aria-label="Site">
       {SITE_NAV.map((n) => {
-        const here = n.match.some((m) => path.startsWith(m));
+        const here = n.match.some((m) => (m === '/' ? path === '/' : path.startsWith(m)));
         // The badge shows everywhere except inside its own section
         return <a href={n.href} aria-current={here ? 'page' : undefined}>{n.label}{n.badge && !here && <span class="new">{n.badge}</span>}</a>;
       })}

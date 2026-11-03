@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Statement
 
-**The B2B AI Standard for LinkedIn Ads** — a community-built, free library of scenarios, skills and rules for running LinkedIn Ads with AI, maintained by DemandSense and framed as a *resource*, not a product. The original site is https://the-ai-standard.vercel.app/; we keep its content and structure and rebuild the UI in the DemandSense report design language. Two parts: `site/` (the tool: Home, Collection, Scenarios, Skills, Rules, Authors, Contribute) and `landing/` (the earlier promo landing, frozen).
+**The B2B AI Standard for LinkedIn Ads** — a community-built, free library of scenarios, skills and rules for running LinkedIn Ads with AI, maintained by DemandSense and framed as a *resource*, not a product. The original site is https://the-ai-standard.vercel.app/; we keep its content and structure and rebuild the UI in the DemandSense report design language. Two parts: `site/` (the tool: Collection as home, Why we exist, Scenarios, Skills, Rules, Authors, Contribute) and `landing/` (the earlier promo landing, frozen).
 
 ## Repo, branches, deploys
 
@@ -33,7 +33,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Full notes: `docs/cms.md`. Read it before touching schemas or `site/src/sanity.ts`.
 
 - Project `t6leg115` (org AGOV Agency, Free plan), dataset `production` (public, no token needed to read). Studio: https://ds-b2b-ai-standards.sanity.studio, source in `studio/` (`sanity.config.ts`, `sanity.cli.ts`, `env.ts`).
-- In the CMS: directory content only. **Home and Contribute stay in code** (`site/src/pages/index.astro`, `contribute.astro`, `site/src/copy.ts`).
+- In the CMS: directory content only. **Why we exist and Contribute stay in code** (`site/src/pages/why-we-exist.astro`, `contribute.astro`, `site/src/copy.ts`).
 - Schemas (`studio/schemas/`, one file per type, shared fields in `shared.ts`):
   - Items: `author`, `rule`, `skill`, `scenario`. Detail-page sections live in a nested `page` object on each item.
   - Collections, referenced by items (rename once, every item follows; `collections.ts`): **Categories** (title, slug, cover colour, fallback icon, Rules hub headline), **Cadences**, **Connectors** (name + logo picked from `design-system/logos`, or an uploaded own logo; standard set in `studio/connectors.json`).
@@ -163,7 +163,7 @@ Preview the specimen: start the `design-system` server from `.claude/launch.json
 - `.claude/skills/`, `.claude/agents/`, `.claude/settings.json`, `.agents/skills/` (hairline, anatomy), `skills-lock.json`
 - `design-system/` — `tokens.css`, `specimen.html`, `fonts/`, `icons/`, `logos/` (connector logos), `wave/`, `wave.js`, `word-reveal.js`. Shared by site and landing. No images stored: visual reference = Figma node IDs in `DESIGN.md` + the specimen
 - `illustrations/` — shared hairline figures and line icons (`icons/`, `icons.js`)
-- `site/` — the tool (Astro): `src/pages` (`index` Home, `collection`, `scenarios`, `skills`, `rules`, `authors`, `contribute`, `art-lab`, `post-builder`: unlinked social post builder, see `docs/post-builder.md`), `src/components`, `src/layouts`, `src/art` (code-drawn figures), `src/sanity.ts` (content loader), `src/content.config.ts`, `src/site.ts` (names, areas, nav), `content/` (Markdown fallback). See `site/README.md`
+- `site/` — the tool (Astro): `src/pages` (`index` Collection = home, `why-we-exist` the landing, `/collection` redirects to `/`, `scenarios`, `skills`, `rules`, `authors`, `contribute`, `art-lab`, `post-builder`: unlinked social post builder, see `docs/post-builder.md`), `src/components`, `src/layouts`, `src/art` (code-drawn figures), `src/sanity.ts` (content loader), `src/content.config.ts`, `src/site.ts` (names, areas, nav), `content/` (Markdown fallback). See `site/README.md`
 - `studio/` — Sanity Studio: `schemas/`, `migrations/`, `seed/`, `connectors.json`
 - `landing/` — earlier promo landing (`index.html`, `landing.css`, `landing.js`, `assets/`), frozen; root-absolute paths, serve from the repo root
 - `lab/` — design experiments, not deployed
