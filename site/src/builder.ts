@@ -75,7 +75,9 @@ function logoPick(name: string) {
   return D.logos[key] ?? '';
 }
 
-const img = (src: string, w: number) => (/cdn\.sanity\.io/.test(src) ? `${src}?w=${w}&h=${w}&fit=crop&auto=format` : src);
+// Sanity photos go through a same-origin rewrite on Vercel (site/vercel.json), so the export can read them without CORS; local dev keeps the CDN
+const LOCAL = typeof location !== 'undefined' && /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const img = (src: string, w: number) => (/cdn\.sanity\.io/.test(src) ? `${LOCAL ? src : src.replace('https://cdn.sanity.io/images/', '/sanity-img/')}?w=${w}&h=${w}&fit=crop&auto=format` : src);
 // Round photo above the headline (author posts, as on the site's author card): the item's author, else the one picked
 function avatar(s: State) {
   const id = s.about.startsWith('author:') ? s.about.slice(7) : s.author, a = s.aCustom ? { name: s.aName, photo: s.aPhoto } : authorById(id);
@@ -352,10 +354,12 @@ let fontCSS: Promise<string> | undefined;
 const download = (blob: Blob, name: string) => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); };
 const slug = (s: State) => (s.headline || s.labelText || 'post').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48) + `-${s.format}`;
 
+const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 async function layers(post: HTMLElement, R: number) {
   const W = post.offsetWidth, H = post.offsetHeight;
   fontCSS ??= getFontEmbedCSS(post);
-  const opts = { width: W, height: H, pixelRatio: R, fontEmbedCSS: await fontCSS, style: { transform: 'none' } };
+  // A photo that can't be read becomes a blank instead of failing the whole export
+  const opts = { width: W, height: H, pixelRatio: R, fontEmbedCSS: await fontCSS, style: { transform: 'none' }, imagePlaceholder: BLANK };
   // Hairlines are thickened for the scaled-down preview; the export draws them at their true 1px
   post.style.setProperty('--hair', '1px');
   post.classList.add('x-bg'); const bg = await toCanvas(post, opts); post.classList.remove('x-bg');
@@ -398,7 +402,7 @@ async function drawArt(ctx: CanvasRenderingContext2D, post: HTMLElement, R: numb
     const b = svg.getBoundingClientRect(), x = (b.left - p.left) / k, y = (b.top - p.top) / k, w = b.width / k, h = b.height / k;
     ctx.drawImage(await svgImage(svg, w, h, R), x * R, y * R, w * R, h * R);
   } else {
-    const c = await toCanvas(r.box, { width: r.w, height: r.h, pixelRatio: R, skipFonts: true, style: { margin: '0', position: 'static', gridArea: 'auto' } });
+    const c = await toCanvas(r.box, { width: r.w, height: r.h, pixelRatio: R, skipFonts: true, imagePlaceholder: BLANK, style: { margin: '0', position: 'static', gridArea: 'auto' } });
     ctx.drawImage(c, r.x * R, r.y * R);
   }
   ctx.restore();
