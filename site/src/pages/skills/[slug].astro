@@ -15,7 +15,7 @@ import DetailCta from '../../components/detail/DetailCta.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { arrow } from '../../arrows';
 import ItemIcon from '../../components/ItemIcon.astro';
-import { T } from '../../site';
+import { T, COMMUNITY_URL, INSTALL } from '../../site';
 import { area } from '../../areas';
 
 export async function getStaticPaths() {
@@ -46,6 +46,7 @@ const facts = [['Changes', d.changes], ['First run', d.firstRun]].filter(([, v])
     <Fragment slot="actions">
       {p.prompt && <a class="btn filled" href="#h-prompt">Copy the prompt</a>}
       {p.prompt?.source && <a class="btn outlined" href={p.prompt.source} rel="noopener">Source on GitHub <Fragment set:html={arrow('up', 'ext')} /></a>}
+      <p class="join t-p2">Using it? <a href={COMMUNITY_URL}>Join the community <Fragment set:html={arrow('right')} /></a></p>
     </Fragment>
     <ItemIcon slot="art" data={d} class="kart" />
   </DetailHero>
@@ -64,7 +65,7 @@ const facts = [['Changes', d.changes], ['First run', d.firstRun]].filter(([, v])
       </Sec>
     )}
 
-    {p.prompt && <PromptTabs headline={p.prompt.headline} context={p.prompt.context} tabs={p.prompt.tabs} install={p.prompt.install} />}
+    {p.prompt && <PromptTabs headline={p.prompt.headline} context={p.prompt.context} tabs={p.prompt.tabs} install={p.prompt.install.length ? p.prompt.install : INSTALL} />}
 
     {p.useWhen.length > 0 && <UsingTiles id="h-when" label="When to use it" headline={`${p.useWhen.length} moments it pays off.`} context="If one of these is this week, run it" items={p.useWhen} />}
 

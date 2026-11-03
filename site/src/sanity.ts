@@ -37,6 +37,7 @@ const sanity = (dir: string): Loader => ({
     for (const d of docs) {
       const id = d.slug?.current;
       if (!id) { logger.warn(`${dir}: ${d._id} has no slug, skipped`); continue; }
+      if (id.startsWith('sample-')) continue; // "every field filled" templates stay in the Studio as examples, never on the site
       store.set({ id, data: await parseData({ id, data: clean(d) }) });
     }
     logger.info(`${docs.length} ${dir} from Sanity`);

@@ -2,8 +2,8 @@
 // "Get it" (scenario and skill pages): a black band with one white code block per install option, each with a Copy button.
 import Sec from '../Sec.astro';
 import CopyButton from '../CopyButton.astro';
-interface Props { intro: string; context?: string; options: { label: string; text: string }[]; note?: string; source?: string; sourceNote?: string }
-const { intro, context, options, note, source, sourceNote } = Astro.props;
+interface Props { intro: string; context?: string; options: { label: string; text: string }[]; note?: string; source?: string; sourceNote?: string; install?: { label: string; text: string }[] }
+const { intro, context, options, note, source, sourceNote, install = [] } = Astro.props;
 ---
 <Sec id="h-get" label="Get it" title={intro} context={context} small class="get-band surface-black">
   <div id="get" class="get">
@@ -16,6 +16,18 @@ const { intro, context, options, note, source, sourceNote } = Astro.props;
         <pre id={`cmd-${i}`}><code>{o.text}</code></pre>
       </div>
     ))}
+    {install.length > 0 && (
+      <div class="inst">
+        <p class="t-h6">Rather not paste it? <span class="tone-2">Install it instead</span></p>
+        <p class="t-p2 body">Add it to Claude Code once and call it by name on any export</p>
+        {install.map((o, i) => (
+          <div class="code">
+            <div class="code-bar"><span class="lbl">{o.label}</span><CopyButton data-copy={`inst-${i}`} /></div>
+            <pre id={`inst-${i}`}><code>{o.text}</code></pre>
+          </div>
+        ))}
+      </div>
+    )}
     <p class="sr-only" aria-live="polite" data-copy-status></p>
     {note && <p class="t-p2 body">{note}</p>}
     {source && (
@@ -47,6 +59,8 @@ const { intro, context, options, note, source, sourceNote } = Astro.props;
   .code-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 8px 8px 20px; border-bottom: 1px solid var(--line); }
   .code-bar .lbl { color: var(--text-2); }
   pre { margin: 0; padding: 20px; overflow-x: auto; font: 500 14px/1.7 var(--font-mono); letter-spacing: 0; color: var(--text); }
+  .inst { display: grid; gap: 16px; margin-top: 24px; }
+  .inst .body { color: var(--text-body); }
   .ul { color: var(--text); border-bottom: 1px solid transparent; transition: border-color var(--t-fast) var(--ease-out); }
   @media (hover: hover) and (pointer: fine) { .ul:hover { border-color: var(--text); } }
 </style>

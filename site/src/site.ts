@@ -21,6 +21,10 @@ export const LIB_NAV = [
 ];
 
 export const CONTRIBUTE_URL = '/contribute';
+// Community waitlist: placeholder until the waitlist page is live, then swap the URL here
+export const COMMUNITY_URL = '/contribute';
+// One plugin installs every skill and scenario; pages use it unless their own content sets an install block
+export const INSTALL = [{ label: 'Claude Code', text: '/plugin install linkedin-ads-skills --marketplace demandsense-labs/linkedin-ads-skills' }];
 export const REPO_URL = 'https://github.com/demandsense/the-ai-standard';
 
 // Opening statements on Home (client copy, 28 Oct 2026); the post builder reuses them as quote posts
