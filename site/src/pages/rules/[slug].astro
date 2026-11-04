@@ -1,6 +1,7 @@
 ---
 // One template for every rule page (Figma DS Report 919:23330): the rule, signs and what to do, who runs it, where it runs, previous/next.
 // Shares the hero ticket, sidebar frame and section heads with the scenario and skill pages.
+import { ds } from '../../order';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import DetailHero from '../../components/detail/DetailHero.astro';
@@ -27,7 +28,7 @@ const { id, data: d } = rule;
 const p = d.page;
 const author = await getEntry(d.author);
 const nn = (n: number) => String(n).padStart(2, '0');
-const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) => a.data.order - b.data.order;
+const byOrder = <E extends { data: { order: number; author?: { id: string } } }>(a: E, b: E) => ds(a) - ds(b) || a.data.order - b.data.order;
 const applies = (await getCollection('skills', (s) => s.data.rules.some((r) => r.id === id))).sort(byOrder);
 const skills = applies.filter((s) => s.data.status === 'ready');
 const scenarios = (await getCollection('scenarios', (s) => s.data.rules.some((r) => r.id === id))).sort(byOrder);
@@ -36,8 +37,8 @@ const hasRule = p.advises || p.adds || p.reason;
 const own = (ids: string[], x: string) => Number(ids.includes(x));
 const skIds = applies.map((s) => s.id), scIds = scenarios.map((s) => s.id);
 const ready = (s: { data: { status: string } }) => Number(s.data.status === 'ready');
-const relSk = (await getCollection('skills')).sort((a, b) => own(skIds, b.id) - own(skIds, a.id) || ready(b) - ready(a) || a.data.order - b.data.order);
-const relSc = (await getCollection('scenarios')).sort((a, b) => own(scIds, b.id) - own(scIds, a.id) || ready(b) - ready(a) || a.data.order - b.data.order);
+const relSk = (await getCollection('skills')).sort((a, b) => own(skIds, b.id) - own(skIds, a.id) || ready(b) - ready(a) || ds(a) - ds(b) || a.data.order - b.data.order);
+const relSc = (await getCollection('scenarios')).sort((a, b) => own(scIds, b.id) - own(scIds, a.id) || ready(b) - ready(a) || ds(a) - ds(b) || a.data.order - b.data.order);
 const toc = [['h-rule', 'The rule', hasRule], ['h-signs', 'Decision triggers', p.signs.length], ['h-voices', 'What experts say', p.voices.length], ['h-run', 'Run it', true]]
   .filter(([, , on]) => on).map(([href, label]) => ({ label: label as string, href: `#${href}` }));
 const ext = arrow('up', 'ext');

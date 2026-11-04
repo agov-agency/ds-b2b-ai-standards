@@ -1,6 +1,7 @@
 ---
 // One template for every skill page (Figma 919:23317), built on the scenario page's parts. Only ready skills get a page;
 // "next version" cards link to their rule instead (SkillCard).
+import { ds } from '../../order';
 import { getCollection, getEntry, getEntries, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import DetailHero from '../../components/detail/DetailHero.astro';
@@ -27,12 +28,12 @@ const { skill } = Astro.props;
 const d = skill.data;
 const p = d.page;
 const author = d.author ? await getEntry(d.author) : undefined;
-const scenarios = await getCollection('scenarios', (s) => s.data.status === 'ready' && s.data.skills.some((k) => k.id === skill.id));
+const scenarios = (await getCollection('scenarios', (s) => s.data.status === 'ready' && s.data.skills.some((k) => k.id === skill.id))).sort((a, b) => ds(a) - ds(b) || a.data.order - b.data.order);
 const rules = (await getEntries(d.rules)).sort((a, b) => a.data.number - b.data.number);
 // Related rails list everything, this skill's own scenarios and rules first
 const own = (ids: string[], id: string) => Number(ids.includes(id));
 const scIds = scenarios.map((s) => s.id), ruIds = rules.map((r) => r.id);
-const relSc = (await getCollection('scenarios')).sort((a, b) => own(scIds, b.id) - own(scIds, a.id) || Number(b.data.status === 'ready') - Number(a.data.status === 'ready') || a.data.order - b.data.order);
+const relSc = (await getCollection('scenarios')).sort((a, b) => own(scIds, b.id) - own(scIds, a.id) || Number(b.data.status === 'ready') - Number(a.data.status === 'ready') || ds(a) - ds(b) || a.data.order - b.data.order);
 const relRu = (await getCollection('rules')).sort((a, b) => own(ruIds, b.id) - own(ruIds, a.id) || a.data.number - b.data.number);
 const cover = d.cover ?? area(d.area).cover;
 // What it does carries the step flow (no separate How it works), then the prompt (Pastel #15)

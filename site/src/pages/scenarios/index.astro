@@ -1,4 +1,5 @@
 ---
+import { ds } from '../../order';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import AuthorMarquee from '../../components/AuthorMarquee.astro';
@@ -13,7 +14,7 @@ import StepDot from '../../components/StepDot.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { T } from '../../site';
 
-const all = (await getCollection('scenarios')).sort((a, b) => a.data.order - b.data.order);
+const all = (await getCollection('scenarios')).sort((a, b) => ds(a) - ds(b) || a.data.order - b.data.order);
 const ready = all.filter((s) => s.data.status === 'ready');
 const soon = all.filter((s) => s.data.status === 'soon');
 const steps = [
