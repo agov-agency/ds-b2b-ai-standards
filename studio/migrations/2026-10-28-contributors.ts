@@ -26,14 +26,6 @@ const PEOPLE: [string, string, string, string][] = [
   ['ivars-krutainis', 'Ivars Krutainis', 'Otter', 'https://www.linkedin.com/in/krutainis/'],
   ['aj-wilcox', 'AJ Wilcox', 'B2Linked', 'https://www.linkedin.com/in/wilcoxaj/'],
   ['ivan-falco', 'Ivan Falco', 'Frontal AI', 'https://www.linkedin.com/in/ivanfalco/'],
-  ['fivos-aresti', 'Fivos Aresti', 'Workflows.io', 'https://www.linkedin.com/in/fivosaresti/'],
-  ['kristof-bardos', 'Kristof Bardos', 'Marketixa', 'https://www.linkedin.com/in/kristof-bardos/'],
-  ['mason-cosby', 'Mason Cosby', 'Scrappy ABM', 'https://www.linkedin.com/in/masoncosby/'],
-  ['sheila-coque', 'Sheila Coque', 'ads2in', 'https://www.linkedin.com/in/sheila-coque/'],
-  ['tim-davidson', 'Tim Davidson', 'B2B Rizz', 'https://www.linkedin.com/in/tadavidson41/'],
-  ['sam-kuehnle', 'Sam Kuehnle', 'Dereva', 'https://www.linkedin.com/in/samkuehnle/'],
-  ['patrick-cumming', 'Patrick Cumming', 'Ad Juice', 'https://www.linkedin.com/in/patrick-james-cumming/'],
-  ['rob-muldoon', 'Rob Muldoon', 'Tuned Social', 'https://www.linkedin.com/in/robmuldoon/'],
 ];
 
 const before = await client.fetch<any[]>('*[_type == "author"]');
