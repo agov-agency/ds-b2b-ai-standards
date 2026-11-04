@@ -108,7 +108,7 @@ svg.ext { rotate: 45deg; }
 .top .hero.has-art > .hero-art { --fade: linear-gradient(transparent, #000 160px, #000 calc(100% - 160px), transparent); -webkit-mask-image: var(--fade); mask-image: var(--fade); }
 .top .hero.has-art > :not(.hero-art) { position: relative; }
 /* Authors running line (Collection and hubs): pinned to the hero's bottom edge, clipped to the text column */
-.top .hero.has-art > .marquee { position: absolute; left: var(--margin); bottom: 32px; width: min(760px, calc(100% - 2 * var(--margin))); }
+.top .hero.has-art > .by { position: absolute; left: var(--margin); bottom: 32px; width: min(760px, calc(100% - 2 * var(--margin))); }
 @media (max-width: 999px) { .top .hero.has-art > .hero-art { display: none; } } /* no room beside the headline */
 @media (max-width: 699px) { .top .hero.has-art { gap: 24px; padding-bottom: 120px; } }
 
