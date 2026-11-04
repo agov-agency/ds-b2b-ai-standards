@@ -12,7 +12,7 @@ export const T = {
 export const SITE_NAV = [
   { href: '/', label: 'Collection', match: ['/', '/scenarios', '/skills', '/rules'], badge: 'New' }, // badge hardcoded for now; '/' matches only itself
   { href: '/authors', label: T.authors, match: ['/authors'] },
-  { href: '/why-we-exist', label: 'Why we exist', match: ['/why-we-exist'] },
+  { href: '/why-rules-matter', label: 'Why rules matter', match: ['/why-rules-matter'] },
 ];
 export const LIB_NAV = [
   { href: '/', label: 'Collection' },
