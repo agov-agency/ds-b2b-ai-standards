@@ -41,10 +41,7 @@ const small = arrow('right');
         <Breadcrumbs items={[{ label: 'Collection' }]} />
         <h1 class="headline t-display">Hand your AI the knowledge of LinkedIn Ads experts. <span class="tone-2">A collection of open-source rules, skills and scenarios.</span></h1>
       </div>
-      <div class="by-line">
-        <p class="lbl by-k">Submitted &amp; reviewed by</p>
-        <AuthorMarquee />
-      </div>
+      <AuthorMarquee />
     </div>
   </div>
   <TabBar />
@@ -153,9 +150,6 @@ const small = arrow('right');
   .copy .headline { max-width: 760px; min-height: 4lh; } /* room for four lines on every hub, so the tabs sit the same distance below */
 
   .blk { padding-block: var(--section-ruled-top) var(--section-ruled-bottom); }
-  .by-line { display: flex; align-items: center; gap: 24px; }
-  .by-k { flex: none; color: var(--text-2); }
-  .by-line > :global(.marquee) { min-width: 0; }
 
   /* Quotes strip: three short quotes in a row under the tabs, quieter than the sections below; the scenarios' top line closes it off */
   .strip { padding-block: 48px; }
@@ -194,7 +188,6 @@ const small = arrow('right');
   }
   @media (max-width: 699px) {
     .hero { padding-block: 24px; }
-    .by-line { flex-direction: column; align-items: start; gap: 12px; }
     .strip { padding-block: 32px; }
     .qs { grid-auto-columns: 85%; }
     .rail { grid-auto-columns: 88%; }
