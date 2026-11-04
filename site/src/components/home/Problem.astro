@@ -2,16 +2,16 @@
 // The problem (home §3): a scroll scene on black. A tall track holds a sticky stage; scroll progress picks a step:
 // 0 the question · 1 the assistant's answer · 2 three phrases turn into orange chips · 3–5 the chat slides left and one
 // note per phrase comes in on the right (its chip fills orange) · 6 the notes leave, the chat recentres and is corrected:
-// the chips turn green and only their words change. Copy from the live site; the corrected wording is a draft to confirm.
+// the chips turn green and only their words change. Copy: client final, 3 Nov 2026.
 const marks = [
   { was: 'performing well', now: 'only half as strong as it looks' },
   { was: 'Stealth AI Startup', now: '“Stealth AI Startup”, a placeholder employer' },
   { was: 'prioritise them for outreach this week', now: 'drop it and rank the real accounts against your CRM first' },
 ];
 const notes = [
-  { title: 'You’ve reported a win that isn’t one.', text: 'Half those clicks came from one placeholder employer. Take them out and the ad set you just called a success looks nothing like one.' },
-  { title: 'Your best account doesn’t exist.', text: '“Stealth AI Startup” is what people list when they won’t name their employer. No buyers, no budget, nobody to sell to.' },
-  { title: 'Sales loses a week to it.', text: 'An SDR chases a company that can’t answer, while the accounts that were actually warming up go cold.' },
+  { title: 'You’ve reported a win that isn’t one.', text: 'Half those clicks came from one placeholder employer. Take them out and the ad set looks very different.' },
+  { title: 'Your best account doesn’t exist.', text: '“Stealth AI Startup” is what people list when they won’t name their employer. No buyers, no budget.' },
+  { title: 'Sales loses a week to it.', text: 'An SDR chases a company that can’t answer, while three accounts that were warming up wait.' },
 ];
 const m = (i: number) => `<mark data-n="${i + 1}"><span class="was">${marks[i].was}</span><span class="now">${marks[i].now}</span></mark>`;
 const sparkles = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M14 4.4375C15.3462 4.4375 16.4375 3.34619 16.4375 2H17.5625C17.5625 3.34619 18.6538 4.4375 20 4.4375V5.5625C18.6538 5.5625 17.5625 6.65381 17.5625 8H16.4375C16.4375 6.65381 15.3462 5.5625 14 5.5625V4.4375ZM1 11C4.31371 11 7 8.31371 7 5H9C9 8.31371 11.6863 11 15 11V13C11.6863 13 9 15.6863 9 19H7C7 15.6863 4.31371 13 1 13V11ZM17.25 14C17.25 15.7949 15.7949 17.25 14 17.25V18.75C15.7949 18.75 17.25 20.2051 17.25 22H18.75C18.75 20.2051 20.2051 18.75 22 18.75V17.25C20.2051 17.25 18.75 15.7949 18.75 14H17.25Z"/></svg>'; // Remix Icon sparkling-fill
@@ -20,7 +20,7 @@ const sparkles = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="curren
   <div class="stage wrap" data-stage>
     <div class="head">
       <p class="marker">The problem</p>
-      <h2 id="h-problem" class="headline t-display">AI can’t catch what nobody told it to look for. <span class="tone-2 after">Unless someone tells it to.</span></h2>
+      <h2 id="h-problem" class="headline t-display">AI always has <em>an</em> answer. <span class="tone-2 after"><em>The</em> answer needs context.</span></h2>
     </div>
     <div class="scene">
       <div class="chat" role="log" aria-label="A conversation with an AI assistant">
@@ -31,14 +31,14 @@ const sparkles = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="curren
         <div class="row ai">
           <span class="ava bot" set:html={sparkles} />
           <div class="bubble">
-            <p class="who lbl"><span class="spark" set:html={sparkles} /><span class="was">Assistant</span><span class="now">Assistant, with the Standard</span><span class="time">now</span></p>
+            <p class="who lbl"><span class="spark" set:html={sparkles} /><span class="was">An answer</span><span class="now">The answer</span><span class="time"><span class="was">Now</span><span class="now">With the Standard</span></span></p>
             <p class="answer" set:html={`This ad set is ${m(0)}. It drove 1,200 clicks last month at a cost per click well under benchmark. Your most engaged account is ${m(1)}, with 600 of them, so I’d ${m(2)}.`} />
           </div>
         </div>
       </div>
 
-      <div class="notes" aria-label="What it didn’t see">
-        <p class="t-h5 notes-h">What it didn’t see</p>
+      <div class="notes" aria-label="What it didn’t catch">
+        <p class="t-h5 notes-h">What it didn’t catch</p>
         <ol class="cards">
           {notes.map((n, i) => (
             <li data-n={i + 1}>

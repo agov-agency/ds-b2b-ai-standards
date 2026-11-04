@@ -30,7 +30,7 @@ export const REPO_URL = 'https://github.com/demandsense/the-ai-standard';
 
 // Opening statements on Home (client copy, 28 Oct 2026); the post builder reuses them as quote posts
 export const QUOTES = [
-  { name: 'Iurii Znak', company: 'DemandSense', photo: '/authors/iurii-znak.jpg', text: 'There’s a trust problem with AI in LinkedIn Ads. The people we work with every day have tried it, and they still check every answer by hand. That’s why we built the Standard: one open set of rules for running LinkedIn Ads with AI, written with the experts and kept up to date.' },
-  { name: 'AJ Wilcox', company: 'B2Linked', photo: '/authors/aj-wilcox.jpg', text: 'AI in LinkedIn Ads needs rules because it was trained on recommendations from the platform itself, and advanced practitioners all agree that taking LinkedIn’s recommendations for setting up your ads is a first-class ticket to negative ROI.' },
   { name: 'Justin Rowe', company: 'Impactable', photo: '/authors/justin-rowe.jpg', text: 'Pretty soon, everyone can “talk with your data”, but raw data needs to be interpreted with actual frameworks, doctrines, and a real point of view. That’s exactly what the Standard delivers.' },
+  { name: 'Iurii Znak', company: 'DemandSense', photo: '/authors/iurii-znak.jpg', text: 'The people we work with every day tried AI on their LinkedIn accounts and loved how fast it was. Then they found themselves checking every answer by hand. The Standard is what we wrote down with them: the checks, as one open set of rules, kept up to date.' },
+  { name: 'AJ Wilcox', company: 'B2Linked', photo: '/authors/aj-wilcox.jpg', text: 'AI in LinkedIn Ads needs rules because it was trained on recommendations from the platform itself, and advanced practitioners all agree that taking LinkedIn’s recommendations for setting up your ads is a first-class ticket to negative ROI.' },
 ];

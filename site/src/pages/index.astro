@@ -14,7 +14,7 @@ import AuthorCard from '../components/AuthorCard.astro';
 import AuthorMarquee from '../components/AuthorMarquee.astro';
 import SubmitBand from '../components/SubmitBand.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { T } from '../site';
+import { T, QUOTES as quotes } from '../site';
 import { AREA_LIST } from '../areas';
 
 const byOrder = (a: { data: { order: number } }, b: { data: { order: number } }) => a.data.order - b.data.order;
@@ -39,16 +39,32 @@ const small = arrow('right');
       <IsoArt name="directory" dark place={[-146, -166, 915, 972]} clip={770} class="hero-art" />
       <div class="copy">
         <Breadcrumbs items={[{ label: 'Collection' }]} />
-        <h1 class="headline t-display">The collection. <span class="tone-2">Every rule, skill and scenario in the Standard, so your AI can make sense of LinkedIn Ads data</span></h1>
+        <h1 class="headline t-display">Hand your AI the knowledge of LinkedIn Ads experts. <span class="tone-2">A collection of open-source rules, skills and scenarios.</span></h1>
       </div>
-      <AuthorMarquee />
+      <div class="by-line">
+        <p class="lbl by-k">Submitted &amp; reviewed by</p>
+        <AuthorMarquee />
+      </div>
     </div>
   </div>
   <TabBar />
 
   <main id="main">
     <div class="ruled">
-    <section class="blk wrap" data-type="scenario" aria-labelledby="h-scenarios">
+    <!-- Quotes strip, small: moved here from Why we exist so the people behind the Standard speak on the main page too -->
+    <section class="wrap strip" aria-label="What the authors say">
+      <ul class="qs scroll-snap-x to-edges" data-reveal>
+        {quotes.map((q) => (
+          <li class="q">
+            <svg class="qmark" viewBox="0 0 32 24" aria-hidden="true"><path d="M0 24V13L7 0h6L9 12h5v12zm18 0V13l7-13h6l-4 12h5v12z" /></svg>
+            <blockquote><p class="t-p2">{q.text}</p></blockquote>
+            <p class="who">{q.photo && <img src={q.photo} alt="" width="28" height="28" loading="lazy" />}<span class="t-p2">{q.name}</span><span class="t-p2 tone-2">{q.company}</span></p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="blk wrap bleed" data-type="scenario" aria-labelledby="h-scenarios">
       <SectionHead id="h-scenarios" marker={T.scenarios} count={scenarios.length} title="Run the usual prep work in one go." context="A scenario runs several skills in order, on your schedule">
         <button class="btn outlined icon xs desk" type="button" data-rail-prev aria-label="Previous scenarios" disabled><Fragment set:html={arrow('left')} /></button>
           <button class="btn filled icon xs desk" type="button" data-rail-next aria-label="Next scenarios"><Fragment set:html={small} /></button>
@@ -137,6 +153,19 @@ const small = arrow('right');
   .copy .headline { max-width: 760px; min-height: 4lh; } /* room for four lines on every hub, so the tabs sit the same distance below */
 
   .blk { padding-block: var(--section-ruled-top) var(--section-ruled-bottom); }
+  .by-line { display: flex; align-items: center; gap: 24px; }
+  .by-k { flex: none; color: var(--text-2); }
+  .by-line > :global(.marquee) { min-width: 0; }
+
+  /* Quotes strip: three short quotes in a row under the tabs, quieter than the sections below; the scenarios' top line closes it off */
+  .strip { padding-block: 48px; }
+  .qs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
+  .q { display: grid; grid-template-columns: auto 1fr; grid-template-rows: 1fr auto; column-gap: 16px; row-gap: 16px; min-width: 0; }
+  .qmark { grid-row: 1 / -1; width: 20px; height: 15px; margin-top: 4px; fill: var(--accent); }
+  .q blockquote { margin: 0; }
+  .q blockquote p { color: var(--text-body); text-wrap: pretty; }
+  .who { display: flex; align-items: center; gap: 8px; }
+  .who img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
   .last { padding-bottom: 0; } /* the black closing band follows with its own top padding */
 
   /* Rail: the hub's wide card at 8 columns, so the next one shows; cropped at the edge lines */
@@ -158,12 +187,16 @@ const small = arrow('right');
   .below { display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 40px; }
 
   @media (max-width: 999px) {
+    .qs { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 60%; }
     .rail { grid-auto-columns: 85%; }
     .cells { grid-auto-columns: 50%; }
     .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 699px) {
     .hero { padding-block: 24px; }
+    .by-line { flex-direction: column; align-items: start; gap: 12px; }
+    .strip { padding-block: 32px; }
+    .qs { grid-auto-columns: 85%; }
     .rail { grid-auto-columns: 88%; }
     .cells { grid-auto-columns: 80%; }
     .grid4 { grid-template-columns: 1fr; }

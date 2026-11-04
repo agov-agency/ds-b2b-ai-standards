@@ -1,19 +1,19 @@
 ---
 // Why AI can't get LinkedIn Ads right (home, after the problem scene). Left: four folds (data, judgement, context,
 // the closing line). Right: the playbook figure sticks; the fold in the middle of the screen lights its block,
-// and the closing line stacks the three into one bound block. Copy: client V1, 26 Oct 2026.
+// and the closing line stacks the three into one bound block. Copy: client final, 3 Nov 2026.
 import { draw, viewBox, aria } from '../../art/playbook';
 const cards = [
-  { label: 'The data', title: 'Your data is held together with duct tape', body: 'Campaign Manager exports, CRM reports, website data and a spreadsheet joining them by hand. Each covers part of the picture, at a different level (campaigns, people, companies) and over a different date range. AI reads whatever you paste in and fills the gaps with guesses.' },
-  { label: 'The judgement', title: 'It can’t tell generic advice from what works in a real account', body: 'Most of what AI knows about LinkedIn Ads comes from general best-practice content. The calls people make every week on real budgets rarely get written down: when a low CPL is enough to move budget, when a drop in CTR means fatigue, when an audience is big enough to count as warm. So AI doesn’t know them.' },
-  { label: 'The context', title: 'It goes for the average and misses your context', body: 'Models lean toward the most common answer. Ask whether a frequency of 20 over 90 days is too high, and you’ll get the same answer for every campaign. On a cold list that’s far too much. On a retargeting audience it’s within range. Without the campaign’s context and the account’s own history to compare against, AI can’t tell good from average.' },
+  { label: 'The data', title: 'A clean signal before anything gets read', body: 'Campaign Manager exports, CRM reports and website data each sit at a different level (campaigns, people, companies) and over a different date range. The rules say which source answers which question and what to clean out first, so a placeholder employer never ends up as your best account.' },
+  { label: 'The judgement', title: 'The calls practitioners make every week', body: 'When a low CPL is enough to move budget. When a drop in CTR means fatigue. When an audience is big enough to count as warm. Each call written down by someone who makes it every week on a real budget, so your AI makes it the same way.' },
+  { label: 'The context', title: 'Your campaign’s own history as the benchmark', body: 'A frequency of 20 over 90 days is too much on a cold list and fine on retargeting. The rules carry that context, so your AI compares a campaign with its own past instead of an industry average.' },
 ];
-const closing = { label: 'The Standard', title: 'The missing context lives with practitioners', body: 'The context AI is missing lives with the people who run LinkedIn budgets every week. So we started writing it down with them: each rule, skill and scenario signed by the person who runs it that way.' };
+const closing = { label: 'The Standard', title: 'All of it comes from the people who run the accounts', body: 'Every rule, skill and scenario carries the name of the person who runs their accounts that way, and it is open for anyone to use.' };
 ---
 <section class="why blk wrap" aria-labelledby="h-why" data-why>
   <div class="head">
-    <p class="marker">The problem</p>
-    <h2 id="h-why" class="headline t-h2">Why AI can’t get LinkedIn Ads right. <span class="tone-2">It will answer any question about your campaigns, but the answers make your job messier, not easier</span></h2>
+    <p class="marker">Why it exists</p>
+    <h2 id="h-why" class="headline t-h2">What the Standard adds to your AI</h2>
   </div>
 
   <div class="body">
