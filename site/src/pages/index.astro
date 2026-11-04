@@ -12,7 +12,7 @@ import ScenarioCard from '../components/ScenarioCard.astro';
 import SkillCard from '../components/SkillCard.astro';
 import RuleRow from '../components/RuleRow.astro';
 import AuthorCard from '../components/AuthorCard.astro';
-import AuthorMarquee from '../components/AuthorMarquee.astro';
+import AuthorStack from '../components/AuthorStack.astro';
 import SubmitBand from '../components/SubmitBand.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import { T, QUOTES as quotes } from '../site';
@@ -42,7 +42,7 @@ const small = arrow('right');
         <Breadcrumbs items={[{ label: 'Collection' }]} />
         <h1 class="headline t-display">Hand your AI the knowledge of LinkedIn Ads experts. <span class="tone-2">A collection of open-source rules, skills and scenarios.</span></h1>
       </div>
-      <AuthorMarquee />
+      <AuthorStack />
     </div>
   </div>
   <TabBar />

@@ -2,7 +2,7 @@
 // Rules hub (outer page): every rule, grouped by category in category order. No rule detail pages yet.
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import AuthorMarquee from '../../components/AuthorMarquee.astro';
+import AuthorStack from '../../components/AuthorStack.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import IsoArt from '../../components/IsoArt.astro';
 import TabBar from '../../components/TabBar.astro';
@@ -28,7 +28,7 @@ const groups = AREA_LIST.map((a) => ({ area: a, rules: rules.filter((r) => r.dat
         <Breadcrumbs items={[{ label: 'Collection', href: '/' }, { label: T.rules }]} />
         <h1 class="headline t-display">Check before you trust a number. <span class="tone-2">Each rule is one thing a seasoned advertiser looks at first, signed by the practitioner</span></h1>
       </div>
-      <AuthorMarquee />
+      <AuthorStack />
     </div>
   </div>
   <TabBar />

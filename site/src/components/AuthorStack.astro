@@ -1,0 +1,47 @@
+---
+// Every author as overlapping avatars, each linking to their page; the name shows in a tooltip on hover and focus.
+// Row is 41px tall, as the old running line was, so the hero spacing doesn't move.
+import { getCollection } from 'astro:content';
+interface Props { class?: string }
+const authors = (await getCollection('authors')).sort((a, b) => a.data.order - b.data.order);
+const initials = (name: string) => name.split(' ').map((w) => w[0]).slice(0, 2).join('');
+---
+<div class:list={['by', Astro.props.class]}>
+<p class="lbl by-k" id="by-k">Submitted &amp; reviewed by</p>
+<ul class="stack" aria-labelledby="by-k">
+  {authors.map(({ id, data }) => (
+    <li>
+      <a class="who" href={`/authors/${id}`} aria-label={data.name}>
+        <span class="av" aria-hidden="true">{data.photo ? <img src={data.photo} alt="" loading="lazy" /> : initials(data.name)}</span>
+        <span class="tip" aria-hidden="true">{data.name}</span>
+      </a>
+    </li>
+  ))}
+</ul>
+</div>
+
+<style>
+  .by { display: grid; gap: 16px; width: 100%; min-width: 0; }
+  .by-k { color: var(--text-2); }
+  .stack { --av: 36px; display: flex; flex-wrap: wrap; align-items: center; row-gap: 8px; min-height: 41px; }
+  .stack li { position: relative; }
+  .stack li + li { margin-left: -12px; }
+  .who { position: relative; display: block; border-radius: 50%; transition: translate var(--t-fast) var(--ease-out); }
+  /* 2px ring in the surface colour separates overlapping photos */
+  .av { display: grid; place-items: center; width: var(--av); height: var(--av); border-radius: 50%; overflow: hidden; background: var(--bg-muted); box-shadow: 0 0 0 2px var(--bg); color: var(--text-2); font: 600 11px/1 var(--font-mono); }
+  .av img { width: 100%; height: 100%; object-fit: cover; }
+  /* Tooltip: inverted surface, anchored to the avatar's outer edge so the first and last never clip */
+  .tip { position: absolute; bottom: calc(100% + 8px); left: 0; z-index: var(--z-tip); padding: 4px 8px; border-radius: var(--radius-2); background: var(--text); color: var(--bg); font: 500 14px/1.4 var(--font-sans); letter-spacing: -.03em; white-space: nowrap; pointer-events: none; opacity: 0; translate: 0 4px; transition: opacity var(--t-fast) var(--ease-out), translate var(--t-fast) var(--ease-out); }
+  .tip::after { content: ''; position: absolute; top: 100%; left: 14px; border: 4px solid transparent; border-top-color: var(--text); }
+  .stack li:nth-last-child(-n+4) .tip { left: auto; right: 0; }
+  .stack li:nth-last-child(-n+4) .tip::after { left: auto; right: 14px; }
+  .stack li:has(.who:hover), .stack li:has(.who:focus-visible) { z-index: var(--z-raised); }
+  .who:focus-visible { translate: 0 -2px; }
+  .who:focus-visible .tip { opacity: 1; translate: 0 0; }
+  @media (hover: hover) and (pointer: fine) {
+    .who:hover { translate: 0 -2px; }
+    .who:hover .tip { opacity: 1; translate: 0 0; }
+  }
+  @media (max-width: 699px) { .stack { --av: 32px; } .stack li + li { margin-left: -14px; } .tip::after { left: 12px; } .stack li:nth-last-child(-n+4) .tip::after { right: 12px; } }
+  @media (prefers-reduced-motion: reduce) { .who, .who:hover, .who:focus-visible { translate: none; } .tip { transition: opacity var(--t-fast) var(--ease-out); translate: 0 0; } }
+</style>
