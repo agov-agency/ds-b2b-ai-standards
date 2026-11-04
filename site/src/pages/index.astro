@@ -152,9 +152,12 @@ const small = arrow('right');
   .blk { padding-block: var(--section-ruled-top) var(--section-ruled-bottom); }
 
   /* Quotes strip: three short quotes in a row under the tabs, quieter than the sections below; the scenarios' top line closes it off */
-  .strip { padding-block: 48px; }
-  .qs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
-  .q { display: grid; grid-template-columns: auto 1fr; grid-template-rows: 1fr auto; column-gap: 16px; row-gap: 16px; min-width: 0; }
+  .strip { padding-block: 0; }
+  .qs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+  .q { display: grid; grid-template-columns: auto 1fr; grid-template-rows: 1fr auto; column-gap: 16px; row-gap: 16px; min-width: 0; padding-block: 48px; }
+  /* Dividers run the strip's full height, between the cards */
+  .q + .q { border-left: 1px solid var(--line); padding-left: var(--gutter); }
+  .q:not(:last-child) { padding-right: var(--gutter); }
   .qmark { grid-row: 1 / -1; width: 20px; height: 15px; margin-top: 4px; fill: var(--accent); }
   .q blockquote { margin: 0; }
   .q blockquote p { color: var(--text-body); text-wrap: pretty; }
@@ -188,7 +191,7 @@ const small = arrow('right');
   }
   @media (max-width: 699px) {
     .hero { padding-block: 24px; }
-    .strip { padding-block: 32px; }
+    .q { padding-block: 32px; }
     .qs { grid-auto-columns: 85%; }
     .rail { grid-auto-columns: 88%; }
     .cells { grid-auto-columns: 80%; }
