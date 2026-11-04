@@ -1,5 +1,5 @@
 ---
-// Why we exist (/why-we-exist, the home page until 3 Nov 2026): the Standard's landing. Copy from the live site (the-ai-standard-site.netlify.app); structure from the brief of 26 Oct 2026.
+// Why we exist (/why-we-exist, the home page until 3 Nov 2026): the Standard's landing. Copy: client final, 3 Nov 2026; structure from the brief of 26 Oct 2026.
 // Black from the hero through the problem scene, white for the why-AI-fails block and the collection, black again for authors + form.
 import { getCollection } from 'astro:content';
 import { arrow } from '../arrows';
@@ -28,7 +28,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
     <SiteHeader />
     <section class="wrap hero" aria-labelledby="h-hero">
       <div class="copy">
-        <h1 id="h-hero" class="headline t-h1">AI changed the game for LinkedIn Ads. <span class="tone-2">But nobody agreed on the rules.</span></h1>
+        <h1 id="h-hero" class="headline t-h1">AI changed the game for LinkedIn Ads. <span class="tone-2">We’re making it play by the rules.</span></h1>
         <p class="t-p1 body lead">A standard for making ads work with AI, without taking its word for it.</p>
         <div class="ctas">
           <a class="btn brand lg" href="/scenarios">See the scenarios <Fragment set:html={go} /></a>
@@ -42,7 +42,7 @@ const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('');
     <section class="wrap quotes-sec" aria-labelledby="h-quotes">
       <div class="quotes-head">
         <p class="marker">Why we wrote it</p>
-        <h2 id="h-quotes" class="headline t-h3">Why the Standard had to exist. <span class="tone-2">In the words of the people who run the accounts</span></h2>
+        <h2 id="h-quotes" class="headline t-h3">Why we built the Standard. <span class="tone-2">In the words of the people who run the accounts</span></h2>
       </div>
       <ul class="quotes scroll-snap-x to-edges" data-quotes data-reveal>
         {quotes.map((q) => (

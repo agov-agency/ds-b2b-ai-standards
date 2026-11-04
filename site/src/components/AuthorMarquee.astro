@@ -6,7 +6,9 @@ interface Props { class?: string }
 const authors = (await getCollection('authors')).sort((a, b) => a.data.order - b.data.order);
 const initials = (name: string) => name.split(' ').map((w) => w[0]).slice(0, 2).join('');
 ---
-<div class:list={['marquee', Astro.props.class]} aria-label="Authors">
+<div class:list={['by', Astro.props.class]}>
+<p class="lbl by-k" id="by-k">Submitted &amp; reviewed by</p>
+<div class="marquee" aria-labelledby="by-k">
   <div class="track">
     {[false, true].map((copy) => (
       <ul class="row" aria-hidden={copy ? 'true' : undefined}>
@@ -22,8 +24,11 @@ const initials = (name: string) => name.split(' ').map((w) => w[0]).slice(0, 2).
     ))}
   </div>
 </div>
+</div>
 
 <style>
+  .by { display: grid; gap: 16px; width: 100%; min-width: 0; }
+  .by-k { color: var(--text-2); }
   .marquee { width: 100%; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); }
   .track { display: flex; width: max-content; animation: marquee 60s linear infinite; }
   .marquee:hover .track, .marquee:focus-within .track { animation-play-state: paused; }
