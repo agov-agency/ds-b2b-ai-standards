@@ -25,7 +25,7 @@ const initials = (name: string) => name.split(' ').map((w) => w[0]).slice(0, 2).
   .by-k { color: var(--text-2); }
   .stack { --av: 36px; display: flex; flex-wrap: wrap; align-items: center; row-gap: 8px; min-height: 41px; }
   .stack li { position: relative; }
-  .stack li + li { margin-left: -12px; }
+  .stack li + li { margin-left: -6px; }
   .who { position: relative; display: block; border-radius: 50%; transition: translate var(--t-fast) var(--ease-out); }
   /* 2px ring in the surface colour separates overlapping photos */
   .av { display: grid; place-items: center; width: var(--av); height: var(--av); border-radius: 50%; overflow: hidden; background: var(--bg-muted); box-shadow: 0 0 0 2px var(--bg); color: var(--text-2); font: 600 11px/1 var(--font-mono); }
@@ -42,6 +42,6 @@ const initials = (name: string) => name.split(' ').map((w) => w[0]).slice(0, 2).
     .who:hover { translate: 0 -2px; }
     .who:hover .tip { opacity: 1; translate: 0 0; }
   }
-  @media (max-width: 699px) { .stack { --av: 32px; } .stack li + li { margin-left: -14px; } .tip::after { left: 12px; } .stack li:nth-last-child(-n+4) .tip::after { right: 12px; } }
+  @media (max-width: 699px) { .stack { --av: 32px; } .stack li + li { margin-left: -12px; } .tip::after { left: 12px; } .stack li:nth-last-child(-n+4) .tip::after { right: 12px; } }
   @media (prefers-reduced-motion: reduce) { .who, .who:hover, .who:focus-visible { translate: none; } .tip { transition: opacity var(--t-fast) var(--ease-out); translate: 0 0; } }
 </style>
