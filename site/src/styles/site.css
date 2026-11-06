@@ -120,3 +120,11 @@ svg.ext { rotate: 45deg; }
 .fchip:active { transform: scale(.97); }
 @media (hover: hover) and (pointer: fine) { .fchip:not([aria-pressed=true]):hover { background: var(--hover-on-50); } }
 @media (prefers-reduced-motion: reduce) { .fchip:active { transform: none; } }
+
+/* "Send it" forms (src/send.ts): status line under the button, slides in */
+.send-note { margin: 0; color: var(--text-body, var(--neutral-800)); opacity: 0; transform: translateY(-4px); transition: opacity var(--t-base) var(--ease-out), transform var(--t-base) var(--ease-out); }
+[data-state] .send-note { opacity: 1; transform: none; }
+.send-note a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+[data-state=sending] button[type=submit] { cursor: progress; opacity: .7; }
+.honey { position: absolute; left: -9999px; }
+@media (prefers-reduced-motion: reduce) { .send-note { transition: none; transform: none; } }
