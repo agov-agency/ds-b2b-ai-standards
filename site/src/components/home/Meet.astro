@@ -13,6 +13,7 @@ const authors = top.length ? top : (await getCollection('authors', (a) => a.data
 const X = [0, 1, .04, .96, 0, 1, .06, .94]; // card offsets across the grid, flanking the headline
 const DY = ['0svh', '6svh', '-4svh', '4svh', '2svh', '-2svh', '4svh', '0svh'];
 const check = '<svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="M6 11C8.7614 11 11 8.7614 11 6C11 3.23857 8.7614 1 6 1C3.23857 1 1 3.23857 1 6C1 8.7614 3.23857 11 6 11ZM8.72855 4.72856L5.5 7.9571L3.39645 5.85355L4.10356 5.14645L5.5 6.5429L8.02145 4.02144L8.72855 4.72856Z"/></svg>'; // Figma icon/check-cricle, as on the report form
+const TO = 'znak@demontrend.com'; // the submit landing's contact until a form backend exists
 ---
 <section class="meet surface-black ruled spotsec" data-spot="front" aria-labelledby="h-meet" data-meet>
   <div class="track">
@@ -46,8 +47,7 @@ const check = '<svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentCo
 
   <div class="wrap send">
     <!-- Stepped form, as the report's request form (Figma 996:24441): numbered steps on a rail, two-tone step headlines -->
-    <form class="card" method="post" data-send>
-      <input class="honey" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <form class="card" action={`mailto:${TO}`} method="post" enctype="text/plain" data-send>
       <fieldset class="step">
         <span class="n" aria-hidden="true">1</span>
         <legend class="t-h5">Who’s sending it? <span class="tone-2">We publish it under your name</span></legend>
@@ -83,8 +83,6 @@ const check = '<svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentCo
 <script is:inline src="/illustrations/spotlight.js" defer></script>
 
 <script>
-  import { wireSendForms } from '../../send';
-  wireSendForms('[data-send]');
   // Headline swap: once the marker after the last card rises past the stage centre, show the ask
   for (const sec of document.querySelectorAll<HTMLElement>('[data-meet]')) {
     const at = sec.querySelector('[data-swap]')!;
@@ -96,6 +94,13 @@ const check = '<svg viewBox="0 0 12 12" aria-hidden="true"><path fill="currentCo
     addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true });
     sync();
   }
+  // No form backend yet: compose the email in the visitor's mail app with the fields filled in
+  document.querySelectorAll<HTMLFormElement>('[data-send]').forEach((f) => f.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = new FormData(f);
+    const body = ['name', 'email', 'company', 'kind', 'about'].map((k) => `${k}: ${d.get(k) ?? ''}`).join('\n');
+    location.href = `${f.action.split('?')[0]}?subject=${encodeURIComponent(`Contribution: ${d.get('kind')}`)}&body=${encodeURIComponent(body)}`;
+  }));
 </script>
 
 <style>
